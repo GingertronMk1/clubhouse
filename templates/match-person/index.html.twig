@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ClubHouse{% endblock %}
+
+{% block classes %}people{% endblock %}
+
+{% block body %}
+{{ match.name }}
+<a href="{{ path('match.person.create', {matchId: match.id}) }}">Add Person</a>
+
+<ul>
+    {% for person in people %}
+        <li>
+            {{ person.person.name }}{% if person.role %} | {{ person.role }}{% endif %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
