@@ -23,7 +23,7 @@ jobs:
         run: ./bin/install
 
       - name: Run Pint
-        run: ./vendor/bin/sail bin pint
+        run: ./vendor/bin/sail bin pint --test
 
       - name: Format Frontend
         run: ./vendor/bin/sail npm run format:check
@@ -34,9 +34,9 @@ jobs:
         if: always()
 
       - name: Tests
-        run: ./vendor/bin/sail artisan test --parallel --coverage
+        run: ./vendor/bin/sail artisan test --coverage --without-tty
         if: always()
 
       - name: Tests
-        run: ./vendor/bin/sail dusk
+        run: ./vendor/bin/sail dusk --without-tty
         if: always()
