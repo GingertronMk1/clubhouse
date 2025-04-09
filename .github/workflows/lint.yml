@@ -26,10 +26,17 @@ jobs:
         run: ./vendor/bin/sail bin pint
 
       - name: Format Frontend
-        run: ./vendor/bin/sail npm run format
+        run: ./vendor/bin/sail npm run format:check
+        if: always()
 
       - name: Lint Frontend
         run: ./vendor/bin/sail npm run lint
+        if: always()
 
       - name: Tests
-        run: ./vendor/bin/pest
+        run: ./vendor/bin/sail artisan test --parallel --coverage
+        if: always()
+
+      - name: Tests
+        run: ./vendor/bin/sail dusk
+        if: always()
