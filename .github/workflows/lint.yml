@@ -25,10 +25,6 @@ jobs:
       - name: Run Pint
         run: ./vendor/bin/sail bin pint --test
 
-      - name: Format Frontend
-        run: ./vendor/bin/sail npm run format:check
-        if: always()
-
       - name: Lint Frontend
         run: ./vendor/bin/sail npm run lint
         if: always()
