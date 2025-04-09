@@ -10,5 +10,6 @@ class Sport extends Model
 {
     /** @use HasFactory<\Database\Factories\SportFactory> */
     use HasFactory;
+
     use SoftDeletes;
 }
