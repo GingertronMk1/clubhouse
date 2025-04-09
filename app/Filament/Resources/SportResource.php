@@ -58,7 +58,7 @@ class SportResource extends Resource
     public static function getRelations(): array
     {
         return [
-            PositionsRelationManager::class
+            PositionsRelationManager::class,
         ];
     }
 
