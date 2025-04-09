@@ -5,7 +5,7 @@ import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescri
 
 export default defineConfigWithVueTs(
     vue.configs['flat/essential'],
-    vueTsConfigs.recommended,
+    vueTsConfigs.recommendedTypeChecked,
     {
         ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js', 'resources/js/components/ui/*'],
     },
