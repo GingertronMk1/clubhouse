@@ -38,10 +38,6 @@ class SportSeeder extends Seeder
                 'name' => 'American Football',
                 'description' => 'American football, referred to simply as football in the United States and Canada and also known as gridiron football,[nb 1] is a team sport played by two teams of eleven players on a rectangular field with goalposts at each end. The offense, the team with possession of the oval-shaped football, attempts to advance down the field by running with the ball or throwing it, while the defense, the team without possession of the ball, aims to stop the offense\'s advance and to take control of the ball for themselves. The offense must advance the ball at least ten yards in four downs or plays; if they fail, they turn over the football to the defense, but if they succeed, they are given a new set of four downs to continue the drive. Points are scored primarily by advancing the ball into the opposing team\'s end zone for a touchdown or kicking the ball through the opponent\'s goalposts for a field goal. The team with the most points at the end of the game wins.',
             ],
-            [
-                'name' => 'Canadian Football',
-                'description' => 'Canadian football, or simply football, is a sport in Canada in which two teams of 12 players each compete on a field 110 yards (101 m) long and 65 yards (59 m) wide, attempting to advance a pointed oval-shaped ball into the opposing team\'s end zone.',
-            ],
         ];
     }
 }
