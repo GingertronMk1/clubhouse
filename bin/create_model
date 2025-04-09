@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 
+echo "Creating model for \"$1\""
 ./vendor/bin/sail artisan make:model "$1" --all --pest
+
+echo "Creating filament stuff for \"$1\""
 ./vendor/bin/sail artisan make:filament-resource "$1" --soft-deletes --view
