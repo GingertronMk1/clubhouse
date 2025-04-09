@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+./vendor/bin/sail bin pint
+./vendor/bin/sail npm run lint
