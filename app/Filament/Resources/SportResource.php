@@ -36,6 +36,7 @@ class SportResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name'),
+                TextColumn::make('description')->words(10)->wrap(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
