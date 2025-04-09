@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SportResource\Pages;
-use App\Models\Sport;
+use App\Filament\Resources\PositionResource\Pages;
+use App\Models\Position;
+use Filament\Forms;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -14,9 +15,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SportResource extends Resource
+class PositionResource extends Resource
 {
-    protected static ?string $model = Sport::class;
+    protected static ?string $model = Position::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -24,8 +25,27 @@ class SportResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name'),
+                TextInput::make('name')->required(),
                 Textarea::make('description'),
+                TextInput::make('preview_x')
+                    ->default(0)
+                    ->numeric()
+                    ->minValue(0)
+                    ->maxValue(100),
+                TextInput::make('preview_y')
+                    ->default(0)
+                    ->numeric()
+                    ->minValue(0)
+                    ->maxValue(100),
+                TextInput::make('sort_order')
+                    ->default(0)
+                    ->numeric(),
+                TextInput::make('default_number')
+                    ->default(0)
+                    ->numeric(),
+                Forms\Components\Select::make('sport_id')
+                    ->relationship('sport', 'name')
+                    ->createOptionForm(SportResource::form($form)->getComponents()),
             ]);
     }
 
@@ -34,9 +54,11 @@ class SportResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('description')->words(10)->wrap(),
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('sport.name')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -64,10 +86,10 @@ class SportResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSports::route('/'),
-            'create' => Pages\CreateSport::route('/create'),
-            'view' => Pages\ViewSport::route('/{record}'),
-            'edit' => Pages\EditSport::route('/{record}/edit'),
+            'index' => Pages\ListPositions::route('/'),
+            'create' => Pages\CreatePosition::route('/create'),
+            'view' => Pages\ViewPosition::route('/{record}'),
+            'edit' => Pages\EditPosition::route('/{record}/edit'),
         ];
     }
 
