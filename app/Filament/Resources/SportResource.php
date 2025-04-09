@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SportResource\Pages;
+use App\Filament\Resources\SportResource\RelationManagers\PositionsRelationManager;
 use App\Models\Sport;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -57,7 +58,7 @@ class SportResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PositionsRelationManager::class
         ];
     }
 
