@@ -34,7 +34,7 @@ jobs:
         if: always()
 
       - name: Tests
-        run: ./vendor/bin/sail artisan test --coverage --without-tty
+        run: ./vendor/bin/sail artisan test --coverage
         if: always()
 
       - name: Tests
