@@ -5,6 +5,7 @@ import path from 'path';
 import tailwindcss from 'tailwindcss';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
+import eslintPlugin from 'vite-plugin-eslint';
 
 export default defineConfig({
     plugins: [
@@ -21,6 +22,9 @@ export default defineConfig({
                 },
             },
         }),
+        eslintPlugin({
+            fix: true
+        })
     ],
     resolve: {
         alias: {
