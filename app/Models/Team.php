@@ -11,6 +11,7 @@ class Team extends Model
 {
     /** @use HasFactory<\Database\Factories\TeamFactory> */
     use HasFactory;
+
     use HasUuids;
     use SoftDeletes;
 }

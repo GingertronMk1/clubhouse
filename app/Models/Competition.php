@@ -11,6 +11,7 @@ class Competition extends Model
 {
     /** @use HasFactory<\Database\Factories\CompetitionFactory> */
     use HasFactory;
+
     use HasUuids;
     use SoftDeletes;
 }
