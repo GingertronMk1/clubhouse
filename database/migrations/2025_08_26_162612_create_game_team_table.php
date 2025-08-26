@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Team::class)->constrained();
             $table->text('notes')->nullable();
             $table->unsignedInteger('order')->default(0);
+            $table->json('score')->default('{}');
             $table->timestamps();
             $table->softDeletes();
         });
