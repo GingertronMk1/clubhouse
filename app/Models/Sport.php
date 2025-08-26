@@ -29,4 +29,15 @@ class Sport extends Model
     {
         return $this->hasMany(Competition::class);
     }
+
+
+    public function getScoringBreakdownAttribute(): string
+    {
+        $_ret = [];
+
+        foreach ($this->scoring as $score => $amount) {
+            $_ret[] = sprintf('%s: %d', $score, $amount);
+        }
+        return implode(', ', $_ret);
+    }
 }

@@ -40,4 +40,16 @@ class Game extends Model
     {
         return $this->belongsToMany(Person::class);
     }
+
+    public function getScoringBreakdownAttribute(): string
+    {
+        $scoring = $this->sport->scoring;
+        $total = 0;
+        $_ret = [];
+        foreach ($this->score as $score => $amount) {
+            $_ret[] = sprintf('%s: %d', $score, $amount);
+            $total += ($scoring[$score] ?? 0) * $amount;
+        }
+        return sprintf('%s; %d', implode(', ', $_ret), $total);
+    }
 }
