@@ -13,8 +13,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    private const string PROGRESS_BAR_FORMAT = ' %current%/%max% [%bar%] %percent:3s%% %message%';
-
     /**
      * Seed the application's database.
      */
