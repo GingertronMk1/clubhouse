@@ -26,8 +26,18 @@ class Game extends Model
         return $this->belongsTo(Competition::class);
     }
 
+    public function sport(): BelongsTo
+    {
+        return $this->competition->sport();
+    }
+
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class);
+    }
+
+    public function players(): BelongsToMany
+    {
+        return $this->belongsToMany(Person::class);
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('preview_y')->default(0);
             $table->integer('order')->default(0);
             $table->integer('default_number')->default(1);
-            $table->foreignIdFor(\App\Models\Competition::class, 'competition_id')->constrained();
+            $table->foreignIdFor(\App\Models\Sport::class)->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -16,6 +16,10 @@ class Sport extends Model
     use HasUuids;
     use SoftDeletes;
 
+    protected $casts = [
+        'scoring' => 'json',
+    ];
+
     public function positions(): HasMany
     {
         return $this->hasMany(Position::class);

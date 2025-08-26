@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Competition;
+use App\Models\Sport;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,14 @@ class CompetitionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->company(),
+            'description' => $this->faker->text(),
+            //            'competition_id' => Competition::query()->count() < 10
+            //                ? Competition::factory()->create()->id
+            //                : Competition::query()->inRandomOrder()->value('id'),
+            'sport_id' => Sport::query()->count() < 10
+                ? Sport::factory()->id
+                : Sport::query()->inRandomOrder()->value('id'),
         ];
     }
 }

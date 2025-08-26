@@ -16,8 +16,15 @@ class SportFactory extends Factory
      */
     public function definition(): array
     {
+        $scores = [];
+        for ($i = 0; $i < $this->faker->numberBetween(1, 5); $i++) {
+            $scores[$this->faker->word()] = $this->faker->numberBetween(1, 10);
+        }
+
         return [
-            //
+            'name' => $this->faker->unique()->word().'ball',
+            'description' => $this->faker->text(),
+            'scoring' => $scores,
         ];
     }
 }
