@@ -18,8 +18,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('summary')->nullable();
             $table->foreignIdFor(\App\Models\Competition::class)->constrained();
-            $table->foreignIdFor(\App\Models\Team::class, 'team_1_id')->constrained();
-            $table->foreignIdFor(\App\Models\Team::class, 'team_2_id')->constrained();
             $table->json('score')->default('{}');
             $table->timestamps();
             $table->softDeletes();
