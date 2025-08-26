@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('positions', function (Blueprint $table) {
+        Schema::create('games', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name')->index();
+            $table->string('name');
+            $table->dateTime('start');
             $table->text('description')->nullable();
-            $table->integer('preview_x')->default(0);
-            $table->integer('preview_y')->default(0);
-            $table->integer('order')->default(0);
-            $table->integer('default_number')->default(1);
-            $table->foreignIdFor(\App\Models\Competition::class, 'competition_id')->constrained();
+            $table->text('summary')->nullable();
+            $table->foreignIdFor(\App\Models\Competition::class)->constrained();
+            $table->foreignIdFor(\App\Models\Team::class, 'team_1_id')->constrained();
+            $table->foreignIdFor(\App\Models\Team::class, 'team_2_id')->constrained();
+            $table->json('score')->default('{}');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('positions');
+        Schema::dropIfExists('games');
     }
 };

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('sports', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
+            $table->json('scoring')->default('{}');
             $table->timestamps();
             $table->softDeletes();
         });

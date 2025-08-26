@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('person_team', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->foreignIdFor(\App\Models\Team::class)->constrained();
+            $table->foreignIdFor(\App\Models\Person::class)->constrained();
+            $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

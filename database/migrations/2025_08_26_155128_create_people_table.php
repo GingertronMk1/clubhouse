@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('people', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('name');
+            $table->text('bio')->nullable();
+            $table->date('birthday')->nullable();
+            $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

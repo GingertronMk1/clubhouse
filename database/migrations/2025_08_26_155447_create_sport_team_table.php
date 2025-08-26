@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sport_team', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->foreignIdFor(\App\Models\Sport::class)->constrained();
+            $table->foreignIdFor(\App\Models\Team::class)->constrained();
+            $table->integer('order')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
