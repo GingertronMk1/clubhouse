@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\Sports\Schemas;
 
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class SportForm
@@ -16,8 +17,10 @@ class SportForm
                     ->required(),
                 Textarea::make('description')
                     ->columnSpanFull(),
-                Textarea::make('scoring')
+                KeyValue::make('scoring')
                     ->required()
+                    ->keyLabel('Scoring Method')
+                    ->valueLabel('Points Accrued')
                     ->default('{}')
                     ->columnSpanFull(),
             ]);

@@ -50,6 +50,7 @@ class Game extends Model
             $_ret[] = sprintf('%s: %d', $score, $amount);
             $total += ($scoring[$score] ?? 0) * $amount;
         }
+
         return sprintf('%s; %d', implode(', ', $_ret), $total);
     }
 }

@@ -20,6 +20,7 @@ class SportsTable
             ->columns([
                 TextColumn::make('id')
                     ->label('ID')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),

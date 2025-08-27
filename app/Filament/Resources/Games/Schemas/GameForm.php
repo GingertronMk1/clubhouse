@@ -3,9 +3,10 @@
 namespace App\Filament\Resources\Games\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class GameForm
@@ -25,8 +26,10 @@ class GameForm
                 Select::make('competition_id')
                     ->relationship('competition', 'name')
                     ->required(),
-                Textarea::make('score')
+                KeyValue::make('score')
                     ->required()
+                    ->keyLabel('Scoring Method')
+                    ->valueLabel('Points Accrued')
                     ->default('{}')
                     ->columnSpanFull(),
             ]);

@@ -7,7 +7,6 @@ use App\Filament\Resources\Games\Pages\EditGame;
 use App\Filament\Resources\Games\Pages\ListGames;
 use App\Filament\Resources\Games\Pages\ViewGame;
 use App\Filament\Resources\Games\RelationManagers\PlayersRelationManager;
-use App\Filament\Resources\Games\RelationManagers\SportRelationManager;
 use App\Filament\Resources\Games\RelationManagers\TeamsRelationManager;
 use App\Filament\Resources\Games\Schemas\GameForm;
 use App\Filament\Resources\Games\Schemas\GameInfolist;
