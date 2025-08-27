@@ -24,7 +24,8 @@ class CompetitionsTable
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('parent_id')
+                TextColumn::make('parent.name')
+                    ->label('Parent Competition')
                     ->searchable(),
                 TextColumn::make('sport.name')
                     ->searchable(),

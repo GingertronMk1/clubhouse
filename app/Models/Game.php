@@ -17,6 +17,10 @@ class Game extends Model
     use HasUuids;
     use SoftDeletes;
 
+    protected $with = [
+        'competition',
+    ];
+
     protected $casts = [
         'score' => 'json',
     ];
@@ -24,11 +28,6 @@ class Game extends Model
     public function competition(): BelongsTo
     {
         return $this->belongsTo(Competition::class);
-    }
-
-    public function sport(): BelongsTo
-    {
-        return $this->competition->sport();
     }
 
     public function teams(): BelongsToMany

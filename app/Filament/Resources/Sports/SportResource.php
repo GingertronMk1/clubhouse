@@ -45,7 +45,7 @@ class SportResource extends Resource
     {
         return [
             PositionsRelationManager::class,
-            GamesRelationManager::class
+            GamesRelationManager::class,
         ];
     }
 

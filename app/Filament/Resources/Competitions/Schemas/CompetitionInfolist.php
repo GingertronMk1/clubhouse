@@ -14,7 +14,7 @@ class CompetitionInfolist
                 TextEntry::make('id')
                     ->label('ID'),
                 TextEntry::make('name'),
-                TextEntry::make('parent_id'),
+                TextEntry::make('parent.name'),
                 TextEntry::make('sport.name'),
                 TextEntry::make('created_at')
                     ->dateTime(),

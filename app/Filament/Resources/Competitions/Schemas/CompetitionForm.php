@@ -17,7 +17,8 @@ class CompetitionForm
                     ->required(),
                 Textarea::make('description')
                     ->columnSpanFull(),
-                TextInput::make('parent_id'),
+                Select::make('parent_id')
+                    ->relationship('parent', 'name'),
                 Select::make('sport_id')
                     ->relationship('sport', 'name')
                     ->required(),

@@ -27,6 +27,8 @@ class GamesTable
                 TextColumn::make('start')
                     ->dateTime()
                     ->sortable(),
+                TextColumn::make('competition.sport.name')
+                    ->searchable(),
                 TextColumn::make('competition.name')
                     ->searchable(),
                 TextColumn::make('created_at')

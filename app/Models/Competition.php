@@ -19,11 +19,26 @@ class Competition extends Model
 
     public function sport(): BelongsTo
     {
-        return $this->belongsTo(Sport::class);
+        $parent = $this;
+        while ($parent->parent !== null) {
+            $parent = $parent->parent;
+        }
+
+        return $parent->belongsTo(Sport::class);
     }
 
     public function games(): HasMany
     {
-        return $this->hasMany(Competition::class);
+        return $this->hasMany(Game::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id');
     }
 }
