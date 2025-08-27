@@ -6,6 +6,7 @@ use App\Filament\Resources\Sports\Pages\CreateSport;
 use App\Filament\Resources\Sports\Pages\EditSport;
 use App\Filament\Resources\Sports\Pages\ListSports;
 use App\Filament\Resources\Sports\Pages\ViewSport;
+use App\Filament\Resources\Sports\RelationManagers\GamesRelationManager;
 use App\Filament\Resources\Sports\RelationManagers\PositionsRelationManager;
 use App\Filament\Resources\Sports\Schemas\SportForm;
 use App\Filament\Resources\Sports\Schemas\SportInfolist;
@@ -44,6 +45,7 @@ class SportResource extends Resource
     {
         return [
             PositionsRelationManager::class,
+            GamesRelationManager::class
         ];
     }
 
