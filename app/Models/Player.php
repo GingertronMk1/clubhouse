@@ -8,19 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Club extends Model
+class Player extends Model
 {
-    /** @use HasFactory<\Database\Factories\ClubFactory> */
+    /** @use HasFactory<\Database\Factories\PlayerFactory> */
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
-    public function players(): BelongsToMany
+    public function clubs(): BelongsToMany
     {
-        return $this->belongsToMany(Player::class);
+        return $this->belongsToMany(Club::class);
     }
 }

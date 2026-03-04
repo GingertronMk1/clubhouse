@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clubs', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name')->index();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::create('club_player', function (Blueprint $table) {
+            $table->foreignIdFor(\App\Models\Club::class);
+            $table->foreignIdFor(\App\Models\Player::class);
         });
     }
 
@@ -24,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clubs');
+        Schema::dropIfExists('club_player');
     }
 };

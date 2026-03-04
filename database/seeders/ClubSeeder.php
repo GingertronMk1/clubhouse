@@ -14,9 +14,9 @@ class ClubSeeder extends Seeder
      */
     public function run(): void
     {
-        $clubs = Storage::json('clubs.json');
+        $clubs = Storage::json('fixtures/clubs.json');
         foreach ($clubs as $club => $players) {
-            Club::query()->create([
+            Club::query()->firstOrCreate([
                 'name' => $club,
             ]);
         }
