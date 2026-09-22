@@ -13,7 +13,7 @@
 - [ ] Team/Sport pivot table
 - [ ] Games
 
-### Tertiary
+### Tertiary models
 
 - [ ] Person/Team pivot table
 - [ ] Game/Person pivot table
