@@ -22,8 +22,8 @@ class LoginAttemptController extends Controller
 
         $user = User::query()
             ->where('email', $credentials['email'])
-            ->first();
-        if ($user && $user->active && Auth::attempt($credentials)) {
+            ->value('active');
+        if ($user && Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
             return redirect()->route('home');
