@@ -42,4 +42,12 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    public function nonRegisteredUser(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email' => 'user_'.User::query()->count(),
+            'password' => 'non-registered-user',
+        ]);
+    }
 }
