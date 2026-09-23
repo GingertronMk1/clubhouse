@@ -15,6 +15,7 @@ const user = computed(() => usePage().props.auth.user);
                     <Link :href="auth.login.show().url" as="button">Login</Link>
                 </template>
                 <template v-else>
+                    <button v-if="user.superadmin">Admin</button>
                     <Link :href="auth.logout().url" :method="auth.logout().method" as="button">Logout</Link>
                 </template>
             </div>
