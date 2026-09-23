@@ -46,7 +46,7 @@ class UserFactory extends Factory
     public function nonRegisteredUser(): static
     {
         return $this->state(fn (array $attributes) => [
-            'email' => 'user_'.User::query()->count(),
+            'email' => sprintf('user_%d', User::query()->count()),
             'password' => 'non-registered-user',
         ]);
     }
