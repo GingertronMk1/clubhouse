@@ -28,6 +28,9 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'bio' => $this->faker->paragraph(),
+            'date_of_birth' => $this->faker->date(),
+            'superadmin' => $this->faker->boolean(1),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
@@ -46,8 +49,9 @@ class UserFactory extends Factory
     public function nonRegisteredUser(): static
     {
         return $this->state(fn (array $attributes) => [
-            'email' => sprintf('user_%d', User::query()->count()),
+            'email' => sprintf('user_%s', Str::uuid7()->toString()),
             'password' => 'non-registered-user',
+            'active' => false,
         ]);
     }
 }
