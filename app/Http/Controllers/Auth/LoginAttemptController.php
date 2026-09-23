@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,10 +20,13 @@ class LoginAttemptController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials) && Auth::user()->active) {
+        $user = User::query()
+            ->where('email', $credentials['email'])
+            ->first();
+        if ($user && $user->active && Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('home');
+            return redirect()->route('home');
         }
 
         return back()->withErrors([

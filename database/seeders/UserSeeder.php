@@ -20,10 +20,17 @@ class UserSeeder extends Seeder
             'password' => Hash::make('1234'),
             'bio' => 'The admin of admins, king of kings',
             'superadmin' => true,
+            'active' => true,
         ]);
         $this->command->info('Admin user created, creating registered users');
         User::factory(10)->create();
         $this->command->info('Registered users created, creating non-registered users');
+        User::query()->create([
+            'email' => 'test_non-registered_user',
+            'password' => 'non-registered-user',
+            'active' => false,
+            'name' => 'Test non-registered user',
+        ]);
         User::factory(50)->nonRegisteredUser()->create();
         $this->command->info('Non-registered users created');
     }
