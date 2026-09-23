@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -42,5 +44,15 @@ class User extends Authenticatable
             'date_of_birth' => 'date',
             'active' => 'boolean',
         ];
+    }
+
+    public static function createNonRegistered(string $name): static
+    {
+        return static::query()->create([
+            'name' => $name,
+            'email' => Str::uuid7()->toString(),
+            'password' => Hash::make($name),
+            'active' => false,
+        ]);
     }
 }

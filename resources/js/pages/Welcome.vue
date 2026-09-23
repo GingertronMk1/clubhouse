@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import {Head, Link, usePage} from '@inertiajs/vue3';
+import auth from "@/routes/auth";
+import {computed} from "vue";
+
+const pageProps = computed(() => usePage().props);
+
 </script>
 
 <template>
@@ -7,6 +12,13 @@ import { Head } from '@inertiajs/vue3';
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
+
+    <template v-if="pageProps.auth.user">
+        <Link :href="auth.logout().url" :method="auth.logout().method" as="button">Logout</Link>
+    </template>
+    <template v-else>
+        <Link :href="auth.login.show().url" as="button">Login</Link>
+    </template>
     <div
         class="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]"
     >
