@@ -10,6 +10,12 @@
         'Noto Color Emoji';
 }
 
+html, body, #app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 button {
     @apply cursor-pointer;
 }
