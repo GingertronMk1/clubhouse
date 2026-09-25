@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+docker run --rm --interactive --tty \
+  --volume $PWD:/var/www \
+  laravelsail/php84-composer:latest \
+  composer install

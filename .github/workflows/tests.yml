@@ -31,8 +31,22 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Setup Application
-        run: composer setup
+      - name: Composer install
+        run: composer i
+
+      - name: Copy env
+        run: cp .env.example .env && php artisan key:generate
+
+      - name: Sail up
+        run: ./vendor/bin/sail up -d
+
+      - name: Migrate
+        run: ./vendor/bin/sail artisan migrate:fresh --seed
+      - name: NPM Install
+        run: ./vendor/bin/sail npm i
+
+      - name: NPM Build
+        run: ./vendor/bin/sail npm run build
 
       - name: Run CI Checks
-        run: composer ci:check
+        run: sail composer ci:check
