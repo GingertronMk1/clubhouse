@@ -10,6 +10,8 @@
         'Noto Color Emoji';
 }
 
-html, body, #app {
-    @apply flex flex-col h-full;
+html,
+body,
+#app {
+    @apply flex h-full flex-col;
 }
