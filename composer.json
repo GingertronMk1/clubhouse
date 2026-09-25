@@ -52,7 +52,7 @@
             "Composer\\Config::disableProcessTimeout",
             "@php artisan dev"
         ],
-        "lint": "pint --parallel --blade -v",
+        "lint": "pint --parallel -v",
         "lint:check": "@lint --test",
         "ci:check": [
             "Composer\\Config::disableProcessTimeout",
