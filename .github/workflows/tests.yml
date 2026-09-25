@@ -35,10 +35,13 @@ jobs:
         run: ./bin/install
 
       - name: Copy env
-        run: cp .env.example .env && php artisan key:generate
+        run: cp .env.example .env
 
       - name: Sail up
         run: ./vendor/bin/sail up -d
+
+      - name: Keygen
+        run: ./vendor/bin/sail artisan key:generate
 
       - name: Migrate
         run: ./vendor/bin/sail artisan migrate:fresh --seed
