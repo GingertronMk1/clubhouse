@@ -15,7 +15,7 @@ class SportController extends Controller
      */
     public function index(): Response
     {
-        return inertia('Sports/Index');
+        return inertia('Sports/Index', ['sports' => Sport::all()]);
     }
 
     /**
