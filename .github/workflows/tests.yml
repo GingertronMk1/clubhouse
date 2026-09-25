@@ -26,7 +26,7 @@ jobs:
         run: composer install --ignore-platform-reqs
 
       - name: Sail up
-        run: ./vendor/bin/sail up --build --detach
+        run: ./vendor/bin/sail up --build --detach --wait
 
       - name: Keygen
         run: ./vendor/bin/sail artisan key:generate
@@ -35,7 +35,7 @@ jobs:
         run: ./vendor/bin/sail artisan optimize
 
       - name: Migrate
-        run: ./vendor/bin/sail artisan migrate:fresh --seed
+        run: ./vendor/bin/sail artisan migrate:fresh --seed -vvv --no-interaction
 
       - name: NPM Install
         run: ./vendor/bin/sail npm i
