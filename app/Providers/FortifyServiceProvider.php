@@ -29,12 +29,29 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->bootFortifySetup();
+        $this->bootRateLimiters();
+        $this->bootViews();
+    }
+
+    private function bootViews(): void
+    {
+        Fortify::loginView(fn () => inertia('Auth/Login'));
+
+        Fortify::registerView(fn () => inertia('Auth/Register'));
+    }
+
+    private function bootFortifySetup(): void
+    {
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
+    }
 
+    private function bootRateLimiters(): void
+    {
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
@@ -52,14 +69,5 @@ class FortifyServiceProvider extends ServiceProvider
                 ($credentialId ?: $request->session()->getId()).'|'.$request->ip()
             );
         });
-
-        $this->registerViews();
-    }
-
-    private function registerViews(): void
-    {
-        Fortify::loginView(fn () => inertia('Auth/Login'));
-
-        Fortify::registerView(fn () => inertia('Auth/Register'));
     }
 }
