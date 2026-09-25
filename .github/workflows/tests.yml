@@ -19,14 +19,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Composer install
-        run: composer install --ignore-platform-reqs
-
       - name: Copy env
         run: cp .env.example .env
 
+      - name: Composer install
+        run: composer install --ignore-platform-reqs
+
+      - name: Sail build
+        run: ./vendor/bin/sail build --no-cache
+
       - name: Sail up
-        run: ./vendor/bin/sail up -d
+        run: ./vendor/bin/sail up --detach
 
       - name: Keygen
         run: ./vendor/bin/sail artisan key:generate
