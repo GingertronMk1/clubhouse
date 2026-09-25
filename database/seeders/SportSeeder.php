@@ -17,6 +17,13 @@ class SportSeeder extends Seeder
         });
     }
 
+    /**
+     * @return array{
+     *  name: string,
+     *  description: string,
+     *  scoring: array<string, int>
+     * }[]
+     */
     public function getSports(): array
     {
         return [
