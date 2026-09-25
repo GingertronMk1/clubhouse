@@ -25,14 +25,14 @@ jobs:
       - name: Composer install
         run: composer install --ignore-platform-reqs
 
-      - name: Sail build
-        run: ./vendor/bin/sail build --no-cache
-
       - name: Sail up
-        run: ./vendor/bin/sail up --detach
+        run: ./vendor/bin/sail up --build --detach
 
       - name: Keygen
         run: ./vendor/bin/sail artisan key:generate
+
+      - name: Clear cache
+        run: ./vendor/bin/sail artisan optimize
 
       - name: Migrate
         run: ./vendor/bin/sail artisan migrate:fresh --seed
