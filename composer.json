@@ -6,9 +6,10 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "filament/filament": "^5.0",
         "inertiajs/inertia-laravel": "^3.0",
+        "laravel/fortify": "*",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
         "laravel/wayfinder": "^0.1.14"
@@ -43,7 +44,7 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
-            "@php artisan migrate --force",
+            "@php artisan migrate --force --seed",
             "npm install",
             "npm run build"
         ],
@@ -51,12 +52,8 @@
             "Composer\\Config::disableProcessTimeout",
             "@php artisan dev"
         ],
-        "lint": [
-            "pint --parallel"
-        ],
-        "lint:check": [
-            "pint --parallel --test"
-        ],
+        "lint": "pint --parallel -v",
+        "lint:check": "@lint --test",
         "ci:check": [
             "Composer\\Config::disableProcessTimeout",
             "npm run check",
