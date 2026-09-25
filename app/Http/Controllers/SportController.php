@@ -33,7 +33,7 @@ class SportController extends Controller
     {
         $sport = Sport::query()->create($request->validated());
 
-        return redirect()->route('sports.show', $sport);
+        return redirect()->route('sport.show', $sport);
     }
 
     /**
@@ -59,7 +59,7 @@ class SportController extends Controller
     {
         $sport->update($request->validated());
 
-        return redirect()->route('sports.show', $sport);
+        return redirect()->route('sport.show', $sport);
     }
 
     /**

@@ -20,11 +20,11 @@ const logoutFunction = function () {
     <header
         class="container mx-auto flex flex-row items-center justify-between p-2"
     >
-        <Link :href="home()" class="text-4xl">
+        <Link :href="home()" class="text-4xl font-[Saira_Condensed]">
             <h1 v-text="env.VITE_APP_NAME" />
         </Link>
 
-        <span class="flex flex-row gap-2">
+        <span class="flex flex-row gap-2 font-[Instrument_Sans]">
             <button v-if="user" @click="logoutFunction()">Log Out</button>
             <template v-else>
                 <Link :href="register()">Register</Link>

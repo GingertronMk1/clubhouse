@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Sport;
 use App\Models\User;
+use App\Permission;
 
 class SportPolicy
 {
@@ -28,7 +29,7 @@ class SportPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->hasPermission(Permission::SUPERADMIN);
     }
 
     /**
@@ -36,7 +37,7 @@ class SportPolicy
      */
     public function update(User $user, Sport $sport): bool
     {
-        return true;
+        return $user->hasPermission(Permission::SUPERADMIN);
     }
 
     /**
@@ -44,7 +45,7 @@ class SportPolicy
      */
     public function delete(User $user, Sport $sport): bool
     {
-        return true;
+        return $user->hasPermission(Permission::SUPERADMIN);
     }
 
     /**
@@ -52,7 +53,7 @@ class SportPolicy
      */
     public function restore(User $user, Sport $sport): bool
     {
-        return true;
+        return $user->hasPermission(Permission::SUPERADMIN);
     }
 
     /**
@@ -60,6 +61,6 @@ class SportPolicy
      */
     public function forceDelete(User $user, Sport $sport): bool
     {
-        return true;
+        return $user->hasPermission(Permission::SUPERADMIN);
     }
 }
