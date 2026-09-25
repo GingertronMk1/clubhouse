@@ -53,10 +53,10 @@
             "@php artisan dev"
         ],
         "lint": [
-            "pint --parallel"
+            "pint --parallel --blade -v"
         ],
         "lint:check": [
-            "pint --parallel --test"
+            "@pint --test"
         ],
         "ci:check": [
             "Composer\\Config::disableProcessTimeout",
