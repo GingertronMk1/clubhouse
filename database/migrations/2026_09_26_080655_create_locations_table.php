@@ -19,6 +19,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
+            $table->string('address_1')->nullable();
+            $table->string('address_2')->nullable();
+            $table->string('address_3')->nullable();
+            $table->string('postcode')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
             $table->json('links')->nullable();
             $table->timestamps();
             $table->softDeletes();

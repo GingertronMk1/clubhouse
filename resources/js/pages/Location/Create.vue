@@ -11,6 +11,12 @@ const form = useForm<Location>({
     latitude: 0.0,
     longitude: 0.0,
     links: [],
+    address1: "",
+    address2: "",
+    address3: "",
+    postcode: "",
+    city: "",
+    country: "",
 })
 
 function removeLink(linkIndex: number) {
@@ -33,6 +39,33 @@ function removeLink(linkIndex: number) {
                 Description
                 <textarea name="description" id="description" v-model="form.description" />
             </label>
+            <section class="flex flex-col gap-2">
+                <label for="address1">
+                    Address Line 1
+                    <input type="text" name="address1" id="address1" v-model="form.address1" />
+                </label>
+                <label for="address1">
+                    Address Line 2
+                    <input type="text" name="address2" id="address2" v-model="form.address2" />
+                </label>
+                <label for="address1">
+                    Address Line 3
+                    <input type="text" name="address3" id="address3" v-model="form.address3" />
+                </label>
+                <label for="address1">
+                    Postcode
+                    <input type="text" name="postcode" id="postcode" v-model="form.postcode" />
+                </label>
+                <label for="address1">
+                    City
+                    <input type="text" name="city" id="city" v-model="form.city" />
+                </label>
+                <label for="address1">
+                    Country
+                    <input type="text" name="country" id="country" v-model="form.country" />
+                </label>
+
+            </section>
             <section class="flex flex-row gap-2">
                 <label for="latitude">
                     Latitude
