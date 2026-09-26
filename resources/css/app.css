@@ -26,3 +26,27 @@ h5,
 h6 {
     @apply font-[Saira_Condensed];
 }
+
+h1 {
+    @apply text-4xl;
+}
+h2 {
+    @apply text-3xl
+}
+h3 {
+    @apply text-2xl;
+}
+h4 {
+    @apply text-xl;
+}
+h5 {
+    @apply text-lg;
+}
+
+button, input[type="submit"], input[type="button"], input[type="reset"], input[type="submit"] {
+    @apply cursor-pointer;
+}
+
+input, textarea {
+    @apply border border-gray-600 rounded-md p-1;
+}
