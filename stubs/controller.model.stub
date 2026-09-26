@@ -14,7 +14,7 @@ class {{ class }} extends Controller
     public function index()
     {
         return inertia('{{ model }}/Index', [
-            '{{ modelVariable }}s' => {{ model }}::query()->all()
+            '{{ modelVariable }}s' => {{ model }}::all()
         ]);
     }
 
