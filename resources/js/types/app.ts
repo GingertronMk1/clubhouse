@@ -10,5 +10,8 @@ export type Location = {
     id: string;
     name: string;
     description: string;
-    coordinates: [string, string] | null;
+    latitude: number;
+    longitude: number;
+    coordinates?: [string, string] | null;
+    links: {title: string; url: string}[];
 };
