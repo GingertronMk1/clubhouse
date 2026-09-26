@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\Location;
 use App\Models\User;
 use App\Permission;
-use Illuminate\Auth\Access\Response;
 
 class LocationPolicy
 {

@@ -11,4 +11,4 @@ export type Location = {
     name: string;
     description: string;
     coordinates: [string, string] | null;
-}
+};

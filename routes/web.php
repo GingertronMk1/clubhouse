@@ -11,4 +11,3 @@ Route::resources([
     'sport' => SportController::class,
     'location' => LocationController::class,
 ]);
-
