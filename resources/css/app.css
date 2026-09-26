@@ -46,3 +46,7 @@ h5 {
 button, input[type="submit"], input[type="button"], input[type="reset"], input[type="submit"] {
     @apply cursor-pointer;
 }
+
+input, textarea {
+    @apply border border-gray-600 rounded-md p-1;
+}

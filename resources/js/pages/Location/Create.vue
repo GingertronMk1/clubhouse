@@ -40,6 +40,7 @@ function removeLink(linkIndex: number) {
                 <textarea name="description" id="description" v-model="form.description" />
             </label>
             <section class="flex flex-col gap-2">
+                <h2>Address</h2>
                 <label for="address1">
                     Address Line 1
                     <input type="text" name="address1" id="address1" v-model="form.address1" />
@@ -76,7 +77,7 @@ function removeLink(linkIndex: number) {
                     <input type="number" name="longitude" id="longitude" v-model="form.longitude" />
                 </label>
             </section>
-            <h4>Links</h4>
+            <h3>Links</h3>
             <section class="flex flex-col gap-2">
                 <section class="flex flex-row" v-for="linkIndex in (Object.keys(form.links) as unknown as number[])" :key="linkIndex">
                     <label for="title">
