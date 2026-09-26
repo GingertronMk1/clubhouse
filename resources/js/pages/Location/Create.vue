@@ -30,7 +30,7 @@ function removeLink(linkIndex: number) {
     <Layout>
         <Head title="Create" />
         <h2>Create Location</h2>
-        <form class="gap-4 [&_label]:flex [&_label]:flex-col" @submit="form.post(store().url)">
+        <form class="gap-4 flex flex-col [&_label]:flex [&_label]:flex-col" @submit="form.post(store().url)">
             <label for="name">
                 Name
                 <input type="text" name="name" id="name" v-model="form.name" />
