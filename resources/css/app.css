@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-@import 'fonts/saira-condensed.css';
-@import 'fonts/instrument-sans.css';
+@import './fonts/saira-condensed.css';
+@import './fonts/instrument-sans.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -16,4 +16,13 @@ html,
 body,
 #app {
     @apply flex h-full flex-col;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply font-[Saira_Condensed];
 }

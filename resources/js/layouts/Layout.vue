@@ -20,7 +20,7 @@ const logoutFunction = function () {
     <header
         class="container mx-auto flex flex-row items-center justify-between p-2"
     >
-        <Link :href="home()" class="text-4xl font-[Saira_Condensed]">
+        <Link :href="home()" class="font-[Saira_Condensed] text-4xl">
             <h1 v-text="env.VITE_APP_NAME" />
         </Link>
 
