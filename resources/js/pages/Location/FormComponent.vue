@@ -3,6 +3,7 @@ import {store} from "@/routes/location";
 import {InertiaForm, useForm, usePage} from "@inertiajs/vue3";
 import type {Location} from "@/types/app.ts";
 import {computed} from "vue";
+import FormError from "@/components/FormError.vue";
 const props = defineProps<{
     location?: Location
 }>();
@@ -40,12 +41,15 @@ defineEmits<{
         <label for="name">
             <span>
                 Name
-                <span class="text-red-500" v-if="errors.name" v-text="errors.name" />
+                <FormError accessor="name" />
             </span>
             <input type="text" name="name" id="name" v-model="form.name" />
         </label>
         <label for="description">
-            Description
+            <span>
+                Description
+                <FormError accessor="description" />
+            </span>
             <textarea name="description" id="description" v-model="form.description" />
         </label>
         <section class="flex flex-col gap-2">
@@ -88,16 +92,24 @@ defineEmits<{
         </section>
         <h3>Links</h3>
         <section class="flex flex-col gap-2">
-            <section class="flex flex-row" v-for="linkIndex in (Object.keys(form.links) as unknown as number[])" :key="linkIndex">
-                <label for="title">
-                    Link title
-                    <input type="text" name="title" id="title" v-model="form.links[linkIndex].title" />
-                </label>
-                <label for="url">
-                    Link URL
-                    <input type="text" name="url" id="url" v-model="form.links[linkIndex].url" />
-                </label>
-                <button @click.prevent="removeLink(linkIndex)">Remove link</button>
+            <section class="flex flex-col gap-2" v-for="linkIndex in (Object.keys(form.links) as unknown as number[])" :key="linkIndex" :data-link-index="linkIndex">
+                <div class="flex flex-row items-center gap-2">
+                    <label for="title">
+                        <span>
+                            Link title
+                            <FormError :accessor="`links.${linkIndex}.title`" />
+                        </span>
+                        <input type="text" name="title" id="title" v-model="form.links[linkIndex].title" />
+                    </label>
+                    <label for="url">
+                        <span>
+                            Link URL
+                            <FormError :accessor="`links.${linkIndex}.url`" />
+                        </span>
+                        <input type="text" name="url" id="url" v-model="form.links[linkIndex].url" />
+                    </label>
+                    <button @click.prevent="removeLink(linkIndex)">Remove link</button>
+                </div>
             </section>
 
             <button @click.prevent="form.links.push({

@@ -23,7 +23,19 @@ class UpdateLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string|required|max:255',
+            'description' => 'string|nullable',
+            'latitude' => 'numeric|nullable',
+            'longitude' => 'numeric|nullable',
+            'address_1' => 'string|nullable',
+            'address_2' => 'string|nullable',
+            'address_3' => 'string|nullable',
+            'city' => 'string|nullable',
+            'country' => 'string|nullable',
+            'postcode' => 'string|nullable',
+            'links' => 'array',
+            'links.*.title' => 'string|required|max:255',
+            'links.*.url' => 'string|required|url',
         ];
     }
 }
