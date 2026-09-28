@@ -2,16 +2,12 @@
 import Layout from '@/layouts/Layout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Sport } from '@/types/app';
+import {ucfirst} from "@/types";
 
 defineProps<{
     sport: Sport;
 }>();
 
-const uppercaseScoreName = (name: string) =>
-    name
-        .split('_')
-        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
 </script>
 
 <template>
@@ -31,7 +27,7 @@ const uppercaseScoreName = (name: string) =>
                     </thead>
                     <tbody>
                         <tr v-for="(score, name) in sport.scoring" :key="name">
-                            <td v-text="uppercaseScoreName(name)" />
+                            <td v-text="ucfirst(name)" />
                             <td v-text="score" />
                         </tr>
                     </tbody>
