@@ -69,6 +69,6 @@ class SportController extends Controller
     {
         $sport->delete();
 
-        return redirect()->route('sports.index');
+        return redirect()->route('sport.index');
     }
 }

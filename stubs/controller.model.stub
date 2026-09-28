@@ -13,7 +13,9 @@ class {{ class }} extends Controller
      */
     public function index()
     {
-        //
+        return inertia('{{ model }}/Index', [
+            '{{ modelVariable }}s' => {{ model }}::all()
+        ]);
     }
 
     /**
@@ -21,7 +23,7 @@ class {{ class }} extends Controller
      */
     public function create()
     {
-        //
+        return inertia('{{ model }}/Create');
     }
 
     /**
@@ -29,7 +31,8 @@ class {{ class }} extends Controller
      */
     public function store({{ storeRequest }} $request)
     {
-        //
+        ${{ modelVariable }} = {{ model }}::query()->create($request->validated());
+        return redirect()->route('{{ modelVariable }}.show', ${{ modelVariable }});
     }
 
     /**
@@ -37,7 +40,7 @@ class {{ class }} extends Controller
      */
     public function show({{ model }} ${{ modelVariable }})
     {
-        //
+        return inertia('{{ model }}/Show', ['{{ modelVariable }}' => ${{ modelVariable }}]);
     }
 
     /**
@@ -45,7 +48,7 @@ class {{ class }} extends Controller
      */
     public function edit({{ model }} ${{ modelVariable }})
     {
-        //
+        return inertia('{{ model }}/Edit', ['{{ modelVariable }}' => ${{ modelVariable }}]);
     }
 
     /**
@@ -53,7 +56,8 @@ class {{ class }} extends Controller
      */
     public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }})
     {
-        //
+        ${{ modelVariable }}->update($request->validated());
+        return redirect()->route('{{ modelVariable }}.show', ${{ modelVariable }});
     }
 
     /**
@@ -61,6 +65,7 @@ class {{ class }} extends Controller
      */
     public function destroy({{ model }} ${{ modelVariable }})
     {
-        //
+        ${{ modelVariable }}->delete();
+        return redirect()->route('{{ modelVariable }}.index');
     }
 }
