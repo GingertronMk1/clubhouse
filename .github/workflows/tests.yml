@@ -19,16 +19,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-            php-version: '8.4'
-
       - name: Copy env
         run: cp .env.example .env
 
       - name: Composer install
-        run: composer install --ignore-platform-reqs
+        run: |
+            docker run --rm \
+                -u "$(id -u):$(id -g)" \
+                -v $(pwd):/opt \
+                -w /opt \
+                sail-8.5/app:latest \
+                composer install --ignore-platform-reqs
 
       - name: Sail up
         run: ./vendor/bin/sail up --build --detach --wait
