@@ -1,51 +1,70 @@
 name: tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+    push:
+        branches:
+            - main
+    pull_request:
 
 permissions:
-  contents: read
+    contents: read
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
+    ci:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+                with:
+                    persist-credentials: false
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-            php-version: '8.5'
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.5'
 
-      - name: Copy env
-        run: cp .env.example .env
+            -   name: Cache Docker images.
+                uses: ScribeMD/docker-cache@0.5.0
+                with:
+                    key: docker-${{ runner.os }}-${{ hashFiles('compose.yaml') }}
 
-      - name: Composer install
-        run: composer install --ignore-platform-reqs
+            -   name: Cache NPM
+                id: cache-npm
+                uses: actions/cache@v6
+                with:
+                    path: prime-numbers
+                    key: npm-${{ hashFiles('package-lock.json') }}
 
-      - name: Sail up
-        run: ./vendor/bin/sail up --build --detach --wait
+            -   name: Cache Composer
+                id: cache-composer
+                uses: actions/cache@v6
+                with:
+                    path: ./vendor
+                    key: npm-${{ hashFiles('composer.lock') }}
 
-      - name: Keygen
-        run: ./vendor/bin/sail artisan key:generate
+            -   name: Copy env
+                run: cp .env.example .env
 
-      - name: Clear cache
-        run: ./vendor/bin/sail artisan optimize
+            -   name: Composer install
+                run: composer install --ignore-platform-reqs
 
-      - name: Migrate
-        run: ./vendor/bin/sail artisan migrate:fresh --seed -vvv --no-interaction
+            -   name: Sail up
+                run: ./vendor/bin/sail up --build --detach --wait
 
-      - name: NPM Install
-        run: ./vendor/bin/sail npm i
+            -   name: Keygen
+                run: ./vendor/bin/sail artisan key:generate
 
-      - name: NPM Build
-        run: ./vendor/bin/sail npm run build
+            -   name: Clear cache
+                run: ./vendor/bin/sail artisan optimize
 
-      - name: Run CI Checks
-        run: ./vendor/bin/sail composer ci:check
+            -   name: Migrate
+                run: ./vendor/bin/sail artisan migrate:fresh --seed -vvv --no-interaction
+
+            -   name: NPM Install
+                run: ./vendor/bin/sail npm i
+
+            -   name: NPM Build
+                run: ./vendor/bin/sail npm run build
+
+            -   name: Run CI Checks
+                run: ./vendor/bin/sail composer ci:check
