@@ -10,7 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Date;
 
+/**
+ * @property string $name
+ * @property Date $start
+ * @property ?string $description
+ * @property ?string $summary
+ * @property int[] $score
+ */
 class Game extends Model
 {
     /** @use HasFactory<GameFactory> */

@@ -144,9 +144,11 @@ return [
     |
     */
 
+    /** @var string $appUrl */
+    $appUrl = is_string(config('app.url')) ? config('app.url') : '/',
     'passkeys' => [
-        'relying_party_id' => parse_url(config('app.url'), PHP_URL_HOST),
-        'allowed_origins' => [config('app.url')],
+        'relying_party_id' => parse_url($appUrl, PHP_URL_HOST),
+        'allowed_origins' => [$appUrl],
         'timeout' => 60000,
     ],
 

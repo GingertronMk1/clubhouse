@@ -47,7 +47,7 @@ class GameFactory extends Factory
     private function getScoreForSport(Sport $sport): int
     {
         $ret = 0;
-        foreach ($sport->scoring as $value) {
+        foreach (($sport->scoring ?? []) as $value) {
             $ret += $value * fake()->randomDigit();
         }
 

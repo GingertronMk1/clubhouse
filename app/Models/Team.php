@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property string $name
+ * @property ?string $description
+ */
 class Team extends Model
 {
     /** @use HasFactory<TeamFactory> */

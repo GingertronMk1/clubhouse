@@ -9,6 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property string $name
+ * @property ?string $description
+ * @property int $preview_x
+ * @property int $preview_y
+ * @property int $sort_order
+ * @property int $default_number
+ * @property int $per_side
+ */
 class Position extends Model
 {
     /** @use HasFactory<PositionFactory> */

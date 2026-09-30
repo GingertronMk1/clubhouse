@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property string $name
+ * @property ?string $description
+ * @property ?array<string, int> $scoring
+ * @property ?string $field_diagram
+ */
 class Sport extends Model
 {
     /** @use HasFactory<SportFactory> */
