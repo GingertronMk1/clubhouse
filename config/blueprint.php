@@ -134,7 +134,7 @@ return [
     |
     */
     'types' => [
-        'primary' => 'uuid',
+        'primary' => 'uuid primary',
         'timestamps' => 'timestamp',
     ],
 
