@@ -18,7 +18,7 @@ class ClubFactory extends Factory
      */
     public function definition(): array
     {
-        $team = Team::query()->count() < 5 ? Team::factory()->create() : Team::query()->inRandomOrder()->first();
+        $team = Team::query()->count() < 5 ? Team::factory()->create() : Team::query()->inRandomOrder()->firstOrFail();
 
         return [
             'name' => $team->name.' '.fake()->randomDigitNotZero().'s',

@@ -23,7 +23,7 @@ class CompetitionFactory extends Factory
             if (Competition::query()->count() < 5) {
                 $parent = Competition::factory()->create();
             } else {
-                $parent = Competition::query()->inRandomOrder()->first();
+                $parent = Competition::query()->inRandomOrder()->firstOrFail();
             }
         }
 
@@ -31,7 +31,7 @@ class CompetitionFactory extends Factory
             'name' => fake()->name(),
             'description' => fake()->text(),
             'parent_id' => $parent,
-            'location_id' => Location::query()->count() < 5 ? Location::factory() : Location::query()->inRandomOrder()->first(),
+            'location_id' => Location::query()->count() < 5 ? Location::factory() : Location::query()->inRandomOrder()->firstOrFail(),
         ];
     }
 }

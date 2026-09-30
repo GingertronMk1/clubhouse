@@ -23,7 +23,12 @@ class SportFactory extends Factory
         }
 
         return [
-            'name' => fake()->words(asText: true).' ball',
+            'name' => sprintf(
+                '%s %s %s ball',
+                fake()->word(),
+                fake()->word(),
+                fake()->word()
+            ),
             'description' => fake()->text(),
             'scoring' => $scoring,
         ];

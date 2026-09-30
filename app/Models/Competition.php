@@ -22,11 +22,17 @@ class Competition extends Model
 
     protected $with = ['parent'];
 
+    /**
+     * @return BelongsTo<Competition, $this>
+     */
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
+    /**
+     * @return HasMany<Competition, $this>
+     */
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');

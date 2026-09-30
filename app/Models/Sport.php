@@ -25,7 +25,7 @@ class Sport extends Model
     }
 
     /**
-     * @return HasMany<Position>
+     * @return HasMany<Position, $this>
      */
     public function positions(): HasMany
     {

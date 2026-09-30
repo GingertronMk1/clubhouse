@@ -20,10 +20,10 @@ class GameFactory extends Factory
      */
     public function definition(): array
     {
-        $club1 = Club::query()->count() < 5 ? Club::factory()->create() : Club::query()->inRandomOrder()->first();
-        $club2 = Club::query()->count() < 5 ? Club::factory()->create() : Club::query()->whereNot('id', $club1->id)->inRandomOrder()->first();
-        $competition = Competition::query()->count() < 5 ? Competition::factory()->create() : Competition::query()->inRandomOrder()->first();
-        $sport = Sport::query()->count() < 5 ? Sport::factory() : Sport::query()->inRandomOrder()->first();
+        $club1 = Club::query()->count() < 5 ? Club::factory()->create() : Club::query()->inRandomOrder()->firstOrFail();
+        $club2 = Club::query()->count() < 5 ? Club::factory()->create() : Club::query()->whereNot('id', $club1->id)->inRandomOrder()->firstOrFail();
+        $competition = Competition::query()->count() < 5 ? Competition::factory()->create() : Competition::query()->inRandomOrder()->firstOrFail();
+        $sport = Sport::query()->count() < 5 ? Sport::factory()->create() : Sport::query()->inRandomOrder()->firstOrFail();
         $start = fake()->dateTime(now()->addYear());
         $score = null;
         if ($start < now()) {

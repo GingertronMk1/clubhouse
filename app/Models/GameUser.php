@@ -8,15 +8,13 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class GameUser extends Pivot
 {
-    protected $appends = ['number'];
-
     /**
      * @return Attribute<int, int>
      */
     public function number(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ?? $this->position->default_number,
+            get: fn (mixed $value) => $value ?? $this->position->default_number ?? 0,
             set: fn (string $value) => intval($value),
         );
     }

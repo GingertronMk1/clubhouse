@@ -25,7 +25,7 @@ class PositionFactory extends Factory
             'preview_y' => fake()->numberBetween(1, 100),
             'sort_order' => fake()->randomDigit(),
             'default_number' => fake()->randomDigit(),
-            'sport_id' => Sport::query()->count() < 5 ? Sport::factory() : Sport::query()->inRandomOrder()->first(),
+            'sport_id' => Sport::query()->count() < 5 ? Sport::factory() : Sport::query()->inRandomOrder()->firstOrFail(),
             'per_side' => fake()->numberBetween(1, 3),
         ];
     }

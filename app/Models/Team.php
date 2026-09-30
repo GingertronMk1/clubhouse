@@ -20,11 +20,17 @@ class Team extends Model
     use HasUuids;
     use SoftDeletes;
 
+    /**
+     * @return HasMany<Club, $this>
+     */
     public function clubs(): HasMany
     {
         return $this->hasMany(Club::class);
     }
 
+    /**
+     * @return BelongsToMany<User, $this>
+     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
