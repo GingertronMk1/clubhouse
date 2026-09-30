@@ -28,7 +28,7 @@ jobs:
                 -u "$(id -u):$(id -g)" \
                 -v $(pwd):/opt \
                 -w /opt \
-                sail-8.5/app:latest \
+                laravelsail/php85-composer:latest \
                 composer install --ignore-platform-reqs
 
       - name: Sail up
