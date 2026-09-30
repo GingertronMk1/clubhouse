@@ -19,7 +19,11 @@ Table locations {
   id uuid [pk]
   name string
   description text
-  additional_information json
+  address1 string
+  address2 string
+  postcode string
+  city string
+  country string
 }
 
 Table teams {
@@ -39,7 +43,6 @@ Table positions {
   sport_id uuid [ref: > sports.id, not null]
 }
 
-
 Table clubs {
   id uuid [pk]
   name string
@@ -50,6 +53,14 @@ Table clubs {
 Table team_user {
   team_id uuid [ref: > teams.id, not null]
   user_id uuid [ref: > users.id, not null]
+}
+
+Table competitions {
+  id uuid [pk]
+  parent_id uuid [ref: >? competitions.id]
+  name string
+  description text
+  location_id uuid [ref: > locations.id, not null]
 }
 
 Table games {
@@ -63,14 +74,6 @@ Table games {
   club1_id uuid [ref: > clubs.id, not null]
   club2_id uuid [ref: > clubs.id, not null]
   score json
-  location_id uuid [ref: > locations.id, not null]
-}
-
-Table competitions {
-  id uuid [pk]
-  parent_id uuid [ref: >? competitions.id]
-  name string
-  description text
   location_id uuid [ref: > locations.id, not null]
 }
 
