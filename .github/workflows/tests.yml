@@ -78,5 +78,22 @@ jobs:
                 run: ./vendor/bin/sail npm run build
 
             -   name: Run CI Checks
-                run: ./vendor/bin/sail composer ci:check
+                if: always()
+                run: ./vendor/bin/sail npm run check
+
+            -   name: Run CI Checks
+                if: always()
+                run: ./vendor/bin/sail npm run types:check
+
+            -   name: Run CI Checks
+                if: always()
+                run: ./vendor/bin/sail composer lint:check
+
+            -   name: Run CI Checks
+                if: always()
+                run: ./vendor/bin/sail composer types:check
+
+            -   name: Run CI Checks
+                if: always()
+                run: ./vendor/bin/sail artisan test
 
