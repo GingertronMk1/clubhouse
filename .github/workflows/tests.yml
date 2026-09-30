@@ -56,7 +56,11 @@ jobs:
                 run: composer install --ignore-platform-reqs
 
             -   name: Sail up
-                run: ./vendor/bin/sail up --build --detach --wait
+                run: ./vendor/bin/sail up --detach --wait
+
+            -   name: Save Docker images
+                if: steps.cache-docker.outputs.cache-hit != 'true'
+                run: docker save $(docker images -q) -o ./docker-images.tar
 
             -   name: Keygen
                 run: ./vendor/bin/sail artisan key:generate
@@ -76,6 +80,3 @@ jobs:
             -   name: Run CI Checks
                 run: ./vendor/bin/sail composer ci:check
 
-            -   name: Save Docker images
-                if: steps.cache-docker.outputs.cache-hit != 'true'
-                run: docker save $(docker images -q) -o ./docker-images.tar
