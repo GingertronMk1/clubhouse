@@ -1,0 +1,85 @@
+Table users {
+  id uuid [pk]
+  name string
+  email string
+  password string
+  bio text
+  dob date
+}
+
+Table sports {
+  id uuid [pk]
+  name string
+  description text
+  scoring json
+  field_diagram text [note: "file path or maybe an svg description"]
+}
+
+Table locations {
+  id uuid [pk]
+  name string
+  description text
+  additional_information json
+}
+
+Table teams {
+  id uuid [pk]
+  name string
+  description text
+}
+
+Table positions {
+  id uuid [pk]
+  name string
+  description text
+  preview_x int
+  preview_y int
+  sort_order int
+  default_number int
+  sport_id uuid [ref: > sports.id, not null]
+}
+
+
+Table clubs {
+  id uuid [pk]
+  name string
+  description text
+  team_id uuid [ref: > teams.id, not null]
+}
+
+Table team_user {
+  team_id uuid [ref: > teams.id, not null]
+  user_id uuid [ref: > users.id, not null]
+}
+
+Table games {
+  id uuid [pk]
+  name string
+  start datetime
+  description text
+  summary text
+  sport_id uuid [ref: > sports.id, not null]
+  competition_id uuid [ref: > competitions.id, not null]
+  club1_id uuid [ref: > clubs.id, not null]
+  club2_id uuid [ref: > clubs.id, not null]
+  score json
+  location_id uuid [ref: > locations.id, not null]
+}
+
+Table competitions {
+  id uuid [pk]
+  parent_id uuid [ref: >? competitions.id]
+  name string
+  description text
+  location_id uuid [ref: > locations.id, not null]
+}
+
+Table game_user {
+  game_id uuid [ref: > games.id, not null]
+  user_id uuid [ref: > users.id, not null]
+  club_id uuid [ref: > clubs.id, not null]
+  position_id uuid [ref: > positions.id, not null]
+  number int [null]
+  notes text
+}
+
