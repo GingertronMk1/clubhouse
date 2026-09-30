@@ -20,21 +20,36 @@ class GameFactory extends Factory
      */
     public function definition(): array
     {
-        $start = fake()->dateTime();
         $club1 = Club::query()->count() < 5 ? Club::factory()->create() : Club::query()->inRandomOrder()->first();
         $club2 = Club::query()->count() < 5 ? Club::factory()->create() : Club::query()->whereNot('id', $club1->id)->inRandomOrder()->first();
         $competition = Competition::query()->count() < 5 ? Competition::factory()->create() : Competition::query()->inRandomOrder()->first();
+        $sport = Sport::query()->count() < 5 ? Sport::factory() : Sport::query()->inRandomOrder()->first();
+        $start = fake()->dateTime(now()->addYear());
+        $score = null;
+        if ($start < now()) {
+            $score = [$this->getScoreForSport($sport), $this->getScoreForSport($sport)];
+        }
 
         return [
             'name' => fake()->words(3, true),
-            'start' => fake()->dateTime(),
+            'start' => fake()->dateTime(now()->addYear()),
             'description' => fake()->text(),
             'summary' => $start > now() ? null : fake()->text(),
-            'sport_id' => Sport::query()->count() < 5 ? Sport::factory() : Sport::query()->inRandomOrder()->first(),
+            'sport_id' => $sport,
             'competition_id' => $competition,
             'club1_id' => $club1,
             'club2_id' => $club2,
             'location_id' => $competition->location,
+            'score' => $score,
         ];
+    }
+
+    private function getScoreForSport(Sport $sport): int
+    {
+        $ret = 0;
+        foreach ($sport->scoring as $value) {
+            $ret += $value * fake()->randomDigit();
+        }
+        return $ret;
     }
 }
