@@ -47,7 +47,7 @@ jobs:
                 uses: actions/cache@v6
                 with:
                     path: ./vendor
-                    key: npm-${{ hashFiles('composer.lock') }}
+                    key: composer-${{ hashFiles('composer.lock') }}
 
             -   name: Copy env
                 run: cp .env.example .env
