@@ -17,6 +17,11 @@ class Club extends Model
     use HasUuids;
     use SoftDeletes;
 
+    protected $with = ['team'];
+
+    /**
+     * @return BelongsTo<Team, $this>
+     */
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);

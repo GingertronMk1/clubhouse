@@ -20,6 +20,8 @@ class Competition extends Model
     use HasUuids;
     use SoftDeletes;
 
+    protected $with = ['parent'];
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');

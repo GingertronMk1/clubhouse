@@ -60,5 +60,23 @@ class DatabaseSeeder extends Seeder
         Competition::factory(20)->create();
         $this->command->info('Creating games');
         Game::factory(500)->create();
+
+        $this->command->info('Assigning players to games');
+        $this->command->withProgressBar(Game::query()->get()->all(), function (Game $game) {
+            $game->sport->load('positions')->positions->each(function (Position $position) use ($game) {
+                foreach ([$game->club1, $game->club2] as $club) {
+                    for ($i = 0; $i < $position->per_side; $i++) {
+                        $game->players()->attach(
+                            $club->team->users()->inRandomOrder()->first(),
+                            [
+                                'position_id' => $position->id,
+                                'club_id' => $club->id,
+                            ]
+                        );
+                    }
+                }
+            });
+        });
+        $this->command->newLine(2);
     }
 }

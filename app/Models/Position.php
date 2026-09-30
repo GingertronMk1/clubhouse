@@ -17,6 +17,11 @@ class Position extends Model
     use HasUuids;
     use SoftDeletes;
 
+    protected $with = ['sport'];
+
+    /**
+     * @return BelongsTo<Sport, $this>
+     */
     public function sport(): BelongsTo
     {
         return $this->belongsTo(Sport::class);

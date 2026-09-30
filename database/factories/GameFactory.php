@@ -50,6 +50,7 @@ class GameFactory extends Factory
         foreach ($sport->scoring as $value) {
             $ret += $value * fake()->randomDigit();
         }
+
         return $ret;
     }
 }

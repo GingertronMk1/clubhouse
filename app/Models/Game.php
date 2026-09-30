@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Game extends Model
@@ -22,9 +23,11 @@ class Game extends Model
     protected function casts(): array
     {
         return [
-            'score' => 'array'
+            'score' => 'array',
         ];
     }
+
+    protected $with = ['sport', 'competition', 'club1', 'club2'];
 
     /**
      * @return BelongsTo<Sport, $this>
@@ -56,5 +59,13 @@ class Game extends Model
     public function club2(): BelongsTo
     {
         return $this->belongsTo(Club::class, 'club2_id');
+    }
+
+    /**
+     * @return BelongsToMany<User, $this, GameUser>
+     */
+    public function players(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->using(GameUser::class);
     }
 }
