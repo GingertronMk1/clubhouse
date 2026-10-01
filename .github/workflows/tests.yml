@@ -24,17 +24,6 @@ jobs:
                 with:
                     php-version: '8.5'
 
-            -   name: Cache Docker images
-                id: cache-docker
-                uses: actions/cache@v6
-                with:
-                    path: ./docker-images.tar
-                    key: docker-${{ runner.os }}-${{ hashFiles('compose.yaml') }}
-
-            -   name: Load docker images
-                if: steps.cache-docker.outputs.cache-hit == 'true'
-                run: docker load -i ./docker-images.tar
-
             -   name: Cache NPM
                 id: cache-npm
                 uses: actions/cache@v6
@@ -58,9 +47,8 @@ jobs:
             -   name: Sail up
                 run: ./vendor/bin/sail up --detach --wait
 
-            -   name: Save Docker images
-                if: steps.cache-docker.outputs.cache-hit != 'true'
-                run: docker save $(docker images -q) -o ./docker-images.tar
+            -   name: Composer reinstall
+                run: ./vendor/bin/sail composer i
 
             -   name: Keygen
                 run: ./vendor/bin/sail artisan key:generate
