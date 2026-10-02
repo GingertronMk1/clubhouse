@@ -34,6 +34,17 @@ jobs:
                 with:
                     path: ./node_modules
                     key: npm-${{ hashFiles('package-lock.json') }}
+            
+            -   name: Cache Docker Image
+                id: cache-docker
+                uses: actions/cache@v6
+                with:
+                    path: ./docker-save.tar
+                    key: docker-${{ hashFiles('compose.yaml') }}
+
+            -   name: (If cache hit) load Docker Image
+                if: steps.cache-docker.outputs.cache-hit == 'true'
+                run: docker load ./docker-save.tar
 
             -   name: Cache Composer
                 id: cache-composer
@@ -88,4 +99,7 @@ jobs:
             -   name: Run CI Checks
                 if: always()
                 run: ./vendor/bin/sail artisan test
+
+            -   name: Save Docker Image
+                run: docker save sail-8.5/app:latest -o ./docker-save.tar
 
