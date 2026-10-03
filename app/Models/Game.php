@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Models;
+
+use App\HasLocation;
+use Database\Factories\GameFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Date;
+
+/**
+ * @property string $name
+ * @property Date $start
+ * @property ?string $description
+ * @property ?string $summary
+ * @property int[] $score
+ */
+class Game extends Model
+{
+    /** @use HasFactory<GameFactory> */
+    use HasFactory;
+
+    use HasLocation;
+    use HasUuids;
+    use SoftDeletes;
+
+    protected function casts(): array
+    {
+        return [
+            'score' => 'array',
+        ];
+    }
+
+    protected $with = ['sport', 'competition', 'club1', 'club2'];
+
+    /**
+     * @return BelongsTo<Sport, $this>
+     */
+    public function sport(): BelongsTo
+    {
+        return $this->belongsTo(Sport::class);
+    }
+
+    /**
+     * @return BelongsTo<Competition, $this>
+     */
+    public function competition(): BelongsTo
+    {
+        return $this->belongsTo(Competition::class);
+    }
+
+    /**
+     * @return BelongsTo<Club, $this>
+     */
+    public function club1(): BelongsTo
+    {
+        return $this->belongsTo(Club::class, 'club1_id');
+    }
+
+    /**
+     * @return BelongsTo<Club, $this>
+     */
+    public function club2(): BelongsTo
+    {
+        return $this->belongsTo(Club::class, 'club2_id');
+    }
+
+    /**
+     * @return BelongsToMany<User, $this, GameUser>
+     */
+    public function players(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->using(GameUser::class);
+    }
+}

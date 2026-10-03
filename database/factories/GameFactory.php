@@ -1,0 +1,56 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Club;
+use App\Models\Competition;
+use App\Models\Game;
+use App\Models\Sport;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<Game>
+ */
+class GameFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        $club1 = Club::query()->count() < 5 ? Club::factory()->create() : Club::query()->inRandomOrder()->firstOrFail();
+        $club2 = Club::query()->count() < 5 ? Club::factory()->create() : Club::query()->whereNot('id', $club1->id)->inRandomOrder()->firstOrFail();
+        $competition = Competition::query()->count() < 5 ? Competition::factory()->create() : Competition::query()->inRandomOrder()->firstOrFail();
+        $sport = Sport::query()->count() < 5 ? Sport::factory()->create() : Sport::query()->inRandomOrder()->firstOrFail();
+        $start = fake()->dateTime(now()->addYear());
+        $score = null;
+        if ($start < now()) {
+            $score = [$this->getScoreForSport($sport), $this->getScoreForSport($sport)];
+        }
+
+        return [
+            'name' => fake()->words(3, true),
+            'start' => fake()->dateTime(now()->addYear()),
+            'description' => fake()->text(),
+            'summary' => $start > now() ? null : fake()->text(),
+            'sport_id' => $sport,
+            'competition_id' => $competition,
+            'club1_id' => $club1,
+            'club2_id' => $club2,
+            'location_id' => $competition->location,
+            'score' => $score,
+        ];
+    }
+
+    private function getScoreForSport(Sport $sport): int
+    {
+        $ret = 0;
+        foreach (($sport->scoring ?? []) as $value) {
+            $ret += $value * fake()->randomDigit();
+        }
+
+        return $ret;
+    }
+}

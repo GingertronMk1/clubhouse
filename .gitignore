@@ -44,3 +44,5 @@ yarn-error.log
 /boost.json
 /opencode.json
 /opencode.jsonc
+/draft.yaml
+/.blueprint
