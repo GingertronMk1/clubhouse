@@ -24,9 +24,11 @@ class DatabaseSeeder extends Seeder
     {
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin',
+            'email' => 'admin@clubhouse.test',
             'password' => 1234,
+            'active' => true,
+            'permissions' => ['admin']
         ]);
 
         $this->command->info('Creating users');
@@ -59,7 +61,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Creating competitions');
         Competition::factory(20)->create();
         $this->command->info('Creating games');
-        Game::factory(500)->create();
+        Game::factory(config('seeding.number_of_games'))->create();
 
         $this->command->info('Assigning players to games');
         $this->command->withProgressBar(Game::query()->get()->all(), function (Game $game) {
