@@ -2,8 +2,6 @@
 
 use App\Models\Scoring;
 use App\Models\Sport;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('sports and their scoring can be created, viewed, updated and deleted', function () {
