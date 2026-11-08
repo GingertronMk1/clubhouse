@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { index } from '@/routes/sports';
+import * as clubs from '@/routes/clubs';
+import * as locations from '@/routes/locations';
 </script>
 
 <template>
@@ -26,6 +28,13 @@ import { index } from '@/routes/sports';
                         >Manage sports</Link
                     >
                     <h1 class="mb-1 font-medium">Let's get started</h1>
+                    <nav class="mb-4 flex gap-4">
+                        <Link :href="clubs.index()" class="underline"
+                            >Clubs</Link
+                        ><Link :href="locations.index()" class="underline"
+                            >Locations</Link
+                        >
+                    </nav>
                     <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
                         Laravel has an incredibly rich ecosystem. <br />We
                         suggest starting with the following.
