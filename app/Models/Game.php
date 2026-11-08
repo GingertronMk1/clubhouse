@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/** @property array<array-key, mixed> $score */
 #[Fillable(['name', 'start', 'description', 'summary', 'sport_id', 'competition_id', 'club1_id', 'club2_id', 'score', 'location_id'])]
 class Game extends Model
 {
