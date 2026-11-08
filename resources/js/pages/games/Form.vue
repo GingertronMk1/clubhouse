@@ -18,7 +18,7 @@ const props = defineProps<{
         location_id: string;
         score: unknown;
     };
-    start?: string;
+    start?: string | null;
     sports: Option[];
     competitions: Option[];
     teams: Team[];
@@ -76,7 +76,6 @@ function submit() {
                     v-model="form.start"
                     type="datetime-local"
                     step="1"
-                    required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 />
                 <p

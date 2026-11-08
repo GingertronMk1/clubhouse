@@ -40,7 +40,7 @@ class GameController extends Controller
 
     public function edit(Game $game): Response
     {
-        return Inertia::render('games/Form', [...$this->formOptions(), 'record' => $game, 'start' => Carbon::parse($game->getRawOriginal('start'))->format('Y-m-d\TH:i:s')]);
+        return Inertia::render('games/Form', [...$this->formOptions(), 'record' => $game, 'start' => $game->start ? Carbon::parse($game->getRawOriginal('start'))->format('Y-m-d\TH:i:s') : null]);
     }
 
     public function update(GameRequest $request, Game $game): RedirectResponse

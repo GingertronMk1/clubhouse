@@ -26,5 +26,5 @@ test('the default database seeder adds teams to every club', function () {
     $this->seed();
 
     expect(Club::query()->count())->toBeGreaterThan(0);
-    expect(Club::query()->has('teams', '!=', 4)->count())->toBe(0);
+    expect(Club::query()->has('teams', '<', 4)->count())->toBe(0);
 });

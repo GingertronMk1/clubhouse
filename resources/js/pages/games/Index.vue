@@ -8,15 +8,15 @@ defineProps<{
     records: {
         id: string;
         name: string;
-        start: string;
+        start: string | null;
         club1: Named | null;
         club2: Named | null;
         competition: Named | null;
         location: Named | null;
     }[];
 }>();
-function formatDate(value: string) {
-    return new Date(value).toLocaleString();
+function formatDate(value: string | null) {
+    return value ? new Date(value).toLocaleString() : 'Kickoff to be announced';
 }
 </script>
 <template>

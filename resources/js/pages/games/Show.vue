@@ -7,7 +7,7 @@ defineOptions({ layout: AppLayout });
 type Named = { id: string; name: string };
 const props = defineProps<{
     record: Named & {
-        start: string;
+        start: string | null;
         description: string;
         summary: string;
         score: unknown;
@@ -49,7 +49,10 @@ function remove() {
             {{ record.club2.club?.name }} {{ record.club2.name }}
         </p>
         <p class="mt-3 text-slate-600">
-            {{ new Date(record.start).toLocaleString()
+            {{
+                record.start
+                    ? new Date(record.start).toLocaleString()
+                    : 'Kickoff to be announced'
             }}<span v-if="record.location"> · {{ record.location.name }}</span
             ><span v-if="record.sport"> · {{ record.sport.name }}</span>
         </p>

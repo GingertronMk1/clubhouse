@@ -18,7 +18,7 @@ class GameRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'start' => ['required', 'date'],
+            'start' => ['nullable', 'date'],
             'description' => ['required', 'string'],
             'summary' => ['required', 'string'],
             'sport_id' => ['required', 'uuid', Rule::exists('sports', 'id')->whereNull('deleted_at')],
