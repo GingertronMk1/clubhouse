@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['name', 'value', 'sort_order'])]
@@ -24,6 +25,12 @@ class ScoringEvent extends Model
     public function sport(): BelongsTo
     {
         return $this->belongsTo(Sport::class);
+    }
+
+    /** @return HasMany<GameScoringEvent, $this> */
+    public function gameScoringEvents(): HasMany
+    {
+        return $this->hasMany(GameScoringEvent::class);
     }
 
     /** @return array<string, string> */

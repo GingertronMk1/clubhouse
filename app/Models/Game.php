@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /** @property array<array-key, mixed> $score */
@@ -49,6 +50,12 @@ class Game extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
+    }
+
+    /** @return HasMany<GameScoringEvent, $this> */
+    public function scoringEvents(): HasMany
+    {
+        return $this->hasMany(GameScoringEvent::class);
     }
 
     /** @return array<string, string> */
