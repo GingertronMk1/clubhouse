@@ -4,6 +4,8 @@ import { home, login, logout } from '@/routes';
 import { index as sports } from '@/routes/sports';
 import { index as clubs } from '@/routes/clubs';
 import { index as locations } from '@/routes/locations';
+import { index as competitions } from '@/routes/competitions';
+import { index as games } from '@/routes/games';
 import { show as profile } from '@/routes/profile';
 
 const page = usePage();
@@ -11,6 +13,8 @@ const navigation = [
     { label: 'Sports', route: sports },
     { label: 'Clubs', route: clubs },
     { label: 'Locations', route: locations },
+    { label: 'Competitions', route: competitions },
+    { label: 'Games', route: games },
 ];
 </script>
 

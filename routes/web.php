@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\ClubController;
+use App\Http\Controllers\CompetitionController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PositionController;
@@ -27,3 +29,6 @@ Route::resource('sports.positions', PositionController::class)->scoped();
 Route::resource('locations', LocationController::class);
 Route::resource('clubs', ClubController::class);
 Route::resource('clubs.teams', TeamController::class)->scoped();
+
+Route::resource('competitions', CompetitionController::class);
+Route::resource('games', GameController::class);
