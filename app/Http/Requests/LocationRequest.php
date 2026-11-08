@@ -12,6 +12,7 @@ class LocationRequest extends FormRequest
         return true;
     }
 
+    /** @return array{name: list<string>, description: list<string>, additional_information: list<string|Closure>} */
     public function rules(): array
     {
         return [

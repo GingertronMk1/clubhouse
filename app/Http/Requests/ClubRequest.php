@@ -11,6 +11,7 @@ class ClubRequest extends FormRequest
         return true;
     }
 
+    /** @return array{name: list<string>, description: list<string>} */
     public function rules(): array
     {
         return [
