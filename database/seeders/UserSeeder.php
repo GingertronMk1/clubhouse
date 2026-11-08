@@ -14,6 +14,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $superadmin = User::query()->firstOrNew(
+            [
+                'email' => 'admin@clubhouse.test',
+            ],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make(12345),
+            ],
+        );
+        $superadmin->superadmin = true;
+        $superadmin->save();
         $firstNames = ['Alice', 'Amelia', 'Benjamin', 'Charlotte', 'Daniel', 'Emily', 'Ethan', 'Grace', 'Harry', 'Isabella', 'Jack', 'James', 'Lily', 'Oliver', 'Sophie', 'Thomas'];
         $lastNames = ['Anderson', 'Baker', 'Brown', 'Clark', 'Davies', 'Evans', 'Green', 'Hall', 'Harris', 'Jones', 'King', 'Lewis', 'Martin', 'Smith', 'Taylor', 'Wilson'];
         $password = Hash::make('password');
