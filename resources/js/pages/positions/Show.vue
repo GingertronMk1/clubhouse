@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
+import PositionField from './PositionField.vue';
 import { destroy, edit, index } from '@/routes/sports/positions';
 
 defineProps<{
     sport: { id: string; name: string };
+    otherPositions: {
+        id: string;
+        name: string;
+        preview_x: number;
+        preview_y: number;
+        default_number: number;
+    }[];
     position: {
         id: string;
         name: string;
@@ -62,5 +70,18 @@ function deletePosition(sportId: string, positionId: string) {
                 </dd>
             </div>
         </dl>
+        <section class="mt-8 max-w-2xl" aria-labelledby="preview-heading">
+            <h2 id="preview-heading" class="text-xl font-semibold">
+                Field preview
+            </h2>
+            <PositionField
+                class="mt-4"
+                :position="position"
+                :other-positions="otherPositions"
+            />
+            <p class="mt-2 text-sm text-slate-600">
+                Highlighted: {{ position.name }} ({{ position.default_number }})
+            </p>
+        </section>
     </main>
 </template>

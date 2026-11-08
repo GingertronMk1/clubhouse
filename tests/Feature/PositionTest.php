@@ -79,3 +79,20 @@ test('the creation page includes positions for the field preview', function () {
         ->where('otherPositions.0.name', 'Existing')
         ->where('otherPositions.0.preview_x', 20));
 });
+
+test('the position detail page includes only the other positions in its sport', function () {
+    $this->withoutVite();
+    $sport = Sport::factory()->create();
+    $position = Position::factory()->for($sport)->create(['name' => 'Selected', 'preview_x' => 30, 'preview_y' => 40]);
+    Position::factory()->for($sport)->create(['name' => 'Other', 'preview_x' => 25, 'preview_y' => 75, 'default_number' => 7]);
+    Position::factory()->create();
+
+    $this->get(route('sports.positions.show', [$sport, $position]))->assertInertia(fn (Assert $page) => $page
+        ->component('positions/Show')
+        ->where('position.preview_x', 30)
+        ->where('position.preview_y', 40)
+        ->has('otherPositions', 1)
+        ->where('otherPositions.0.name', 'Other')
+        ->where('otherPositions.0.preview_x', 25)
+        ->where('otherPositions.0.preview_y', 75));
+});
