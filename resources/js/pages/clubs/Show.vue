@@ -4,8 +4,10 @@ import AppLayout from '@/layouts/AppLayout.vue';
 defineOptions({ layout: AppLayout });
 import { Head, Link, router } from '@inertiajs/vue3';
 import * as clubs from '@/routes/clubs';
+import { index as teamsIndex, show as teamShow } from '@/routes/clubs/teams';
 
 const props = defineProps<{
+    teams: { id: string; name: string }[];
     record: {
         id: string;
         name: string;
@@ -43,5 +45,27 @@ function remove() {
         <p class="mt-5 whitespace-pre-wrap text-slate-600">
             {{ record.description }}
         </p>
+        <section class="mt-8" aria-labelledby="teams-heading">
+            <div class="flex items-center justify-between gap-4">
+                <h2 id="teams-heading" class="text-xl font-semibold">Teams</h2>
+                <Link
+                    :href="teamsIndex.url(record.id)"
+                    class="text-sm underline"
+                    >Manage teams</Link
+                >
+            </div>
+            <p v-if="teams.length === 0" class="mt-3 text-slate-600">
+                No teams yet.
+            </p>
+            <ul v-else class="mt-4 space-y-2">
+                <li v-for="team in teams" :key="team.id">
+                    <Link
+                        :href="teamShow.url([record.id, team.id])"
+                        class="underline"
+                        >{{ team.name }}</Link
+                    >
+                </li>
+            </ul>
+        </section>
     </main>
 </template>

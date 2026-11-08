@@ -50,10 +50,34 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Setup Application
+        id: setup
         run: composer setup
 
-      - name: Run CI Checks
-        run: composer ci:check
+      - name: Check frontend formatting and lint
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: npm run check
+
+      - name: Check frontend types
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: npm run types:check
+
+      - name: Clear configuration cache
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: php artisan config:clear --ansi
+
+      - name: Check PHP formatting
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: composer lint:check
+
+      - name: Check PHP types
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: composer types:check
+
+      - name: Run tests with coverage
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 0
+        run: composer artisan-test
 
   auto-merge:
     needs: ci
