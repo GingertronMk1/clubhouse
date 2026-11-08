@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sport extends Model
@@ -17,6 +18,12 @@ class Sport extends Model
     use HasUuids, SoftDeletes;
 
     protected $fillable = ['name', 'description', 'scoring'];
+
+    /** @return HasMany<Position, $this> */
+    public function positions(): HasMany
+    {
+        return $this->hasMany(Position::class);
+    }
 
     /** @return array<string, string> */
     protected function casts(): array

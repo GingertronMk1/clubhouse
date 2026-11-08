@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\PositionRequest;
+use App\Models\Position;
+use App\Models\Sport;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class PositionController extends Controller
+{
+    public function index(Sport $sport): Response
+    {
+        return Inertia::render('positions/Index', [
+            'sport' => $sport,
+            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(),
+        ]);
+    }
+
+    public function create(Sport $sport): Response
+    {
+        return Inertia::render('positions/Form', ['sport' => $sport]);
+    }
+
+    public function store(PositionRequest $request, Sport $sport): RedirectResponse
+    {
+        $sport->positions()->create($request->validated());
+
+        return to_route('sports.positions.index', $sport);
+    }
+
+    public function edit(Sport $sport, Position $position): Response
+    {
+        return Inertia::render('positions/Form', ['sport' => $sport, 'position' => $position]);
+    }
+
+    public function update(PositionRequest $request, Sport $sport, Position $position): RedirectResponse
+    {
+        $position->update($request->validated());
+
+        return to_route('sports.positions.index', $sport);
+    }
+
+    public function destroy(Sport $sport, Position $position): RedirectResponse
+    {
+        $position->delete();
+
+        return to_route('sports.positions.index', $sport);
+    }
+}

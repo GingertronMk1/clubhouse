@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
 import { create, destroy, edit } from '@/routes/sports';
+import { index as positionsIndex } from '@/routes/sports/positions';
 
 defineProps<{
     sports: {
@@ -55,6 +56,7 @@ function deleteSport(id: string) {
                         </ul>
                     </div>
                     <div class="flex gap-3 text-sm">
+                        <Link :href="positionsIndex.url(sport.id)" class="underline">Positions</Link>
                         <Link :href="edit.url(sport.id)" class="underline"
                             >Edit</Link
                         >
