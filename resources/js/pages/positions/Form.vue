@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import NameDescriptionFields from '@/components/NameDescriptionFields.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 
 defineOptions({ layout: AppLayout });
@@ -59,37 +60,11 @@ function submit() {
             {{ position ? 'Edit position' : 'Add position' }}
         </h1>
         <form class="mt-8 space-y-6" @submit.prevent="submit">
-            <div>
-                <label for="name" class="block font-medium">Name</label>
-                <input
-                    id="name"
-                    v-model="form.name"
-                    required
-                    maxlength="255"
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
-                />
-                <p v-if="form.errors.name" class="mt-1 text-sm text-red-700">
-                    {{ form.errors.name }}
-                </p>
-            </div>
-            <div>
-                <label for="description" class="block font-medium"
-                    >Description</label
-                >
-                <textarea
-                    id="description"
-                    v-model="form.description"
-                    required
-                    rows="4"
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
-                />
-                <p
-                    v-if="form.errors.description"
-                    class="mt-1 text-sm text-red-700"
-                >
-                    {{ form.errors.description }}
-                </p>
-            </div>
+            <NameDescriptionFields
+                v-model:name="form.name"
+                v-model:description="form.description"
+                :errors="form.errors"
+            />
             <div v-for="field in numberFields" :key="field.key">
                 <label :for="field.key" class="block font-medium">{{
                     field.label
