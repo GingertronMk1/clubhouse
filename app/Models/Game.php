@@ -18,6 +18,8 @@ class Game extends Model
 
     use HasUuids, SoftDeletes;
 
+    protected $with = ['sport', 'competition', 'club1', 'club2', 'location'];
+
     /** @return BelongsTo<Sport, $this> */
     public function sport(): BelongsTo
     {

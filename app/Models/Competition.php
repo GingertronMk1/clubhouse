@@ -19,6 +19,8 @@ class Competition extends Model
 
     use HasUuids, SoftDeletes;
 
+    protected $with = ['parent', 'location'];
+
     /** @return BelongsTo<Competition, $this> */
     public function parent(): BelongsTo
     {
