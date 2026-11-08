@@ -74,7 +74,7 @@
             "@types:check",
             "@artisan-test"
         ],
-        "artisan-test": "@php artisan test --parallel --min=90",
+        "artisan-test": "@php artisan test --parallel --coverage --min=90",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
