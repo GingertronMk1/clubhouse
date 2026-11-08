@@ -30,7 +30,7 @@ class ClubController extends Controller
 
     public function show(Club $club): Response
     {
-        return Inertia::render('clubs/Show', ['record' => $club]);
+        return Inertia::render('clubs/Show', ['record' => $club, 'teams' => $club->teams()->orderBy('name')->get(['id', 'name'])]);
     }
 
     public function edit(Club $club): Response
