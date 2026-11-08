@@ -22,6 +22,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
 - Start model queries with `Model::query()` before calling query methods; do not use Laravel's static model query shortcuts (for example, use `User::query()->where(...)` instead of `User::where(...)`).
+- Use Laravel's PHP attributes for model configuration whenever the installed framework provides them, such as `#[Fillable]` and `#[Hidden]`. Use the corresponding model property or method when no framework attribute is available, such as `$with` in Laravel 13.
 - Add every `belongsTo` relationship to the model's `$with` attribute so it is eager loaded by default.
 
 ## Verification Scripts
