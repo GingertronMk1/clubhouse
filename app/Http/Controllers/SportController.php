@@ -37,7 +37,7 @@ class SportController extends Controller
     {
         return Inertia::render('sports/Show', [
             'sport' => $sport,
-            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
+            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'slug', 'name', 'preview_x', 'preview_y', 'default_number']),
         ]);
     }
 

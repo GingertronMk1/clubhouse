@@ -17,6 +17,7 @@ const props = defineProps<{
     }[];
     position?: {
         id: string;
+        slug: string;
         name: string;
         description: string;
         preview_x: number;
@@ -43,7 +44,7 @@ const numberFields = [
 ] as const;
 function submit() {
     if (props.position)
-        form.put(update.url([props.sport.slug, props.position.id]));
+        form.put(update.url([props.sport.slug, props.position.slug]));
     else form.post(store.url(props.sport.slug));
 }
 </script>

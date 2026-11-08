@@ -19,6 +19,7 @@ defineProps<{
     };
     positions: {
         id: string;
+        slug: string;
         name: string;
         preview_x: number;
         preview_y: number;
@@ -97,7 +98,9 @@ function deleteSport(id: string) {
                         <Link
                             v-for="position in positions"
                             :key="position.id"
-                            :href="positionShow.url([sport.slug, position.id])"
+                            :href="
+                                positionShow.url([sport.slug, position.slug])
+                            "
                             :style="{
                                 left: fieldCoordinate(position.preview_x),
                                 top: fieldCoordinate(position.preview_y),
@@ -125,7 +128,9 @@ function deleteSport(id: string) {
                 <ul class="mt-4 grid gap-2 text-sm sm:grid-cols-2">
                     <li v-for="position in positions" :key="position.id">
                         <Link
-                            :href="positionShow.url([sport.slug, position.id])"
+                            :href="
+                                positionShow.url([sport.slug, position.slug])
+                            "
                             class="underline"
                             >{{ position.default_number }} —
                             {{ position.name }}</Link

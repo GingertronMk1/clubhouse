@@ -8,7 +8,12 @@ import { create, show } from '@/routes/sports/positions';
 
 defineProps<{
     sport: { id: string; slug: string; name: string };
-    positions: { id: string; name: string; description: string }[];
+    positions: {
+        id: string;
+        slug: string;
+        name: string;
+        description: string;
+    }[];
 }>();
 </script>
 
@@ -37,7 +42,7 @@ defineProps<{
             >
                 <h2 class="text-xl font-semibold">
                     <Link
-                        :href="show.url([sport.slug, position.id])"
+                        :href="show.url([sport.slug, position.slug])"
                         class="underline"
                         >{{ position.name }}</Link
                     >

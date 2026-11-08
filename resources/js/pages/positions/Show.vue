@@ -17,6 +17,7 @@ defineProps<{
     }[];
     position: {
         id: string;
+        slug: string;
         name: string;
         description: string;
         preview_x: number;
@@ -41,14 +42,14 @@ function deletePosition(sportId: string, positionId: string) {
             <h1 class="text-3xl font-semibold">{{ position.name }}</h1>
             <div class="flex gap-3 text-sm">
                 <Link
-                    :href="edit.url([sport.slug, position.id])"
+                    :href="edit.url([sport.slug, position.slug])"
                     class="underline"
                     >Edit</Link
                 >
                 <button
                     type="button"
                     class="text-red-700 underline"
-                    @click="deletePosition(sport.slug, position.id)"
+                    @click="deletePosition(sport.slug, position.slug)"
                 >
                     Delete
                 </button>
