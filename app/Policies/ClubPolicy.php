@@ -13,7 +13,7 @@ class ClubPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return (bool) $user->id;
     }
 
     /**
@@ -29,7 +29,7 @@ class ClubPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return (bool) $user->id;
     }
 
     /**
