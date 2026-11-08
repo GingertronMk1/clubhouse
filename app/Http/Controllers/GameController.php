@@ -46,6 +46,11 @@ class GameController extends Controller
     public function update(GameRequest $request, Game $game): RedirectResponse
     {
         $data = $request->validated();
+        foreach (['club1_score', 'club2_score'] as $field) {
+            if ($game->{$field} !== $data[$field]) {
+                $game->setAttribute($field.'_source', null);
+            }
+        }
         $game->update($data);
 
         return to_route('games.show', $game);

@@ -6,6 +6,7 @@ use App\Models\Club;
 use App\Models\Competition;
 use App\Models\Game;
 use App\Models\Location;
+use App\Models\ScoringBreakdown;
 use App\Models\Sport;
 use App\Models\Team;
 use Illuminate\Database\Seeder;
@@ -34,6 +35,8 @@ class GameSeeder extends Seeder
 
         /** @var list<array{competition: string, key: string, division: string, home: string, away: string, start: ?string, venue: string, round: string, score: array{home: int, away: int}|array{}}> $fixtures */
         $fixtures = json_decode(File::get(database_path('seeders/data/competition-fixtures.json')), true, flags: JSON_THROW_ON_ERROR);
+
+        $breakdowns = [];
 
         foreach ($fixtures as $fixture) {
             $competition = $competitions->get($competitionNames[$fixture['competition']]);
@@ -87,6 +90,30 @@ class GameSeeder extends Seeder
 
             if ($game->result === [] && $fixture['score'] !== []) {
                 $game->update(['result' => $fixture['score']]);
+            }
+
+            if ($fixture['score'] === [] || $game->result !== $fixture['score']) {
+                continue;
+            }
+
+            $updates = [];
+            foreach (['home' => 'club1', 'away' => 'club2'] as $side => $club) {
+                $scoreField = $club.'_score';
+                if (! empty($game->{$scoreField})) {
+                    continue;
+                }
+                $total = $fixture['score'][$side];
+                $cacheKey = $sport->id.':'.$total;
+                if (! array_key_exists($cacheKey, $breakdowns)) {
+                    $breakdowns[$cacheKey] = ScoringBreakdown::infer($sport->scoring, $total);
+                }
+                if ($breakdowns[$cacheKey] !== null) {
+                    $updates[$scoreField] = $breakdowns[$cacheKey];
+                    $updates[$scoreField.'_source'] = 'inferred';
+                }
+            }
+            if ($updates !== []) {
+                $game->forceFill($updates)->save();
             }
         }
     }

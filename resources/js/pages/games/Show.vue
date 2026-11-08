@@ -11,6 +11,8 @@ const props = defineProps<{
         description: string;
         summary: string;
         result: { home?: number; away?: number } | null;
+        club1_score_source: string | null;
+        club2_score_source: string | null;
         club1_score: { name: string; value: number; count: number }[] | null;
         club2_score: { name: string; value: number; count: number }[] | null;
         sport: Named | null;
@@ -103,6 +105,13 @@ function remove() {
                             : record.club2?.name
                     }}
                 </h3>
+                <p
+                    v-if="record[`${side}_source`] === 'inferred'"
+                    class="mt-1 text-sm text-slate-600"
+                >
+                    Estimated from the final result using the fewest scoring
+                    events.
+                </p>
                 <p
                     v-if="!record[side]?.length"
                     class="mt-1 text-sm text-slate-600"
