@@ -17,7 +17,7 @@ class GameController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('games/Index', ['records' => Game::query()->with(['club1', 'club2', 'competition', 'location'])->orderBy('start')->get()]);
+        return Inertia::render('games/Index', ['records' => Game::query()->with(['team1', 'team2', 'competition', 'location'])->orderBy('start')->get()]);
     }
 
     public function create(): Response
@@ -35,7 +35,7 @@ class GameController extends Controller
 
     public function show(Game $game): Response
     {
-        return Inertia::render('games/Show', ['record' => $game->load(['sport', 'competition', 'club1.club', 'club2.club', 'location'])]);
+        return Inertia::render('games/Show', ['record' => $game->load(['sport', 'competition', 'team1.club', 'team2.club', 'location'])]);
     }
 
     public function edit(Game $game): Response

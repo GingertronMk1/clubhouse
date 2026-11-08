@@ -13,8 +13,8 @@ const props = defineProps<{
         summary: string;
         sport_id: string;
         competition_id: string;
-        club1_id: string;
-        club2_id: string;
+        team1_id: string;
+        team2_id: string;
         location_id: string;
     };
     start?: string | null;
@@ -30,8 +30,8 @@ const form = useForm({
     summary: props.record?.summary ?? '',
     sport_id: props.record?.sport_id ?? '',
     competition_id: props.record?.competition_id ?? '',
-    club1_id: props.record?.club1_id ?? '',
-    club2_id: props.record?.club2_id ?? '',
+    team1_id: props.record?.team1_id ?? '',
+    team2_id: props.record?.team2_id ?? '',
     location_id: props.record?.location_id ?? '',
 });
 function submit() {
@@ -171,11 +171,11 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="club1_id" class="block font-medium"
+                <label for="team1_id" class="block font-medium"
                     >First team</label
                 ><select
-                    id="club1_id"
-                    v-model="form.club1_id"
+                    id="team1_id"
+                    v-model="form.team1_id"
                     required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 >
@@ -189,19 +189,19 @@ function submit() {
                     </option>
                 </select>
                 <p
-                    v-if="form.errors.club1_id"
+                    v-if="form.errors.team1_id"
                     role="alert"
                     class="mt-1 text-sm text-red-700"
                 >
-                    {{ form.errors.club1_id }}
+                    {{ form.errors.team1_id }}
                 </p>
             </div>
             <div>
-                <label for="club2_id" class="block font-medium"
+                <label for="team2_id" class="block font-medium"
                     >Second team</label
                 ><select
-                    id="club2_id"
-                    v-model="form.club2_id"
+                    id="team2_id"
+                    v-model="form.team2_id"
                     required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 >
@@ -215,11 +215,11 @@ function submit() {
                     </option>
                 </select>
                 <p
-                    v-if="form.errors.club2_id"
+                    v-if="form.errors.team2_id"
                     role="alert"
                     class="mt-1 text-sm text-red-700"
                 >
-                    {{ form.errors.club2_id }}
+                    {{ form.errors.team2_id }}
                 </p>
             </div>
             <div>

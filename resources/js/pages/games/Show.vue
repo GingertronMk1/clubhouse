@@ -12,8 +12,8 @@ const props = defineProps<{
         summary: string;
         sport: Named | null;
         competition: Named | null;
-        club1: (Named & { club: Named | null }) | null;
-        club2: (Named & { club: Named | null }) | null;
+        team1: (Named & { club: Named | null }) | null;
+        team2: (Named & { club: Named | null }) | null;
         location: Named | null;
     };
 }>();
@@ -43,9 +43,9 @@ function remove() {
                 </button>
             </div>
         </div>
-        <p v-if="record.club1 && record.club2" class="mt-5 text-xl font-medium">
-            {{ record.club1.club?.name }} {{ record.club1.name }} vs
-            {{ record.club2.club?.name }} {{ record.club2.name }}
+        <p v-if="record.team1 && record.team2" class="mt-5 text-xl font-medium">
+            {{ record.team1.club?.name }} {{ record.team1.name }} vs
+            {{ record.team2.club?.name }} {{ record.team2.name }}
         </p>
         <p class="mt-3 text-slate-600">
             {{

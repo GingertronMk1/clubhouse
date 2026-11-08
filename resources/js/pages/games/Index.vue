@@ -9,8 +9,8 @@ defineProps<{
         id: string;
         name: string;
         start: string | null;
-        club1: Named | null;
-        club2: Named | null;
+        team1: Named | null;
+        team2: Named | null;
         competition: Named | null;
         location: Named | null;
     }[];
@@ -45,10 +45,10 @@ function formatDate(value: string | null) {
                     }}</Link>
                 </h2>
                 <p
-                    v-if="record.club1 && record.club2"
+                    v-if="record.team1 && record.team2"
                     class="mt-2 text-slate-700"
                 >
-                    {{ record.club1.name }} vs {{ record.club2.name }}
+                    {{ record.team1.name }} vs {{ record.team2.name }}
                 </p>
                 <p class="mt-2 text-sm text-slate-600">
                     {{ formatDate(record.start)

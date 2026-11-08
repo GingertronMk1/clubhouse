@@ -19,16 +19,18 @@ test('competition and game seeders import the fixtures and can be repeated', fun
     }
 
     $game = Game::query()->where('description', 'nfl fixture 1')->firstOrFail();
-    expect($game->club1->club->name)->toBe('Seattle Seahawks');
-    expect($game->club2->club->name)->toBe('New England Patriots');
+    expect($game->team1->name)->toBe('First team');
+    expect($game->team1->club->name)->toBe('Seattle Seahawks');
+    expect($game->team2->name)->toBe('First team');
+    expect($game->team2->club->name)->toBe('New England Patriots');
     expect($game->location->name)->toBe('Lumen Field');
     expect($game->start->format('Y-m-d H:i:s'))->toBe('2026-09-10 00:20:00');
     expect($game->score)->toBe([]);
     $game->update(['summary' => 'Custom summary', 'score' => ['home' => 2, 'away' => 1]]);
 
     $touch = Game::query()->where('description', 'touch fixture 7524')->firstOrFail();
-    expect($touch->club1->name)->toBe("Men's Open");
-    expect($touch->club2->name)->toBe("Men's Open");
+    expect($touch->team1->name)->toBe("Men's Open");
+    expect($touch->team2->name)->toBe("Men's Open");
     expect($touch->start->format('Y-m-d H:i:s'))->toBe('2024-07-16 11:20:00');
     expect(Game::query()->whereNull('start')->count())->toBe(24);
 

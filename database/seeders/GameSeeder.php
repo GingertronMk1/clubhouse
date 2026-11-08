@@ -68,15 +68,15 @@ class GameSeeder extends Seeder
                 $locations->put($fixture['venue'], $location);
             }
 
-            $game = Game::query()->without(['sport', 'competition', 'club1', 'club2', 'location'])->firstOrCreate(
+            $game = Game::query()->without(['sport', 'competition', 'team1', 'team2', 'location'])->firstOrCreate(
                 ['competition_id' => $competition->id, 'description' => "{$fixture['competition']} fixture {$fixture['key']}"],
                 [
                     'name' => "{$fixture['home']} vs {$fixture['away']}",
                     'start' => $fixture['start'],
                     'summary' => trim($fixture['division'].' — '.$fixture['round']),
                     'sport_id' => $sport->id,
-                    'club1_id' => $fixtureTeams['home']->id,
-                    'club2_id' => $fixtureTeams['away']->id,
+                    'team1_id' => $fixtureTeams['home']->id,
+                    'team2_id' => $fixtureTeams['away']->id,
                     'score' => [],
                     'location_id' => $location->id,
                 ],

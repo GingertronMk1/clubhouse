@@ -7,7 +7,7 @@ use Inertia\Testing\AssertableInertia as Assert;
 test('games can be created viewed updated and deleted', function () {
     $this->withoutVite();
     $sample = Game::factory()->create();
-    $data = ['name' => 'Final', 'start' => '2026-11-08T12:30', 'description' => 'Final match', 'summary' => 'A good game', 'sport_id' => $sample->sport_id, 'competition_id' => $sample->competition_id, 'club1_id' => $sample->club1_id, 'club2_id' => $sample->club2_id, 'location_id' => $sample->location_id, 'score' => ['home' => 2, 'away' => 1]];
+    $data = ['name' => 'Final', 'start' => '2026-11-08T12:30', 'description' => 'Final match', 'summary' => 'A good game', 'sport_id' => $sample->sport_id, 'competition_id' => $sample->competition_id, 'team1_id' => $sample->team1_id, 'team2_id' => $sample->team2_id, 'location_id' => $sample->location_id, 'score' => ['home' => 2, 'away' => 1]];
 
     $this->get(route('games.create'))->assertInertia(fn (Assert $page) => $page->component('games/Form')->has('teams', 2));
     $this->post(route('games.store'), $data)->assertRedirect();
@@ -25,9 +25,9 @@ test('games reject duplicate teams and deleted relations', function () {
     $sample = Game::factory()->create();
     $team = Team::factory()->create();
     $team->delete();
-    $data = ['name' => 'Final', 'start' => '2026-11-08T12:30', 'description' => 'Match', 'summary' => 'Summary', 'sport_id' => $sample->sport_id, 'competition_id' => $sample->competition_id, 'club1_id' => $sample->club1_id, 'club2_id' => $sample->club1_id, 'location_id' => $sample->location_id];
+    $data = ['name' => 'Final', 'start' => '2026-11-08T12:30', 'description' => 'Match', 'summary' => 'Summary', 'sport_id' => $sample->sport_id, 'competition_id' => $sample->competition_id, 'team1_id' => $sample->team1_id, 'team2_id' => $sample->team1_id, 'location_id' => $sample->location_id];
 
-    $this->post(route('games.store'), $data)->assertSessionHasErrors('club2_id');
-    $this->post(route('games.store'), [...$data, 'club2_id' => $team->id])->assertSessionHasErrors('club2_id');
+    $this->post(route('games.store'), $data)->assertSessionHasErrors('team2_id');
+    $this->post(route('games.store'), [...$data, 'team2_id' => $team->id])->assertSessionHasErrors('team2_id');
     expect(Game::query()->count())->toBe(1);
 });

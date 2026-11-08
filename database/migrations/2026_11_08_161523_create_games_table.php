@@ -20,8 +20,8 @@ return new class extends Migration
             $table->text('summary');
             $table->foreignIdFor(Sport::class)->constrained();
             $table->foreignIdFor(Competition::class)->constrained();
-            $table->foreignIdFor(Team::class, 'club1_id')->constrained('teams');
-            $table->foreignIdFor(Team::class, 'club2_id')->constrained('teams');
+            $table->foreignIdFor(Team::class, 'team1_id')->constrained('teams');
+            $table->foreignIdFor(Team::class, 'team2_id')->constrained('teams');
             $table->json('score');
             $table->foreignIdFor(Location::class)->constrained();
             $table->timestamps();
