@@ -99,10 +99,23 @@ function deleteSport(id: string) {
                                 top: fieldCoordinate(position.preview_y),
                             }"
                             :aria-label="`${position.name}, number ${position.default_number}`"
-                            :title="position.name"
-                            class="absolute flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-slate-900 text-xs font-semibold text-white shadow focus:z-10 focus:outline-2 focus:outline-offset-2 focus:outline-white"
-                            >{{ position.default_number }}</Link
+                            class="group absolute flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-slate-900 text-xs font-semibold text-white shadow hover:z-10 focus:z-10 focus:outline-2 focus:outline-offset-2 focus:outline-white"
                         >
+                            {{ position.default_number }}
+                            <span
+                                aria-hidden="true"
+                                :class="[
+                                    position.preview_x > 50
+                                        ? 'right-0'
+                                        : 'left-0',
+                                    position.preview_y < 20
+                                        ? 'top-full mt-2'
+                                        : 'bottom-full mb-2',
+                                ]"
+                                class="pointer-events-none absolute hidden w-max max-w-48 rounded bg-slate-900 px-2 py-1 text-left text-xs font-medium text-white shadow group-hover:block group-focus:block"
+                                >{{ position.name }}</span
+                            >
+                        </Link>
                     </div>
                 </div>
                 <ul class="mt-4 grid gap-2 text-sm sm:grid-cols-2">
