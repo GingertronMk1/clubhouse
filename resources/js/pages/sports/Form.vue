@@ -12,14 +12,18 @@ const props = defineProps<{
         slug: string;
         name: string;
         description: string;
-        scoring: { name: string; value: number }[];
+        scoring: { id: string; name: string; value: number }[];
     };
 }>();
 const form = useForm({
     name: props.sport?.name ?? '',
     description: props.sport?.description ?? '',
     scoring:
-        props.sport?.scoring.map(({ name, value }) => ({ name, value })) ?? [],
+        props.sport?.scoring.map(({ id, name, value }) => ({
+            id: id as string | null,
+            name,
+            value,
+        })) ?? [],
 });
 function submit() {
     if (props.sport) form.put(update.url(props.sport.slug));
@@ -132,7 +136,7 @@ function submit() {
                 <button
                     type="button"
                     class="text-sm underline"
-                    @click="form.scoring.push({ name: '', value: 0 })"
+                    @click="form.scoring.push({ id: null, name: '', value: 0 })"
                 >
                     Add scoring entry
                 </button>
