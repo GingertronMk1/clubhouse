@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import AppLayout from '@/layouts/AppLayout.vue';
+
+defineOptions({ layout: AppLayout });
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { index, store, update } from '@/routes/sports';
 
