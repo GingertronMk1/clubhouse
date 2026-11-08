@@ -21,41 +21,36 @@ function remove() {
 </script>
 
 <template>
-    <div
-        class="min-h-screen bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100"
-    >
+    <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="record.name" />
-        <main class="mx-auto max-w-2xl px-6 py-12">
-            <Link :href="routes.index()" class="text-sm underline"
-                >Back to locations</Link
-            >
-            <h1 class="mt-6 text-3xl font-semibold">{{ record.name }}</h1>
-            <p
-                class="mt-4 whitespace-pre-wrap text-stone-700 dark:text-stone-300"
-            >
-                {{ record.description }}
-            </p>
-            <section class="mt-8">
-                <h2 class="font-semibold">Additional information</h2>
-                <pre
-                    class="mt-2 overflow-auto rounded bg-stone-100 p-4 text-sm dark:bg-stone-900"
-                    >{{
-                        JSON.stringify(record.additional_information, null, 2)
-                    }}</pre>
-            </section>
-            <div class="mt-8 flex gap-4">
-                <Link
-                    :href="routes.edit(record.id)"
-                    class="rounded bg-stone-900 px-4 py-2 text-white dark:bg-stone-100 dark:text-stone-900"
+        <Link :href="routes.index()" class="text-sm underline"
+            >Back to locations</Link
+        >
+        <div class="mt-5 flex items-start justify-between gap-4">
+            <h1 class="text-3xl font-semibold">{{ record.name }}</h1>
+            <div class="flex gap-3 text-sm">
+                <Link :href="routes.edit(record.id)" class="underline"
                     >Edit</Link
-                ><button
+                >
+                <button
                     type="button"
-                    class="rounded border border-red-600 px-4 py-2 text-red-700 dark:text-red-400"
+                    class="text-red-700 underline"
                     @click="remove"
                 >
                     Delete
                 </button>
             </div>
-        </main>
-    </div>
+        </div>
+        <p class="mt-5 whitespace-pre-wrap text-slate-600">
+            {{ record.description }}
+        </p>
+        <section class="mt-6">
+            <h2 class="text-xl font-semibold">Additional information</h2>
+            <pre
+                class="mt-2 overflow-auto rounded border border-slate-200 p-4 text-sm text-slate-700"
+                >{{
+                    JSON.stringify(record.additional_information, null, 2)
+                }}</pre>
+        </section>
+    </main>
 </template>
