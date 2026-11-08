@@ -12,7 +12,7 @@ test('competitions can be created viewed updated and deleted', function () {
 
     $this->get(route('competitions.create'))->assertInertia(fn (Assert $page) => $page->component('competitions/Form')->has('locations')->has('competitions'));
     $this->post(route('competitions.store'), $data)->assertRedirect();
-    $competition = Competition::where('name', 'Cup')->firstOrFail();
+    $competition = Competition::query()->where('name', 'Cup')->firstOrFail();
     $this->get(route('competitions.index'))->assertInertia(fn (Assert $page) => $page->component('competitions/Index')->has('records', 2));
     $this->get(route('competitions.show', $competition))->assertInertia(fn (Assert $page) => $page->component('competitions/Show')->where('record.parent.id', $parent->id));
     $this->get(route('competitions.edit', $competition))->assertInertia(fn (Assert $page) => $page->component('competitions/Form')->where('record.id', $competition->id));

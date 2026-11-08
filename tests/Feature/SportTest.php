@@ -13,7 +13,7 @@ test('sports and their scoring can be created, viewed, updated and deleted', fun
         'scoring' => [['name' => 'Try', 'value' => 5]],
     ])->assertRedirect(route('sports.index'));
 
-    $sport = Sport::firstOrFail();
+    $sport = Sport::query()->firstOrFail();
     expect($sport->scoring->sole())->toBeInstanceOf(Scoring::class)
         ->and($sport->scoring->sole()->value)->toBe(5);
     $this->get(route('sports.index'))->assertInertia(fn (Assert $page) => $page
@@ -38,7 +38,7 @@ test('sport scoring entries are validated', function () {
         'name' => '', 'description' => '',
         'scoring' => [['name' => '', 'value' => 'invalid']],
     ])->assertSessionHasErrors(['name', 'description', 'scoring.0.name', 'scoring.0.value']);
-    expect(Sport::count())->toBe(0);
+    expect(Sport::query()->count())->toBe(0);
 });
 
 test('the sport creation page displays an empty form', function () {
@@ -52,17 +52,17 @@ test('sport fixtures include scoring and can be seeded repeatedly', function () 
     $this->seed(SportSeeder::class);
     $this->seed(SportSeeder::class);
 
-    expect(Sport::count())->toBe(4);
-    expect(Sport::orderBy('name')->pluck('name')->all())->toBe([
+    expect(Sport::query()->count())->toBe(4);
+    expect(Sport::query()->orderBy('name')->pluck('name')->all())->toBe([
         'American Football', 'Rugby League', 'Rugby Union', 'Touch Rugby',
     ]);
-    expect(Sport::where('name', 'Rugby League')->firstOrFail()->scoring->first()->toArray())
+    expect(Sport::query()->where('name', 'Rugby League')->firstOrFail()->scoring->first()->toArray())
         ->toBe(['name' => 'Try', 'value' => 4]);
-    expect(Sport::where('name', 'Rugby Union')->firstOrFail()->scoring->first()->toArray())
+    expect(Sport::query()->where('name', 'Rugby Union')->firstOrFail()->scoring->first()->toArray())
         ->toBe(['name' => 'Try', 'value' => 5]);
-    expect(Sport::where('name', 'Touch Rugby')->firstOrFail()->scoring->first()->toArray())
+    expect(Sport::query()->where('name', 'Touch Rugby')->firstOrFail()->scoring->first()->toArray())
         ->toBe(['name' => 'Touchdown', 'value' => 1]);
-    expect(Sport::where('name', 'American Football')->firstOrFail()->scoring->first()->toArray())
+    expect(Sport::query()->where('name', 'American Football')->firstOrFail()->scoring->first()->toArray())
         ->toBe(['name' => 'Touchdown', 'value' => 6]);
 });
 

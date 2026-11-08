@@ -13,7 +13,7 @@ class SportController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('sports/Index', ['sports' => Sport::orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Sport $sport) => [
+        return Inertia::render('sports/Index', ['sports' => Sport::query()->orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Sport $sport) => [
             'id' => $sport->id,
             'slug' => $sport->slug,
             'name' => $sport->name,
@@ -28,7 +28,7 @@ class SportController extends Controller
 
     public function store(SportRequest $request): RedirectResponse
     {
-        Sport::create($request->validated());
+        Sport::query()->create($request->validated());
 
         return to_route('sports.index');
     }

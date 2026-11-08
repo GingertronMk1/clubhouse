@@ -17,7 +17,7 @@ class GameController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('games/Index', ['records' => Game::with(['club1', 'club2', 'competition', 'location'])->orderBy('start')->get()]);
+        return Inertia::render('games/Index', ['records' => Game::query()->with(['club1', 'club2', 'competition', 'location'])->orderBy('start')->get()]);
     }
 
     public function create(): Response
@@ -30,7 +30,7 @@ class GameController extends Controller
         $data = $request->validated();
         $data['score'] = json_decode($data['score'], true);
 
-        return to_route('games.show', Game::create($data));
+        return to_route('games.show', Game::query()->create($data));
     }
 
     public function show(Game $game): Response
@@ -63,10 +63,10 @@ class GameController extends Controller
     private function formOptions(): array
     {
         return [
-            'sports' => Sport::orderBy('name')->get(['id', 'name']),
-            'competitions' => Competition::orderBy('name')->get(['id', 'name']),
-            'teams' => Team::with('club:id,name')->orderBy('name')->get(['id', 'name', 'club_id']),
-            'locations' => Location::orderBy('name')->get(['id', 'name']),
+            'sports' => Sport::query()->orderBy('name')->get(['id', 'name']),
+            'competitions' => Competition::query()->orderBy('name')->get(['id', 'name']),
+            'teams' => Team::query()->with('club:id,name')->orderBy('name')->get(['id', 'name', 'club_id']),
+            'locations' => Location::query()->orderBy('name')->get(['id', 'name']),
         ];
     }
 }

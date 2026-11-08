@@ -25,6 +25,6 @@ test('team seeding adds the four teams to each club and can be repeated', functi
 test('the default database seeder adds teams to every club', function () {
     $this->seed();
 
-    expect(Club::count())->toBeGreaterThan(0);
-    expect(Club::has('teams', '!=', 4)->count())->toBe(0);
+    expect(Club::query()->count())->toBeGreaterThan(0);
+    expect(Club::query()->has('teams', '!=', 4)->count())->toBe(0);
 });

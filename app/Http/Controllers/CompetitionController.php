@@ -13,7 +13,7 @@ class CompetitionController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('competitions/Index', ['records' => Competition::with('location')->orderBy('name')->get()]);
+        return Inertia::render('competitions/Index', ['records' => Competition::query()->with('location')->orderBy('name')->get()]);
     }
 
     public function create(): Response
@@ -23,7 +23,7 @@ class CompetitionController extends Controller
 
     public function store(CompetitionRequest $request): RedirectResponse
     {
-        return to_route('competitions.show', Competition::create($request->validated()));
+        return to_route('competitions.show', Competition::query()->create($request->validated()));
     }
 
     public function show(Competition $competition): Response
@@ -54,8 +54,8 @@ class CompetitionController extends Controller
     private function formOptions(): array
     {
         return [
-            'locations' => Location::orderBy('name')->get(['id', 'name']),
-            'competitions' => Competition::orderBy('name')->get(['id', 'name']),
+            'locations' => Location::query()->orderBy('name')->get(['id', 'name']),
+            'competitions' => Competition::query()->orderBy('name')->get(['id', 'name']),
         ];
     }
 }

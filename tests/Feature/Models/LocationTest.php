@@ -10,7 +10,7 @@ test('locations persist their details and additional information', function () {
         'additional_information' => ['facilities' => ['parking', 'showers']],
     ]);
 
-    $savedLocation = Location::findOrFail($location->id);
+    $savedLocation = Location::query()->findOrFail($location->id);
 
     expect(Str::isUuid($location->id, version: 7))->toBeTrue();
     expect($savedLocation->name)->toBe('Main Ground');
@@ -24,10 +24,10 @@ test('deleted locations are retained and can be restored', function () {
     $location->delete();
 
     $this->assertSoftDeleted($location);
-    expect(Location::find($location->id))->toBeNull();
+    expect(Location::query()->find($location->id))->toBeNull();
 
     $location->restore();
 
     $this->assertNotSoftDeleted($location);
-    expect(Location::findOrFail($location->id)->trashed())->toBeFalse();
+    expect(Location::query()->findOrFail($location->id)->trashed())->toBeFalse();
 });

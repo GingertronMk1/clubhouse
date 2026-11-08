@@ -11,7 +11,7 @@ test('games can be created viewed updated and deleted', function () {
 
     $this->get(route('games.create'))->assertInertia(fn (Assert $page) => $page->component('games/Form')->has('teams', 2));
     $this->post(route('games.store'), $data)->assertRedirect();
-    $game = Game::where('name', 'Final')->firstOrFail();
+    $game = Game::query()->where('name', 'Final')->firstOrFail();
     $this->get(route('games.index'))->assertInertia(fn (Assert $page) => $page->component('games/Index')->has('records', 2));
     $this->get(route('games.show', $game))->assertInertia(fn (Assert $page) => $page->component('games/Show')->where('record.score.home', 2));
     $this->get(route('games.edit', $game))->assertInertia(fn (Assert $page) => $page->component('games/Form')->where('start', '2026-11-08T12:30:00'));
@@ -29,5 +29,5 @@ test('games reject duplicate teams invalid scores and deleted relations', functi
 
     $this->post(route('games.store'), $data)->assertSessionHasErrors(['club2_id', 'score']);
     $this->post(route('games.store'), [...$data, 'club2_id' => $team->id, 'score' => '{}'])->assertSessionHasErrors('club2_id');
-    expect(Game::count())->toBe(1);
+    expect(Game::query()->count())->toBe(1);
 });
