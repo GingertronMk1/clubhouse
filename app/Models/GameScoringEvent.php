@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['game_id', 'scoring_event_id', 'timestamp'])]
+#[Fillable(['game_id', 'scoring_event_id', 'team_id', 'timestamp'])]
 class GameScoringEvent extends Model
 {
     /** @use HasFactory<GameScoringEventFactory> */
@@ -18,7 +18,7 @@ class GameScoringEvent extends Model
 
     use HasUuids, SoftDeletes;
 
-    protected $with = ['game', 'scoringEvent'];
+    protected $with = ['game', 'scoringEvent', 'team'];
 
     /** @return BelongsTo<Game, $this> */
     public function game(): BelongsTo
@@ -29,7 +29,13 @@ class GameScoringEvent extends Model
     /** @return BelongsTo<ScoringEvent, $this> */
     public function scoringEvent(): BelongsTo
     {
-        return $this->belongsTo(ScoringEvent::class);
+        return $this->belongsTo(ScoringEvent::class)->withTrashed();
+    }
+
+    /** @return BelongsTo<Team, $this> */
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class)->withTrashed();
     }
 
     /** @return array<string, string> */

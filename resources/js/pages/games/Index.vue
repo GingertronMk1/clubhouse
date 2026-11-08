@@ -4,13 +4,15 @@ import { Head, Link } from '@inertiajs/vue3';
 import * as routes from '@/routes/games';
 defineOptions({ layout: AppLayout });
 type Named = { name: string };
+type Team = Named & { club: Named | null };
 defineProps<{
     records: {
         id: string;
         name: string;
         start: string | null;
-        club1: Named | null;
-        club2: Named | null;
+        score_totals: { club1: number; club2: number } | null;
+        club1: Team | null;
+        club2: Team | null;
         competition: Named | null;
         location: Named | null;
     }[];
@@ -48,7 +50,12 @@ function formatDate(value: string | null) {
                     v-if="record.club1 && record.club2"
                     class="mt-2 text-slate-700"
                 >
-                    {{ record.club1.name }} vs {{ record.club2.name }}
+                    {{ record.club1.club?.name }} {{ record.club1.name }} vs
+                    {{ record.club2.club?.name }} {{ record.club2.name }}
+                </p>
+                <p v-if="record.score_totals" class="mt-2 font-semibold">
+                    {{ record.score_totals.club1 }} –
+                    {{ record.score_totals.club2 }}
                 </p>
                 <p class="mt-2 text-sm text-slate-600">
                     {{ formatDate(record.start)
