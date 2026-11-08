@@ -2,22 +2,21 @@
 
 namespace App\Models\Concerns;
 
+use Illuminate\Database\Eloquent\Attributes\Boot;
+use Illuminate\Database\Eloquent\Attributes\RouteKey;
 use Illuminate\Support\Str;
 
+#[RouteKey('slug')]
 trait HasSlug
 {
-    protected static function bootHasSlug(): void
+    #[Boot]
+    protected static function bootSlug(): void
     {
         static::saving(function (self $model): void {
             if ($model->isDirty('name') || ! $model->exists) {
                 $model->slug = $model->generateSlug();
             }
         });
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
     }
 
     /** @return array<string, mixed> */
