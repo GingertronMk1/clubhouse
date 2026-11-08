@@ -3,6 +3,8 @@
 use App\Models\Club;
 use App\Models\Sport;
 use App\Models\Team;
+use App\Models\User;
+use App\Permission;
 
 it('generates a slug from the name and updates it when the name changes', function (string $modelClass) {
     $model = $modelClass::factory()->create(['name' => 'Rugby Union']);
@@ -58,6 +60,9 @@ it('binds slug routes to the correct records', function () {
     $team = Team::factory()->for($club)->create(['name' => 'First Team']);
     $otherTeam = Team::factory()->for($otherClub)->create(['name' => 'First Team']);
     $secondTeam = Team::factory()->for($club)->create(['name' => 'First Team']);
+    $user = User::factory()->create();
+    $user->clubs()->attach($club, ['permissions' => [Permission::View->value]]);
+    $this->actingAs($user);
 
     expect(route('sports.show', $sport))->toEndWith('/sports/rugby-union')
         ->and(route('clubs.show', $club))->toEndWith('/clubs/town-club')

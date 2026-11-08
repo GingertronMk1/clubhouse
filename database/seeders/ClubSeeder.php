@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Club;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class ClubSeeder extends Seeder
@@ -53,9 +54,30 @@ class ClubSeeder extends Seeder
             ],
         ];
 
+        $users = User::query()->orderBy('email')->pluck('id');
+        $userIndex = 0;
+
         foreach ($competitions as $description => $clubs) {
             foreach ($clubs as $name) {
-                Club::withTrashed()->firstOrCreate(['name' => $name], ['description' => $description]);
+                $club = Club::withTrashed()->firstOrCreate(['name' => $name], ['description' => $description]);
+
+                if ($users->isEmpty()) {
+                    continue;
+                }
+
+                $existingUserIds = $club->users()->pluck('users.id');
+                $assignments = [];
+
+                for ($i = 0; $i < min(25, $users->count()); $i++) {
+                    $userId = $users[$userIndex % $users->count()];
+                    $userIndex++;
+
+                    if (! $existingUserIds->contains($userId)) {
+                        $assignments[$userId] = ['permissions' => []];
+                    }
+                }
+
+                $club->users()->attach($assignments);
             }
         }
     }

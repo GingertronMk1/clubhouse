@@ -2,11 +2,16 @@
 
 use App\Models\Club;
 use App\Models\Team;
+use App\Models\User;
+use App\Permission;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('teams can be created, listed, viewed, updated and deleted for a club', function () {
     $this->withoutVite();
     $club = Club::factory()->create();
+    $user = User::factory()->create();
+    $user->clubs()->attach($club, ['permissions' => [Permission::View->value]]);
+    $this->actingAs($user);
     Team::factory()->for($club)->create(['name' => 'Zebras']);
     Team::factory()->create(['name' => 'Other club']);
     $data = ['name' => 'Athletics', 'description' => 'First team'];

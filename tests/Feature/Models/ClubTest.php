@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Club;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 test('clubs persist their details', function () {
@@ -28,4 +29,18 @@ test('deleted clubs are retained and can be restored', function () {
 
     $this->assertNotSoftDeleted($club);
     expect(Club::findOrFail($club->id)->trashed())->toBeFalse();
+});
+
+test('club memberships store permissions and are accessible from both sides', function () {
+    $club = Club::factory()->create();
+    $user = User::factory()->create();
+
+    $club->users()->attach($user, ['permissions' => ['manage-team', 'view-members']]);
+
+    expect($club->users()->firstOrFail()->pivot->permissions)->toBe(['manage-team', 'view-members']);
+    expect($user->clubs()->firstOrFail()->pivot->permissions)->toBe(['manage-team', 'view-members']);
+
+    $user->clubs()->updateExistingPivot($club, ['permissions' => ['view-members']]);
+
+    expect($club->users()->firstOrFail()->pivot->permissions)->toBe(['view-members']);
 });
