@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Permission;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -38,6 +39,30 @@ class User extends Authenticatable
     public function clubs(): BelongsToMany
     {
         return $this->belongsToMany(Club::class)->using(ClubUser::class)->withPivot('permissions')->withTimestamps();
+    }
+
+    /** @param Permission|array<Permission> $permissions */
+    public function hasClubPermission(Club $club, Permission|array $permissions): bool
+    {
+        $permissions = is_array($permissions) ? $permissions : [$permissions];
+
+        if ($permissions === []) {
+            return false;
+        }
+
+        $membership = $this->clubs()->whereKey($club->getKey())->first()?->pivot;
+
+        if (! $membership instanceof ClubUser || ! is_array($membership->permissions)) {
+            return false;
+        }
+
+        foreach ($permissions as $permission) {
+            if (! in_array($permission->value, $membership->permissions, true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

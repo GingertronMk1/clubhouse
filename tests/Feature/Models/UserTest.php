@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Club;
 use App\Models\User;
+use App\Permission;
 use Illuminate\Support\Str;
 
 test('users are persisted with UUIDv7 identifiers', function () {
@@ -22,4 +24,24 @@ test('deleted users are retained and can be restored', function () {
 
     expect(User::findOrFail($user->id)->trashed())->toBeFalse();
     $this->assertNotSoftDeleted($user);
+});
+
+test('club permissions require every requested permission for the specified club', function () {
+    $user = User::factory()->create();
+    $club = Club::factory()->create();
+    $otherClub = Club::factory()->create();
+    $user->clubs()->attach($club, ['permissions' => [Permission::View->value, Permission::Update->value]]);
+    $user->clubs()->attach($otherClub, ['permissions' => [Permission::Delete->value]]);
+
+    expect($user->hasClubPermission($club, Permission::View))->toBeTrue();
+    expect($user->hasClubPermission($club, Permission::Delete))->toBeFalse();
+    expect($user->hasClubPermission($club, [Permission::View, Permission::Update]))->toBeTrue();
+    expect($user->hasClubPermission($club, [Permission::View, Permission::Delete]))->toBeFalse();
+    expect($user->hasClubPermission($otherClub, Permission::View))->toBeFalse();
+    expect($user->hasClubPermission(Club::factory()->create(), Permission::View))->toBeFalse();
+    expect($user->hasClubPermission($club, []))->toBeFalse();
+
+    $club->delete();
+
+    expect($user->hasClubPermission($club, Permission::View))->toBeFalse();
 });
