@@ -6,6 +6,7 @@ use App\Http\Requests\PositionRequest;
 use App\Models\Position;
 use App\Models\Sport;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,7 +16,11 @@ class PositionController extends Controller
     {
         return Inertia::render('positions/Index', [
             'sport' => $sport,
-            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(),
+            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'description'])->map(fn (Position $position) => [
+                'id' => $position->id,
+                'name' => $position->name,
+                'description' => Str::limit($position->description, 160),
+            ]),
         ]);
     }
 
@@ -29,6 +34,11 @@ class PositionController extends Controller
         $sport->positions()->create($request->validated());
 
         return to_route('sports.positions.index', $sport);
+    }
+
+    public function show(Sport $sport, Position $position): Response
+    {
+        return Inertia::render('positions/Show', ['sport' => $sport, 'position' => $position]);
     }
 
     public function edit(Sport $sport, Position $position): Response

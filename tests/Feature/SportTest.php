@@ -16,7 +16,9 @@ test('sports and their scoring can be created, viewed, updated and deleted', fun
     expect($sport->scoring->sole())->toBeInstanceOf(Scoring::class)
         ->and($sport->scoring->sole()->value)->toBe(5);
     $this->get(route('sports.index'))->assertInertia(fn (Assert $page) => $page
-        ->component('sports/Index')->where('sports.0.name', 'Rugby')->where('sports.0.scoring.0.name', 'Try'));
+        ->component('sports/Index')->where('sports.0.name', 'Rugby')->missing('sports.0.scoring'));
+    $this->get(route('sports.show', $sport))->assertInertia(fn (Assert $page) => $page
+        ->component('sports/Show')->where('sport.name', 'Rugby')->where('sport.scoring.0.name', 'Try'));
     $this->get(route('sports.edit', $sport))->assertInertia(fn (Assert $page) => $page
         ->component('sports/Form')->where('sport.name', 'Rugby'));
 
@@ -61,4 +63,12 @@ test('sport fixtures include scoring and can be seeded repeatedly', function () 
         ->toBe(['name' => 'Touchdown', 'value' => 1]);
     expect(Sport::where('name', 'American Football')->firstOrFail()->scoring->first()->toArray())
         ->toBe(['name' => 'Touchdown', 'value' => 6]);
+});
+
+test('the sports index shows a shortened description', function () {
+    $this->withoutVite();
+    Sport::factory()->create(['description' => str_repeat('A', 170)]);
+
+    $this->get(route('sports.index'))->assertInertia(fn (Assert $page) => $page
+        ->where('sports.0.description', str_repeat('A', 160).'...'));
 });

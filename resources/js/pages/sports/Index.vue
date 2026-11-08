@@ -1,20 +1,8 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
-import { create, destroy, edit } from '@/routes/sports';
-import { index as positionsIndex } from '@/routes/sports/positions';
+import { Head, Link } from '@inertiajs/vue3';
+import { create, show } from '@/routes/sports';
 
-defineProps<{
-    sports: {
-        id: string;
-        name: string;
-        description: string;
-        scoring: { name: string; value: number }[];
-    }[];
-}>();
-
-function deleteSport(id: string) {
-    if (window.confirm('Delete this sport?')) router.delete(destroy.url(id));
-}
+defineProps<{ sports: { id: string; name: string; description: string }[] }>();
 </script>
 
 <template>
@@ -37,42 +25,14 @@ function deleteSport(id: string) {
                 :key="sport.id"
                 class="rounded-lg border border-slate-200 p-5"
             >
-                <div class="flex items-start justify-between gap-4">
-                    <div>
-                        <h2 class="text-xl font-semibold">{{ sport.name }}</h2>
-                        <p class="mt-2 whitespace-pre-wrap text-slate-600">
-                            {{ sport.description }}
-                        </p>
-                        <ul
-                            v-if="sport.scoring.length"
-                            class="mt-3 text-sm text-slate-700"
-                        >
-                            <li
-                                v-for="(score, index) in sport.scoring"
-                                :key="index"
-                            >
-                                {{ score.name }}: {{ score.value }}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="flex gap-3 text-sm">
-                        <Link
-                            :href="positionsIndex.url(sport.id)"
-                            class="underline"
-                            >Positions</Link
-                        >
-                        <Link :href="edit.url(sport.id)" class="underline"
-                            >Edit</Link
-                        >
-                        <button
-                            type="button"
-                            class="text-red-700 underline"
-                            @click="deleteSport(sport.id)"
-                        >
-                            Delete
-                        </button>
-                    </div>
-                </div>
+                <h2 class="text-xl font-semibold">
+                    <Link :href="show.url(sport.id)" class="underline">{{
+                        sport.name
+                    }}</Link>
+                </h2>
+                <p class="mt-2 whitespace-pre-wrap text-slate-600">
+                    {{ sport.description }}
+                </p>
             </li>
         </ul>
     </main>
