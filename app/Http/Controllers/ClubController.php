@@ -28,7 +28,7 @@ class ClubController extends Controller
     public function store(ClubRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $club = Club::create($data);
+        $club = Club::query()->create($data);
 
         return redirect()->route('clubs.show', $club);
     }

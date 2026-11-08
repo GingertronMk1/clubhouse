@@ -16,7 +16,7 @@ test('clubs can be listed, viewed, created, updated and deleted', function () {
     $this->get(route('clubs.show', $club))->assertOk()->assertInertia(fn (Assert $page) => $page->component('clubs/Show')->where('record.id', $club->id));
     $this->get(route('clubs.edit', $club))->assertOk()->assertInertia(fn (Assert $page) => $page->component('clubs/Form')->where('record.id', $club->id));
     $this->post(route('clubs.store'), ['name' => 'Town', 'description' => 'Local club'])->assertRedirect();
-    $created = Club::where('name', 'Town')->firstOrFail();
+    $created = Club::query()->where('name', 'Town')->firstOrFail();
     $this->put(route('clubs.update', $created), ['name' => 'City', 'description' => 'New description'])->assertRedirect(route('clubs.show', $created->refresh()));
     expect($created->fresh()->name)->toBe('City');
     expect($created->fresh()->description)->toBe('New description');
@@ -30,7 +30,7 @@ test('club details must be valid', function () {
     Gate::before(fn (User $candidate) => $candidate->is($user) ? true : null);
     $this->post(route('clubs.store'), [])->assertSessionHasErrors(['name', 'description']);
     $this->post(route('clubs.store'), ['name' => str_repeat('a', 256), 'description' => 'Club'])->assertSessionHasErrors(['name']);
-    expect(Club::count())->toBe(0);
+    expect(Club::query()->count())->toBe(0);
 });
 
 test('club routes enforce the policy for guests and users without permissions', function () {
@@ -52,7 +52,7 @@ test('club routes enforce the policy for guests and users without permissions', 
 
     expect($club->fresh()->name)->toBe($club->name);
     $this->assertNotSoftDeleted($club);
-    expect(Club::count())->toBe(1);
+    expect(Club::query()->count())->toBe(1);
 });
 
 test('authenticated users can create a club', function () {

@@ -11,7 +11,7 @@ test('locations can be listed, viewed, created, updated and deleted', function (
     $this->get(route('locations.edit', $location))->assertOk()->assertInertia(fn (Assert $page) => $page->component('locations/Form')->where('record.id', $location->id));
 
     $this->post(route('locations.store'), ['name' => 'Ground', 'description' => 'A field', 'additional_information' => '{"parking":true}'])->assertRedirect();
-    $created = Location::where('name', 'Ground')->firstOrFail();
+    $created = Location::query()->where('name', 'Ground')->firstOrFail();
     expect($created->additional_information)->toBe(['parking' => true]);
     $this->put(route('locations.update', $created), ['name' => 'New Ground', 'description' => 'A pitch', 'additional_information' => '{"parking":false}'])->assertRedirect(route('locations.show', $created));
     expect($created->fresh()->additional_information)->toBe(['parking' => false]);
@@ -24,5 +24,5 @@ test('location details must be valid', function () {
     $this->post(route('locations.store'), [])->assertSessionHasErrors(['name', 'description', 'additional_information']);
     $this->post(route('locations.store'), ['name' => str_repeat('a', 256), 'description' => 'A field', 'additional_information' => 'invalid'])->assertSessionHasErrors(['name', 'additional_information']);
     $this->post(route('locations.store'), ['name' => 'Ground', 'description' => 'A field', 'additional_information' => 'null'])->assertSessionHasErrors(['additional_information']);
-    expect(Location::count())->toBe(0);
+    expect(Location::query()->count())->toBe(0);
 });

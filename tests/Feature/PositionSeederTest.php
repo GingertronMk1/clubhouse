@@ -26,8 +26,8 @@ test('position seeder populates each sport and can be run repeatedly', function 
             ->and($positions->pluck('sort_order')->all())->toBe(range(1, $count));
     }
 
-    expect(Sport::where('name', 'Rugby Union')->firstOrFail()->positions()->where('name', 'Fullback')->firstOrFail()->default_number)->toBe(15);
-    expect(Sport::where('name', 'Rugby League')->firstOrFail()->positions()->where('name', 'Loose Forward')->firstOrFail()->default_number)->toBe(13);
+    expect(Sport::query()->where('name', 'Rugby Union')->firstOrFail()->positions()->where('name', 'Fullback')->firstOrFail()->default_number)->toBe(15);
+    expect(Sport::query()->where('name', 'Rugby League')->firstOrFail()->positions()->where('name', 'Loose Forward')->firstOrFail()->default_number)->toBe(13);
 });
 
 test('the default database seeder includes sport positions', function () {

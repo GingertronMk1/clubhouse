@@ -25,7 +25,7 @@ class LocationController extends Controller
         $data = $request->validated();
         $data['additional_information'] = json_decode($data['additional_information'], true);
 
-        $location = Location::create($data);
+        $location = Location::query()->create($data);
 
         return redirect()->route('locations.show', $location);
     }

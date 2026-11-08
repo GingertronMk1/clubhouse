@@ -19,6 +19,8 @@ class Position extends Model
 
     use HasSlug, HasUuids, SoftDeletes;
 
+    protected $with = ['sport'];
+
     /** @return array<string, mixed> */
     protected function slugUniqueScope(): array
     {

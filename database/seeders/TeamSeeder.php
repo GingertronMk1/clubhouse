@@ -11,7 +11,7 @@ class TeamSeeder extends Seeder
     {
         $teamNames = ['First team', 'Second team', 'Third team', 'Social team'];
 
-        foreach (Club::cursor() as $club) {
+        foreach (Club::query()->cursor() as $club) {
             foreach ($teamNames as $name) {
                 $club->teams()->withTrashed()->firstOrCreate(
                     ['name' => $name],

@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
             foreach ($lastNames as $lastName) {
                 $email = Str::lower("{$firstName}.{$lastName}@clubhouse.test");
 
-                User::withTrashed()->firstOrCreate(['email' => $email], [
+                User::query()->withTrashed()->firstOrCreate(['email' => $email], [
                     'name' => "{$firstName} {$lastName}",
                     'password' => $password,
                     'email_verified_at' => now(),

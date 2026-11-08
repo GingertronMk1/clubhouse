@@ -10,7 +10,7 @@ test('clubs persist their details', function () {
         'description' => 'A local club.',
     ]);
 
-    $savedClub = Club::findOrFail($club->id);
+    $savedClub = Club::query()->findOrFail($club->id);
 
     expect(Str::isUuid($club->id, version: 7))->toBeTrue();
     expect($savedClub->name)->toBe('Town Club');
@@ -23,12 +23,12 @@ test('deleted clubs are retained and can be restored', function () {
     $club->delete();
 
     $this->assertSoftDeleted($club);
-    expect(Club::find($club->id))->toBeNull();
+    expect(Club::query()->find($club->id))->toBeNull();
 
     $club->restore();
 
     $this->assertNotSoftDeleted($club);
-    expect(Club::findOrFail($club->id)->trashed())->toBeFalse();
+    expect(Club::query()->findOrFail($club->id)->trashed())->toBeFalse();
 });
 
 test('club memberships store permissions and are accessible from both sides', function () {

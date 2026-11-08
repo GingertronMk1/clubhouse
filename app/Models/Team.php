@@ -19,6 +19,8 @@ class Team extends Model
 
     use HasSlug, HasUuids, SoftDeletes;
 
+    protected $with = ['club'];
+
     /** @return array<string, mixed> */
     protected function slugUniqueScope(): array
     {

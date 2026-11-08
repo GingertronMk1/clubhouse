@@ -59,7 +59,7 @@ class ClubSeeder extends Seeder
 
         foreach ($competitions as $description => $clubs) {
             foreach ($clubs as $name) {
-                $club = Club::withTrashed()->firstOrCreate(['name' => $name], ['description' => $description]);
+                $club = Club::query()->withTrashed()->firstOrCreate(['name' => $name], ['description' => $description]);
 
                 if ($users->isEmpty()) {
                     continue;
