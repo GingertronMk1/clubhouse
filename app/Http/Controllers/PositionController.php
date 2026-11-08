@@ -16,8 +16,9 @@ class PositionController extends Controller
     {
         return Inertia::render('positions/Index', [
             'sport' => $sport,
-            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'description'])->map(fn (Position $position) => [
+            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Position $position) => [
                 'id' => $position->id,
+                'slug' => $position->slug,
                 'name' => $position->name,
                 'description' => Str::limit($position->description, 160),
             ]),

@@ -5,7 +5,9 @@ defineOptions({ layout: AppLayout });
 import { Head, Link } from '@inertiajs/vue3';
 import { create, show } from '@/routes/sports';
 
-defineProps<{ sports: { id: string; name: string; description: string }[] }>();
+defineProps<{
+    sports: { id: string; slug: string; name: string; description: string }[];
+}>();
 </script>
 
 <template>
@@ -29,7 +31,7 @@ defineProps<{ sports: { id: string; name: string; description: string }[] }>();
                 class="rounded-lg border border-slate-200 p-5"
             >
                 <h2 class="text-xl font-semibold">
-                    <Link :href="show.url(sport.id)" class="underline">{{
+                    <Link :href="show.url(sport.slug)" class="underline">{{
                         sport.name
                     }}</Link>
                 </h2>

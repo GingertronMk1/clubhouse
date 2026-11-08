@@ -8,6 +8,7 @@ import { index, store, update } from '@/routes/sports';
 const props = defineProps<{
     sport?: {
         id: string;
+        slug: string;
         name: string;
         description: string;
         scoring: { name: string; value: number }[];
@@ -20,7 +21,7 @@ const form = useForm({
         props.sport?.scoring.map(({ name, value }) => ({ name, value })) ?? [],
 });
 function submit() {
-    if (props.sport) form.put(update.url(props.sport.id));
+    if (props.sport) form.put(update.url(props.sport.slug));
     else form.post(store.url());
 }
 </script>

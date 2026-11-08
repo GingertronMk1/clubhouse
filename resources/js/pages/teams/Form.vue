@@ -6,9 +6,10 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import * as teams from '@/routes/clubs/teams';
 
 const props = defineProps<{
-    club: { id: string; name: string };
+    club: { id: string; slug: string; name: string };
     team?: {
         id: string;
+        slug: string;
         name: string;
         description: string;
     };
@@ -20,15 +21,16 @@ const form = useForm({
     description: props.team?.description ?? '',
 });
 function submit() {
-    if (props.team) form.put(routes.update.url([props.club.id, props.team.id]));
-    else form.post(routes.store.url(props.club.id));
+    if (props.team)
+        form.put(routes.update.url([props.club.slug, props.team.slug]));
+    else form.post(routes.store.url(props.club.slug));
 }
 </script>
 
 <template>
     <main class="mx-auto max-w-2xl px-6 py-12 text-slate-900">
         <Head :title="`${team ? 'Edit' : 'Add'} ${label}`" />
-        <Link :href="routes.index(club.id)" class="text-sm underline"
+        <Link :href="routes.index(club.slug)" class="text-sm underline"
             >Back to {{ club.name }} teams</Link
         >
         <h1 class="mt-5 text-3xl font-semibold">

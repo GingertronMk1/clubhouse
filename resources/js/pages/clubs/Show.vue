@@ -7,9 +7,10 @@ import * as clubs from '@/routes/clubs';
 import { index as teamsIndex, show as teamShow } from '@/routes/clubs/teams';
 
 const props = defineProps<{
-    teams: { id: string; name: string }[];
+    teams: { id: string; slug: string; name: string }[];
     record: {
         id: string;
+        slug: string;
         name: string;
         description: string;
     };
@@ -17,7 +18,7 @@ const props = defineProps<{
 const routes = clubs;
 function remove() {
     if (window.confirm(`Delete ${props.record.name}?`))
-        router.delete(routes.destroy.url(props.record.id));
+        router.delete(routes.destroy.url(props.record.slug));
 }
 </script>
 
@@ -30,7 +31,7 @@ function remove() {
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ record.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link :href="routes.edit(record.id)" class="underline"
+                <Link :href="routes.edit(record.slug)" class="underline"
                     >Edit</Link
                 >
                 <button
@@ -49,7 +50,7 @@ function remove() {
             <div class="flex items-center justify-between gap-4">
                 <h2 id="teams-heading" class="text-xl font-semibold">Teams</h2>
                 <Link
-                    :href="teamsIndex.url(record.id)"
+                    :href="teamsIndex.url(record.slug)"
                     class="text-sm underline"
                     >Manage teams</Link
                 >
@@ -60,7 +61,7 @@ function remove() {
             <ul v-else class="mt-4 space-y-2">
                 <li v-for="team in teams" :key="team.id">
                     <Link
-                        :href="teamShow.url([record.id, team.id])"
+                        :href="teamShow.url([record.slug, team.slug])"
                         class="underline"
                         >{{ team.name }}</Link
                     >

@@ -13,8 +13,9 @@ class SportController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('sports/Index', ['sports' => Sport::orderBy('name')->get(['id', 'name', 'description'])->map(fn (Sport $sport) => [
+        return Inertia::render('sports/Index', ['sports' => Sport::orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Sport $sport) => [
             'id' => $sport->id,
+            'slug' => $sport->slug,
             'name' => $sport->name,
             'description' => Str::limit($sport->description, 160),
         ])]);
@@ -36,7 +37,7 @@ class SportController extends Controller
     {
         return Inertia::render('sports/Show', [
             'sport' => $sport,
-            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
+            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'slug', 'name', 'preview_x', 'preview_y', 'default_number']),
         ]);
     }
 

@@ -7,7 +7,7 @@ import PositionField from './PositionField.vue';
 import { destroy, edit, index } from '@/routes/sports/positions';
 
 defineProps<{
-    sport: { id: string; name: string };
+    sport: { id: string; slug: string; name: string };
     otherPositions: {
         id: string;
         name: string;
@@ -17,6 +17,7 @@ defineProps<{
     }[];
     position: {
         id: string;
+        slug: string;
         name: string;
         description: string;
         preview_x: number;
@@ -34,21 +35,21 @@ function deletePosition(sportId: string, positionId: string) {
 <template>
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="position.name" />
-        <Link :href="index.url(sport.id)" class="text-sm underline"
+        <Link :href="index.url(sport.slug)" class="text-sm underline"
             >Back to {{ sport.name }} positions</Link
         >
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ position.name }}</h1>
             <div class="flex gap-3 text-sm">
                 <Link
-                    :href="edit.url([sport.id, position.id])"
+                    :href="edit.url([sport.slug, position.slug])"
                     class="underline"
                     >Edit</Link
                 >
                 <button
                     type="button"
                     class="text-red-700 underline"
-                    @click="deletePosition(sport.id, position.id)"
+                    @click="deletePosition(sport.slug, position.slug)"
                 >
                     Delete
                 </button>

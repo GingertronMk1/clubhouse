@@ -12,12 +12,14 @@ return new class extends Migration
         Schema::create('positions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->string('slug')->index();
             $table->text('description');
             $table->integer('preview_x');
             $table->integer('preview_y');
             $table->integer('sort_order');
             $table->integer('default_number');
             $table->foreignIdFor(Sport::class)->constrained();
+            $table->unique(['sport_id', 'slug']);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -7,21 +7,26 @@ import { show as sportShow } from '@/routes/sports';
 import { create, show } from '@/routes/sports/positions';
 
 defineProps<{
-    sport: { id: string; name: string };
-    positions: { id: string; name: string; description: string }[];
+    sport: { id: string; slug: string; name: string };
+    positions: {
+        id: string;
+        slug: string;
+        name: string;
+        description: string;
+    }[];
 }>();
 </script>
 
 <template>
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="`${sport.name} positions`" />
-        <Link :href="sportShow.url(sport.id)" class="text-sm underline"
+        <Link :href="sportShow.url(sport.slug)" class="text-sm underline"
             >Back to {{ sport.name }}</Link
         >
         <div class="mt-5 mb-8 flex items-center justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ sport.name }} positions</h1>
             <Link
-                :href="create.url(sport.id)"
+                :href="create.url(sport.slug)"
                 class="rounded bg-slate-900 px-4 py-2 text-white"
                 >Add position</Link
             >
@@ -37,7 +42,7 @@ defineProps<{
             >
                 <h2 class="text-xl font-semibold">
                     <Link
-                        :href="show.url([sport.id, position.id])"
+                        :href="show.url([sport.slug, position.slug])"
                         class="underline"
                         >{{ position.name }}</Link
                     >

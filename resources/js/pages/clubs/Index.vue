@@ -6,7 +6,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import * as clubs from '@/routes/clubs';
 
 defineProps<{
-    records: { id: string; name: string; description: string }[];
+    records: { id: string; slug: string; name: string; description: string }[];
 }>();
 const routes = clubs;
 const title = 'Clubs';
@@ -33,7 +33,7 @@ const title = 'Clubs';
                 class="rounded-lg border border-slate-200 p-5"
             >
                 <h2 class="text-xl font-semibold">
-                    <Link :href="routes.show(record.id)" class="underline">{{
+                    <Link :href="routes.show(record.slug)" class="underline">{{
                         record.name
                     }}</Link>
                 </h2>

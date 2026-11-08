@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Database\Factories\SportFactory;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -15,7 +16,7 @@ class Sport extends Model
     /** @use HasFactory<SportFactory> */
     use HasFactory;
 
-    use HasUuids, SoftDeletes;
+    use HasSlug, HasUuids, SoftDeletes;
 
     protected $fillable = ['name', 'description', 'scoring'];
 

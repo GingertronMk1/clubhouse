@@ -7,7 +7,7 @@ import PositionField from './PositionField.vue';
 import { index, store, update } from '@/routes/sports/positions';
 
 const props = defineProps<{
-    sport: { id: string; name: string };
+    sport: { id: string; slug: string; name: string };
     otherPositions?: {
         id: string;
         name: string;
@@ -17,6 +17,7 @@ const props = defineProps<{
     }[];
     position?: {
         id: string;
+        slug: string;
         name: string;
         description: string;
         preview_x: number;
@@ -43,15 +44,15 @@ const numberFields = [
 ] as const;
 function submit() {
     if (props.position)
-        form.put(update.url([props.sport.id, props.position.id]));
-    else form.post(store.url(props.sport.id));
+        form.put(update.url([props.sport.slug, props.position.slug]));
+    else form.post(store.url(props.sport.slug));
 }
 </script>
 
 <template>
     <main class="mx-auto max-w-2xl px-6 py-12 text-slate-900">
         <Head :title="position ? 'Edit position' : 'Add position'" />
-        <Link :href="index.url(sport.id)" class="text-sm underline"
+        <Link :href="index.url(sport.slug)" class="text-sm underline"
             >Back to {{ sport.name }} positions</Link
         >
         <h1 class="mt-5 text-3xl font-semibold">

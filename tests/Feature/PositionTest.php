@@ -96,3 +96,27 @@ test('the position detail page includes only the other positions in its sport', 
         ->where('otherPositions.0.preview_x', 25)
         ->where('otherPositions.0.preview_y', 75));
 });
+
+test('position slugs are unique within each sport and bind to the correct position', function () {
+    $this->withoutVite();
+    $sport = Sport::factory()->create(['name' => 'Rugby League']);
+    $otherSport = Sport::factory()->create(['name' => 'Rugby Union']);
+    $first = Position::factory()->for($sport)->create(['name' => 'Prop']);
+    $second = Position::factory()->for($sport)->create(['name' => 'Prop']);
+    $other = Position::factory()->for($otherSport)->create(['name' => 'Prop']);
+
+    expect($first->slug)->toBe('prop')
+        ->and($second->slug)->toBe('prop-2')
+        ->and($other->slug)->toBe('prop')
+        ->and(route('sports.positions.show', [$sport, $second]))->toEndWith('/sports/rugby-league/positions/prop-2');
+
+    $this->get(route('sports.positions.show', [$sport, $second]))
+        ->assertInertia(fn (Assert $page) => $page->where('position.id', $second->id));
+    $this->get(route('sports.positions.show', [$otherSport, $other]))
+        ->assertInertia(fn (Assert $page) => $page->where('position.id', $other->id));
+    $this->get('/sports/rugby-union/positions/prop-2')->assertNotFound();
+    $this->get(route('sports.positions.index', $sport))
+        ->assertInertia(fn (Assert $page) => $page->where('positions.0.slug', $first->slug));
+    $this->get(route('sports.show', $sport))
+        ->assertInertia(fn (Assert $page) => $page->where('positions.0.slug', $first->slug));
+});
