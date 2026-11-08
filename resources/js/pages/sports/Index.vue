@@ -46,7 +46,10 @@ function deleteSport(id: string) {
                             v-if="sport.scoring.length"
                             class="mt-3 text-sm text-slate-700"
                         >
-                            <li v-for="(score, index) in sport.scoring" :key="index">
+                            <li
+                                v-for="(score, index) in sport.scoring"
+                                :key="index"
+                            >
                                 {{ score.name }}: {{ score.value }}
                             </li>
                         </ul>
