@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { computed, watch } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import * as routes from '@/routes/games';
 defineOptions({ layout: AppLayout });
 type Option = { id: string; name: string };
+type ScoringMethod = { name: string; value: number; count: number | null | '' };
+type Sport = Option & { scoring: { name: string; value: number }[] };
 type Team = Option & { club: { name: string } | null };
 const props = defineProps<{
     record?: {
@@ -16,10 +19,11 @@ const props = defineProps<{
         club1_id: string;
         club2_id: string;
         location_id: string;
-        score: unknown;
+        club1_score: ScoringMethod[] | null;
+        club2_score: ScoringMethod[] | null;
     };
     start?: string | null;
-    sports: Option[];
+    sports: Sport[];
     competitions: Option[];
     teams: Team[];
     locations: Option[];
@@ -34,9 +38,43 @@ const form = useForm({
     club1_id: props.record?.club1_id ?? '',
     club2_id: props.record?.club2_id ?? '',
     location_id: props.record?.location_id ?? '',
-    score: JSON.stringify(props.record?.score ?? {}, null, 2),
+    club1_score: props.record?.club1_score ?? [],
+    club2_score: props.record?.club2_score ?? [],
 });
+const selectedSport = computed(() =>
+    props.sports.find((sport) => sport.id === form.sport_id),
+);
+function scoringForSport(existing: ScoringMethod[] = []): ScoringMethod[] {
+    return (selectedSport.value?.scoring ?? []).map((method) => ({
+        ...method,
+        count:
+            existing.find(
+                (item) =>
+                    item.name === method.name && item.value === method.value,
+            )?.count ?? null,
+    }));
+}
+watch(
+    () => form.sport_id,
+    () => {
+        form.club1_score = scoringForSport();
+        form.club2_score = scoringForSport();
+    },
+);
+if (selectedSport.value) {
+    form.club1_score = scoringForSport(form.club1_score);
+    form.club2_score = scoringForSport(form.club2_score);
+}
 function submit() {
+    form.transform((data) => ({
+        ...data,
+        club1_score: data.club1_score.filter(
+            (item) => item.count !== null && item.count !== '',
+        ),
+        club2_score: data.club2_score.filter(
+            (item) => item.count !== null && item.count !== '',
+        ),
+    }));
     if (props.record) form.put(routes.update.url(props.record.id));
     else form.post(routes.store.url());
 }
@@ -250,24 +288,54 @@ function submit() {
                     {{ form.errors.location_id }}
                 </p>
             </div>
-            <div>
-                <label for="score" class="block font-medium">Score (JSON)</label
-                ><textarea
-                    id="score"
-                    v-model="form.score"
-                    required
-                    rows="5"
-                    spellcheck="false"
-                    class="mt-1 w-full rounded border border-slate-300 p-2 font-mono text-sm"
-                />
-                <p
-                    v-if="form.errors.score"
-                    role="alert"
-                    class="mt-1 text-sm text-red-700"
-                >
-                    {{ form.errors.score }}
+            <fieldset
+                v-for="side in ['club1_score', 'club2_score'] as const"
+                :key="side"
+                class="space-y-3"
+            >
+                <legend class="font-medium">
+                    {{
+                        side === 'club1_score'
+                            ? 'First team scoring'
+                            : 'Second team scoring'
+                    }}
+                </legend>
+                <p v-if="!selectedSport" class="text-sm text-slate-600">
+                    Select a sport to enter scoring.
                 </p>
-            </div>
+                <p
+                    v-else-if="!selectedSport.scoring.length"
+                    class="text-sm text-slate-600"
+                >
+                    This sport has no scoring methods.
+                </p>
+                <div
+                    v-for="(method, index) in form[side]"
+                    :key="method.name"
+                    class="flex items-center gap-3"
+                >
+                    <label :for="`${side}-${index}`" class="flex-1"
+                        >{{ method.name }} ({{ method.value }} points)</label
+                    >
+                    <input
+                        :id="`${side}-${index}`"
+                        v-model.number="method.count"
+                        type="number"
+                        min="0"
+                        step="1"
+                        class="w-24 rounded border border-slate-300 p-2"
+                    />
+                </div>
+                <p
+                    v-for="(error, key) in form.errors"
+                    v-show="key.startsWith(side)"
+                    :key="key"
+                    role="alert"
+                    class="text-sm text-red-700"
+                >
+                    {{ error }}
+                </p>
+            </fieldset>
             <p
                 v-if="
                     !sports.length ||

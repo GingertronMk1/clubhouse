@@ -78,13 +78,15 @@ class GameSeeder extends Seeder
                     'sport_id' => $sport->id,
                     'club1_id' => $fixtureTeams['home']->id,
                     'club2_id' => $fixtureTeams['away']->id,
-                    'score' => $fixture['score'],
+                    'result' => $fixture['score'],
+                    'club1_score' => [],
+                    'club2_score' => [],
                     'location_id' => $location->id,
                 ],
             );
 
-            if ($game->score === [] && $fixture['score'] !== []) {
-                $game->update(['score' => $fixture['score']]);
+            if ($game->result === [] && $fixture['score'] !== []) {
+                $game->update(['result' => $fixture['score']]);
             }
         }
     }

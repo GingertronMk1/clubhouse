@@ -27,7 +27,7 @@ test('games retain their related records and cast the start and score', function
     $location = Location::factory()->create();
     $game = Game::factory()->for($sport)->for($competition)->for($club1, 'club1')->for($club2, 'club2')->for($location)->create([
         'start' => '2026-11-08 12:30:00',
-        'score' => ['club1' => 2, 'club2' => 1],
+        'club1_score' => [['name' => 'Try', 'value' => 4, 'count' => 2]], 'club2_score' => [['name' => 'Try', 'value' => 4, 'count' => 1]],
     ])->fresh();
 
     expect($game->sport->is($sport))->toBeTrue();
@@ -36,5 +36,6 @@ test('games retain their related records and cast the start and score', function
     expect($game->club2->is($club2))->toBeTrue();
     expect($game->location->is($location))->toBeTrue();
     expect($game->start)->toBeInstanceOf(CarbonInterface::class)->format('Y-m-d H:i:s')->toBe('2026-11-08 12:30:00');
-    expect($game->score)->toBe(['club1' => 2, 'club2' => 1]);
+    expect($game->club1_score)->toBe([['name' => 'Try', 'value' => 4, 'count' => 2]]);
+    expect($game->club2_score)->toBe([['name' => 'Try', 'value' => 4, 'count' => 1]]);
 });

@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/** @property array<array-key, mixed> $score */
-#[Fillable(['name', 'start', 'description', 'summary', 'sport_id', 'competition_id', 'club1_id', 'club2_id', 'score', 'location_id'])]
+/** @property array<array-key, mixed> $result */
+#[Fillable(['name', 'start', 'description', 'summary', 'sport_id', 'competition_id', 'club1_id', 'club2_id', 'result', 'club1_score', 'club2_score', 'location_id'])]
 class Game extends Model
 {
     /** @use HasFactory<GameFactory> */
@@ -54,6 +54,6 @@ class Game extends Model
     /** @return array<string, string> */
     protected function casts(): array
     {
-        return ['start' => 'datetime', 'score' => 'array'];
+        return ['start' => 'datetime', 'result' => 'array', 'club1_score' => 'array', 'club2_score' => 'array'];
     }
 }

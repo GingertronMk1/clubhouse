@@ -23,19 +23,19 @@ test('competition and game seeders import the fixtures and can be repeated', fun
     expect($game->club2->club->name)->toBe('New England Patriots');
     expect($game->location->name)->toBe('Lumen Field');
     expect($game->start->format('Y-m-d H:i:s'))->toBe('2026-09-10 00:20:00');
-    expect($game->score)->toBe(['home' => 13, 'away' => 10]);
-    $game->update(['summary' => 'Custom summary', 'score' => ['home' => 99, 'away' => 0]]);
+    expect($game->result)->toBe(['home' => 13, 'away' => 10]);
+    $game->update(['summary' => 'Custom summary', 'result' => ['home' => 99, 'away' => 0]]);
 
     $touch = Game::query()->where('description', 'touch fixture 7524')->firstOrFail();
     expect($touch->club1->name)->toBe("Men's Open");
     expect($touch->club2->name)->toBe("Men's Open");
     expect($touch->start->format('Y-m-d H:i:s'))->toBe('2024-07-16 11:20:00');
-    expect($touch->score)->toBe(['home' => 15, 'away' => 7]);
-    expect(Game::query()->where('description', 'nrl fixture 1')->firstOrFail()->score)->toBe(['home' => 28, 'away' => 18]);
-    expect(Game::query()->where('description', 'super fixture 121074')->firstOrFail()->score)->toBe(['home' => 19, 'away' => 18]);
-    expect(Game::query()->where('description', 'nfl fixture 123')->firstOrFail()->score)->toBe([]);
-    expect(Game::query()->where('description', 'touch fixture 7526')->firstOrFail()->score)->toBe([]);
-    $touch->update(['score' => []]);
+    expect($touch->result)->toBe(['home' => 15, 'away' => 7]);
+    expect(Game::query()->where('description', 'nrl fixture 1')->firstOrFail()->result)->toBe(['home' => 28, 'away' => 18]);
+    expect(Game::query()->where('description', 'super fixture 121074')->firstOrFail()->result)->toBe(['home' => 19, 'away' => 18]);
+    expect(Game::query()->where('description', 'nfl fixture 123')->firstOrFail()->result)->toBe([]);
+    expect(Game::query()->where('description', 'touch fixture 7526')->firstOrFail()->result)->toBe([]);
+    $touch->update(['result' => []]);
     expect(Game::query()->whereNull('start')->count())->toBe(24);
 
     $this->seed([CompetitionSeeder::class, GameSeeder::class]);
@@ -43,8 +43,8 @@ test('competition and game seeders import the fixtures and can be repeated', fun
     expect(Competition::query()->count())->toBe(4);
     expect(Game::query()->count())->toBe(array_sum($counts));
     expect($game->fresh()->summary)->toBe('Custom summary');
-    expect($game->fresh()->score)->toBe(['home' => 99, 'away' => 0]);
-    expect($touch->fresh()->score)->toBe(['home' => 15, 'away' => 7]);
+    expect($game->fresh()->result)->toBe(['home' => 99, 'away' => 0]);
+    expect($touch->fresh()->result)->toBe(['home' => 15, 'away' => 7]);
 });
 
 test('games without an announced kickoff can be viewed and edited', function () {
