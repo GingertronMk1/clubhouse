@@ -4,7 +4,15 @@ import { index, store, update } from '@/routes/sports/positions';
 
 const props = defineProps<{
     sport: { id: string; name: string };
-    position?: { id: string; name: string; description: string; preview_x: number; preview_y: number; sort_order: number; default_number: number };
+    position?: {
+        id: string;
+        name: string;
+        description: string;
+        preview_x: number;
+        preview_y: number;
+        sort_order: number;
+        default_number: number;
+    };
 }>();
 const form = useForm({
     name: props.position?.name ?? '',
@@ -21,7 +29,8 @@ const numberFields = [
     { key: 'default_number', label: 'Default number' },
 ] as const;
 function submit() {
-    if (props.position) form.put(update.url([props.sport.id, props.position.id]));
+    if (props.position)
+        form.put(update.url([props.sport.id, props.position.id]));
     else form.post(store.url(props.sport.id));
 }
 </script>
@@ -29,25 +38,72 @@ function submit() {
 <template>
     <main class="mx-auto max-w-2xl px-6 py-12 text-slate-900">
         <Head :title="position ? 'Edit position' : 'Add position'" />
-        <Link :href="index.url(sport.id)" class="text-sm underline">Back to {{ sport.name }} positions</Link>
-        <h1 class="mt-5 text-3xl font-semibold">{{ position ? 'Edit position' : 'Add position' }}</h1>
+        <Link :href="index.url(sport.id)" class="text-sm underline"
+            >Back to {{ sport.name }} positions</Link
+        >
+        <h1 class="mt-5 text-3xl font-semibold">
+            {{ position ? 'Edit position' : 'Add position' }}
+        </h1>
         <form class="mt-8 space-y-6" @submit.prevent="submit">
             <div>
                 <label for="name" class="block font-medium">Name</label>
-                <input id="name" v-model="form.name" required maxlength="255" class="mt-1 w-full rounded border border-slate-300 p-2" />
-                <p v-if="form.errors.name" class="mt-1 text-sm text-red-700">{{ form.errors.name }}</p>
+                <input
+                    id="name"
+                    v-model="form.name"
+                    required
+                    maxlength="255"
+                    class="mt-1 w-full rounded border border-slate-300 p-2"
+                />
+                <p v-if="form.errors.name" class="mt-1 text-sm text-red-700">
+                    {{ form.errors.name }}
+                </p>
             </div>
             <div>
-                <label for="description" class="block font-medium">Description</label>
-                <textarea id="description" v-model="form.description" required rows="4" class="mt-1 w-full rounded border border-slate-300 p-2" />
-                <p v-if="form.errors.description" class="mt-1 text-sm text-red-700">{{ form.errors.description }}</p>
+                <label for="description" class="block font-medium"
+                    >Description</label
+                >
+                <textarea
+                    id="description"
+                    v-model="form.description"
+                    required
+                    rows="4"
+                    class="mt-1 w-full rounded border border-slate-300 p-2"
+                />
+                <p
+                    v-if="form.errors.description"
+                    class="mt-1 text-sm text-red-700"
+                >
+                    {{ form.errors.description }}
+                </p>
             </div>
             <div v-for="field in numberFields" :key="field.key">
-                <label :for="field.key" class="block font-medium">{{ field.label }}</label>
-                <input :id="field.key" v-model.number="form[field.key]" type="number" required step="1" min="-2147483648" max="2147483647" class="mt-1 w-full rounded border border-slate-300 p-2" />
-                <p v-if="form.errors[field.key]" class="mt-1 text-sm text-red-700">{{ form.errors[field.key] }}</p>
+                <label :for="field.key" class="block font-medium">{{
+                    field.label
+                }}</label>
+                <input
+                    :id="field.key"
+                    v-model.number="form[field.key]"
+                    type="number"
+                    required
+                    step="1"
+                    min="-2147483648"
+                    max="2147483647"
+                    class="mt-1 w-full rounded border border-slate-300 p-2"
+                />
+                <p
+                    v-if="form.errors[field.key]"
+                    class="mt-1 text-sm text-red-700"
+                >
+                    {{ form.errors[field.key] }}
+                </p>
             </div>
-            <button type="submit" :disabled="form.processing" class="rounded bg-slate-900 px-4 py-2 text-white disabled:opacity-50">Save position</button>
+            <button
+                type="submit"
+                :disabled="form.processing"
+                class="rounded bg-slate-900 px-4 py-2 text-white disabled:opacity-50"
+            >
+                Save position
+            </button>
         </form>
     </main>
 </template>

@@ -56,7 +56,11 @@ function deleteSport(id: string) {
                         </ul>
                     </div>
                     <div class="flex gap-3 text-sm">
-                        <Link :href="positionsIndex.url(sport.id)" class="underline">Positions</Link>
+                        <Link
+                            :href="positionsIndex.url(sport.id)"
+                            class="underline"
+                            >Positions</Link
+                        >
                         <Link :href="edit.url(sport.id)" class="underline"
                             >Edit</Link
                         >
