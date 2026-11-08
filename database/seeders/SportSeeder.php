@@ -52,7 +52,7 @@ class SportSeeder extends Seeder
         ];
 
         foreach ($sports as $sport) {
-            Sport::updateOrCreate(['name' => $sport['name']], $sport);
+            Sport::query()->updateOrCreate(['name' => $sport['name']], $sport);
         }
     }
 }
