@@ -36,3 +36,10 @@ test('sport scoring entries are validated', function () {
     ])->assertSessionHasErrors(['name', 'description', 'scoring.0.name', 'scoring.0.value']);
     expect(Sport::count())->toBe(0);
 });
+
+test('the sport creation page displays an empty form', function () {
+    $this->withoutVite();
+
+    $this->get(route('sports.create'))->assertInertia(fn (Assert $page) => $page
+        ->component('sports/Form')->missing('sport'));
+});
