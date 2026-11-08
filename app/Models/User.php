@@ -42,7 +42,7 @@ class User extends Authenticatable
     }
 
     /** @param Permission|array<Permission> $permissions */
-    public function hasClubPermission(Club $club, Permission|array $permissions): bool
+    public function hasClubPermission(Club $club, Permission|array $permissions, bool $includeTrashed = false): bool
     {
         $permissions = is_array($permissions) ? $permissions : [$permissions];
 
@@ -50,7 +50,13 @@ class User extends Authenticatable
             return false;
         }
 
-        $membership = $this->clubs()->whereKey($club->getKey())->first()?->pivot;
+        $clubs = $this->clubs();
+
+        if ($includeTrashed) {
+            $clubs->withTrashed();
+        }
+
+        $membership = $clubs->whereKey($club->getKey())->first()?->pivot;
 
         if (! $membership instanceof ClubUser || ! is_array($membership->permissions)) {
             return false;
