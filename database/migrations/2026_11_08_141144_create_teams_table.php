@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->string('slug');
             $table->text('description');
             $table->foreignIdFor(Club::class)->constrained();
             $table->timestamps();

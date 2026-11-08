@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Database\Factories\ClubFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -16,7 +17,7 @@ class Club extends Model
     /** @use HasFactory<ClubFactory> */
     use HasFactory;
 
-    use HasUuids, SoftDeletes;
+    use HasSlug, HasUuids, SoftDeletes;
 
     /** @return HasMany<Team, $this> */
     public function teams(): HasMany

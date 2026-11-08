@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Database\Factories\TeamFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ class Team extends Model
     /** @use HasFactory<TeamFactory> */
     use HasFactory;
 
-    use HasUuids, SoftDeletes;
+    use HasSlug, HasUuids, SoftDeletes;
 
     protected $fillable = ['name', 'description'];
 
