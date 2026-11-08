@@ -40,3 +40,22 @@ test('the default database seeder includes sport positions', function () {
         'American Football' => 23,
     ]);
 });
+
+test('american football positions are grouped into field thirds by unit', function () {
+    $this->seed(SportSeeder::class);
+    $this->seed(PositionSeeder::class);
+
+    $positions = Sport::where('name', 'American Football')->firstOrFail()->positions->keyBy('name');
+    $units = [
+        [0, 33, ['Quarterback', 'Running Back', 'Fullback', 'Wide Receiver', 'Tight End', 'Center', 'Offensive Guard', 'Offensive Tackle']],
+        [34, 66, ['Defensive Tackle', 'Defensive End', 'Nose Tackle', 'Inside Linebacker', 'Outside Linebacker', 'Cornerback', 'Free Safety', 'Strong Safety']],
+        [67, 100, ['Placekicker', 'Punter', 'Long Snapper', 'Holder', 'Kick Returner', 'Punt Returner', 'Gunner']],
+    ];
+
+    foreach ($units as [$minimum, $maximum, $names]) {
+        foreach ($names as $name) {
+            expect($positions->get($name))->not->toBeNull()
+                ->and($positions->get($name)->preview_y)->toBeGreaterThanOrEqual($minimum)->toBeLessThanOrEqual($maximum);
+        }
+    }
+});
