@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NameDescriptionFields from '@/components/NameDescriptionFields.vue';
+import FormInput from '@/components/FormInput.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 
 defineOptions({ layout: AppLayout });
@@ -38,11 +38,41 @@ function submit() {
             {{ record ? 'Edit' : 'Add' }} {{ label }}
         </h1>
         <form class="mt-8 space-y-6" @submit.prevent="submit">
-            <NameDescriptionFields
-                v-model:name="form.name"
-                v-model:description="form.description"
-                :errors="form.errors"
-            />
+            <div>
+                <label for="name" class="block font-medium">Name</label>
+                <FormInput
+                    id="name"
+                    v-model="form.name"
+                    required
+                    maxlength="255"
+                />
+                <p
+                    v-if="form.errors.name"
+                    class="mt-1 text-sm text-red-700"
+                    role="alert"
+                >
+                    {{ form.errors.name }}
+                </p>
+            </div>
+            <div>
+                <label for="description" class="block font-medium"
+                    >Description</label
+                >
+                <FormInput
+                    textarea
+                    id="description"
+                    v-model="form.description"
+                    required
+                    rows="4"
+                />
+                <p
+                    v-if="form.errors.description"
+                    class="mt-1 text-sm text-red-700"
+                    role="alert"
+                >
+                    {{ form.errors.description }}
+                </p>
+            </div>
             <button
                 type="submit"
                 :disabled="form.processing"

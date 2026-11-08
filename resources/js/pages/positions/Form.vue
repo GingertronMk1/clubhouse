@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NameDescriptionFields from '@/components/NameDescriptionFields.vue';
+import FormInput from '@/components/FormInput.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 
 defineOptions({ layout: AppLayout });
@@ -60,16 +60,46 @@ function submit() {
             {{ position ? 'Edit position' : 'Add position' }}
         </h1>
         <form class="mt-8 space-y-6" @submit.prevent="submit">
-            <NameDescriptionFields
-                v-model:name="form.name"
-                v-model:description="form.description"
-                :errors="form.errors"
-            />
+            <div>
+                <label for="name" class="block font-medium">Name</label>
+                <FormInput
+                    id="name"
+                    v-model="form.name"
+                    required
+                    maxlength="255"
+                />
+                <p
+                    v-if="form.errors.name"
+                    class="mt-1 text-sm text-red-700"
+                    role="alert"
+                >
+                    {{ form.errors.name }}
+                </p>
+            </div>
+            <div>
+                <label for="description" class="block font-medium"
+                    >Description</label
+                >
+                <FormInput
+                    textarea
+                    id="description"
+                    v-model="form.description"
+                    required
+                    rows="4"
+                />
+                <p
+                    v-if="form.errors.description"
+                    class="mt-1 text-sm text-red-700"
+                    role="alert"
+                >
+                    {{ form.errors.description }}
+                </p>
+            </div>
             <div v-for="field in numberFields" :key="field.key">
                 <label :for="field.key" class="block font-medium">{{
                     field.label
                 }}</label>
-                <input
+                <FormInput
                     :id="field.key"
                     v-model.number="form[field.key]"
                     type="number"
@@ -77,7 +107,6 @@ function submit() {
                     step="1"
                     min="-2147483648"
                     max="2147483647"
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
                 />
                 <p
                     v-if="form.errors[field.key]"
@@ -110,14 +139,13 @@ function submit() {
                             <label :for="field.key" class="block font-medium"
                                 >{{ field.label }}: {{ form[field.key] }}</label
                             >
-                            <input
+                            <FormInput
                                 :id="field.key"
                                 v-model.number="form[field.key]"
                                 type="range"
                                 min="0"
                                 max="100"
                                 step="1"
-                                class="mt-2 w-full accent-emerald-700"
                             />
                             <p
                                 v-if="form.errors[field.key]"
