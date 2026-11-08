@@ -28,7 +28,7 @@ class CompetitionController extends Controller
 
     public function show(Competition $competition): Response
     {
-        return Inertia::render('competitions/Show', ['record' => $competition->load(['location', 'parent', 'children', 'games.club1', 'games.club2'])]);
+        return Inertia::render('competitions/Show', ['record' => $competition->load(['location', 'parent', 'children', 'games.team1', 'games.team2'])]);
     }
 
     public function edit(Competition $competition): Response

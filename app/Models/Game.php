@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /** @property array<array-key, mixed> $score */
-#[Fillable(['name', 'start', 'description', 'summary', 'sport_id', 'competition_id', 'club1_id', 'club2_id', 'score', 'location_id'])]
+#[Fillable(['name', 'start', 'description', 'summary', 'sport_id', 'competition_id', 'team1_id', 'team2_id', 'score', 'location_id'])]
 class Game extends Model
 {
     /** @use HasFactory<GameFactory> */
@@ -19,7 +19,7 @@ class Game extends Model
 
     use HasUuids, SoftDeletes;
 
-    protected $with = ['sport', 'competition', 'club1', 'club2', 'location'];
+    protected $with = ['sport', 'competition', 'team1', 'team2', 'location'];
 
     /** @return BelongsTo<Sport, $this> */
     public function sport(): BelongsTo
@@ -34,15 +34,15 @@ class Game extends Model
     }
 
     /** @return BelongsTo<Team, $this> */
-    public function club1(): BelongsTo
+    public function team1(): BelongsTo
     {
-        return $this->belongsTo(Team::class, 'club1_id');
+        return $this->belongsTo(Team::class, 'team1_id');
     }
 
     /** @return BelongsTo<Team, $this> */
-    public function club2(): BelongsTo
+    public function team2(): BelongsTo
     {
-        return $this->belongsTo(Team::class, 'club2_id');
+        return $this->belongsTo(Team::class, 'team2_id');
     }
 
     /** @return BelongsTo<Location, $this> */

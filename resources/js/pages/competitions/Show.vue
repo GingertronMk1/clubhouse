@@ -11,7 +11,7 @@ const props = defineProps<{
         location: Named | null;
         parent: Named | null;
         children: Named[];
-        games: (Named & { club1: Named | null; club2: Named | null })[];
+        games: (Named & { team1: Named | null; team2: Named | null })[];
     };
 }>();
 function remove() {
@@ -81,10 +81,10 @@ function remove() {
                         game.name
                     }}</Link
                     ><span
-                        v-if="game.club1 && game.club2"
+                        v-if="game.team1 && game.team2"
                         class="text-slate-600"
                     >
-                        — {{ game.club1.name }} vs {{ game.club2.name }}</span
+                        — {{ game.team1.name }} vs {{ game.team2.name }}</span
                     >
                 </li>
             </ul>

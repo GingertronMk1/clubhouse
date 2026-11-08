@@ -22,8 +22,8 @@ class GameFactory extends Factory
             'summary' => fake()->sentence(),
             'sport_id' => Sport::factory(),
             'competition_id' => Competition::factory(),
-            'club1_id' => Team::factory(),
-            'club2_id' => Team::factory(),
+            'team1_id' => Team::factory(),
+            'team2_id' => Team::factory(),
             'score' => [],
             'location_id' => Location::factory(),
         ];

@@ -39,7 +39,7 @@ test('games load all of their belongs to records by default', function () {
 
     $loaded = Game::query()->findOrFail($game->id);
 
-    foreach (['sport', 'competition', 'club1', 'club2', 'location'] as $relationship) {
+    foreach (['sport', 'competition', 'team1', 'team2', 'location'] as $relationship) {
         expect($loaded->relationLoaded($relationship))->toBeTrue();
         expect($loaded->{$relationship}->id)->toBe($game->{$relationship.'_id'});
     }
