@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Position;
 use App\Models\Scoring;
 use App\Models\Sport;
 use Database\Seeders\SportSeeder;
@@ -71,4 +72,21 @@ test('the sports index shows a shortened description', function () {
 
     $this->get(route('sports.index'))->assertInertia(fn (Assert $page) => $page
         ->where('sports.0.description', str_repeat('A', 160).'...'));
+});
+
+test('the sport detail page includes only its positions in display order', function () {
+    $this->withoutVite();
+    $sport = Sport::factory()->create();
+    Position::factory()->for($sport)->create(['name' => 'Second', 'sort_order' => 2]);
+    Position::factory()->for($sport)->create(['name' => 'First', 'sort_order' => 1, 'preview_x' => 25, 'preview_y' => 75, 'default_number' => 10]);
+    Position::factory()->create(['name' => 'Other sport']);
+
+    $this->get(route('sports.show', $sport))->assertInertia(fn (Assert $page) => $page
+        ->component('sports/Show')
+        ->has('positions', 2)
+        ->where('positions.0.name', 'First')
+        ->where('positions.0.preview_x', 25)
+        ->where('positions.0.preview_y', 75)
+        ->where('positions.0.default_number', 10)
+        ->where('positions.1.name', 'Second'));
 });

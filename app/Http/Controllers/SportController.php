@@ -34,7 +34,10 @@ class SportController extends Controller
 
     public function show(Sport $sport): Response
     {
-        return Inertia::render('sports/Show', ['sport' => $sport]);
+        return Inertia::render('sports/Show', [
+            'sport' => $sport,
+            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
+        ]);
     }
 
     public function edit(Sport $sport): Response
