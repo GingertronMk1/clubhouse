@@ -45,6 +45,6 @@ test('club seeding assigns 25 users in order and wraps around without changing e
 
     expect(Club::withCount('users')->get()->pluck('users_count')->unique()->all())->toBe([25]);
     expect($firstClub->users()->pluck('users.id')->sort()->values()->all())->toBe($users->slice(0, 25)->sort()->values()->all());
-    expect($eleventhClub->users()->pluck('users.id')->sort()->values()->all())->toBe($users->slice(250)->concat($users->slice(0, 19))->sort()->values()->all());
+    expect($eleventhClub->users()->pluck('users.id')->sort()->values()->all())->toBe($users->slice(250)->concat($users->slice(0, 18))->sort()->values()->all());
     expect($firstClub->users()->whereKey($users[0])->firstOrFail()->pivot->permissions)->toBe(['manage-team']);
 });

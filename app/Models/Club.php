@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasSlug;
+use App\Policies\ClubPolicy;
 use Database\Factories\ClubFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['name', 'description'])]
+#[UsePolicy(ClubPolicy::class)]
 class Club extends Model
 {
     /** @use HasFactory<ClubFactory> */

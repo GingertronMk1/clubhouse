@@ -9,9 +9,14 @@ test('user seeding creates 256 named accounts and can be repeated', function () 
     $this->seed(UserSeeder::class);
     $this->seed(UserSeeder::class);
 
-    expect(User::count())->toBe(256);
+    expect(User::count())->toBe(257);
 
-    foreach (User::all() as $user) {
+    $superadmin = User::where('email', 'admin@clubhouse.test')->firstOrFail();
+
+    expect($superadmin->superadmin)->toBeTrue();
+    expect(Hash::check('12345', $superadmin->password))->toBeTrue();
+
+    foreach (User::where('email', '!=', 'admin@clubhouse.test')->get() as $user) {
         expect($user->email)->toBe(Str::lower(str_replace(' ', '.', $user->name)).'@clubhouse.test');
         expect(Hash::check('password', $user->password))->toBeTrue();
     }

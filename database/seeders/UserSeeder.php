@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Super Admin',
-                'password' => Hash::make(12345),
+                'password' => Hash::make('12345'),
             ],
         );
         $superadmin->superadmin = true;
