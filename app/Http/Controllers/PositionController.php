@@ -26,7 +26,10 @@ class PositionController extends Controller
 
     public function create(Sport $sport): Response
     {
-        return Inertia::render('positions/Form', ['sport' => $sport]);
+        return Inertia::render('positions/Form', [
+            'sport' => $sport,
+            'otherPositions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
+        ]);
     }
 
     public function store(PositionRequest $request, Sport $sport): RedirectResponse

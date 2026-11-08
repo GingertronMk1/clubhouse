@@ -66,3 +66,16 @@ test('the edit page includes the other positions for the same sport', function (
         ->where('otherPositions.0.preview_y', 75)
         ->where('otherPositions.0.default_number', 7));
 });
+
+test('the creation page includes positions for the field preview', function () {
+    $this->withoutVite();
+    $sport = Sport::factory()->create();
+    Position::factory()->for($sport)->create(['name' => 'Existing', 'preview_x' => 20]);
+    Position::factory()->create();
+
+    $this->get(route('sports.positions.create', $sport))->assertInertia(fn (Assert $page) => $page
+        ->component('positions/Form')
+        ->has('otherPositions', 1)
+        ->where('otherPositions.0.name', 'Existing')
+        ->where('otherPositions.0.preview_x', 20));
+});
