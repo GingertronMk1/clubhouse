@@ -2,25 +2,32 @@
 
 namespace App\Models;
 
-use Database\Factories\ScoringFactory;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Support\Arrayable;
+use JsonSerializable;
 
-class Scoring extends Model
+/** @implements Arrayable<string, string|int> */
+class Scoring implements Arrayable, JsonSerializable
 {
-    /** @use HasFactory<ScoringFactory> */
-    use HasFactory;
-
-    use HasUuids, SoftDeletes;
-
-    protected $fillable = ['name', 'value'];
-
-    /** @return BelongsTo<Sport, $this> */
-    public function sport(): BelongsTo
+    /** @param array{name: string, value: int} $attributes */
+    public function __construct(array $attributes)
     {
-        return $this->belongsTo(Sport::class);
+        $this->name = $attributes['name'];
+        $this->value = (int) $attributes['value'];
+    }
+
+    public readonly string $name;
+
+    public readonly int $value;
+
+    /** @return array{name: string, value: int} */
+    public function toArray(): array
+    {
+        return ['name' => $this->name, 'value' => $this->value];
+    }
+
+    /** @return array{name: string, value: int} */
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 }

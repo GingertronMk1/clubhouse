@@ -20,6 +20,7 @@ class SportFactory extends Factory
         return [
             'name' => fake()->word(),
             'description' => fake()->sentence(),
+            'scoring' => [],
         ];
     }
 }

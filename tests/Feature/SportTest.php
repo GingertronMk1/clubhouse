@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Scoring;
 use App\Models\Sport;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('sports and their scoring can be created, viewed, updated and deleted', function () {
@@ -10,8 +13,9 @@ test('sports and their scoring can be created, viewed, updated and deleted', fun
         'scoring' => [['name' => 'Try', 'value' => 5]],
     ])->assertRedirect(route('sports.index'));
 
-    $sport = Sport::with('scoring')->firstOrFail();
-    expect($sport->scoring->sole()->value)->toBe(5);
+    $sport = Sport::firstOrFail();
+    expect($sport->scoring->sole())->toBeInstanceOf(Scoring::class)
+        ->and($sport->scoring->sole()->value)->toBe(5);
     $this->get(route('sports.index'))->assertInertia(fn (Assert $page) => $page
         ->component('sports/Index')->where('sports.0.name', 'Rugby')->where('sports.0.scoring.0.name', 'Try'));
     $this->get(route('sports.edit', $sport))->assertInertia(fn (Assert $page) => $page
@@ -22,7 +26,7 @@ test('sports and their scoring can be created, viewed, updated and deleted', fun
         'scoring' => [['name' => 'Conversion', 'value' => 2]],
     ])->assertRedirect(route('sports.index'));
     expect($sport->refresh()->name)->toBe('Rugby union');
-    expect($sport->scoring()->sole()->name)->toBe('Conversion');
+    expect($sport->scoring->sole()->name)->toBe('Conversion');
     $this->delete(route('sports.destroy', $sport))->assertRedirect(route('sports.index'));
     $this->assertSoftDeleted($sport);
 });
@@ -33,4 +37,16 @@ test('sport scoring entries are validated', function () {
         'scoring' => [['name' => '', 'value' => 'invalid']],
     ])->assertSessionHasErrors(['name', 'description', 'scoring.0.name', 'scoring.0.value']);
     expect(Sport::count())->toBe(0);
+});
+
+test('existing scoring is migrated to the sport and restored on rollback', function () {
+    $sport = Sport::factory()->create(['scoring' => [['name' => 'Try', 'value' => 5]]]);
+    $migration = require database_path('migrations/2026_11_08_125324_move_scoring_to_sports_table.php');
+
+    $migration->down();
+    expect(DB::table('scorings')->where('sport_id', $sport->id)->value('name'))->toBe('Try');
+
+    $migration->up();
+    expect(Schema::hasTable('scorings'))->toBeFalse();
+    expect($sport->refresh()->scoring->sole()->toArray())->toBe(['name' => 'Try', 'value' => 5]);
 });

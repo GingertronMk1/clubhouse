@@ -7,7 +7,7 @@ defineProps<{
         id: string;
         name: string;
         description: string;
-        scoring: { id: string; name: string; value: number }[];
+        scoring: { name: string; value: number }[];
     }[];
 }>();
 
@@ -46,7 +46,7 @@ function deleteSport(id: string) {
                             v-if="sport.scoring.length"
                             class="mt-3 text-sm text-slate-700"
                         >
-                            <li v-for="score in sport.scoring" :key="score.id">
+                            <li v-for="(score, index) in sport.scoring" :key="index">
                                 {{ score.name }}: {{ score.value }}
                             </li>
                         </ul>
