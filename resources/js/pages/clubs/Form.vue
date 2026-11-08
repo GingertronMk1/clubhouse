@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FormInput from '@/components/FormInput.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 
 defineOptions({ layout: AppLayout });
@@ -39,12 +40,11 @@ function submit() {
         <form class="mt-8 space-y-6" @submit.prevent="submit">
             <div>
                 <label for="name" class="block font-medium">Name</label>
-                <input
+                <FormInput
                     id="name"
                     v-model="form.name"
                     required
                     maxlength="255"
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
                 />
                 <p
                     v-if="form.errors.name"
@@ -58,12 +58,12 @@ function submit() {
                 <label for="description" class="block font-medium"
                     >Description</label
                 >
-                <textarea
+                <FormInput
+                    textarea
                     id="description"
                     v-model="form.description"
                     required
                     rows="4"
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
                 />
                 <p
                     v-if="form.errors.description"

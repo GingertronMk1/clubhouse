@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FormInput from '@/components/FormInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { store } from '@/routes/login';
@@ -22,14 +23,13 @@ function submit() {
                 <label for="email" class="block font-medium"
                     >Email address</label
                 >
-                <input
+                <FormInput
                     id="email"
                     v-model="form.email"
                     type="email"
                     autocomplete="username"
                     required
                     autofocus
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
                     :aria-invalid="!!form.errors.email"
                     :aria-describedby="
                         form.errors.email ? 'email-error' : undefined
@@ -46,13 +46,12 @@ function submit() {
             </div>
             <div>
                 <label for="password" class="block font-medium">Password</label>
-                <input
+                <FormInput
                     id="password"
                     v-model="form.password"
                     type="password"
                     autocomplete="current-password"
                     required
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
                     :aria-invalid="!!form.errors.password"
                     :aria-describedby="
                         form.errors.password ? 'password-error' : undefined

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FormInput from '@/components/FormInput.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 
 defineOptions({ layout: AppLayout });
@@ -38,14 +39,17 @@ function submit() {
         <form class="mt-8 space-y-6" @submit.prevent="submit">
             <div>
                 <label for="name" class="block font-medium">Name</label>
-                <input
+                <FormInput
                     id="name"
                     v-model="form.name"
                     required
                     maxlength="255"
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
                 />
-                <p v-if="form.errors.name" class="mt-1 text-sm text-red-700">
+                <p
+                    v-if="form.errors.name"
+                    class="mt-1 text-sm text-red-700"
+                    role="alert"
+                >
                     {{ form.errors.name }}
                 </p>
             </div>
@@ -53,16 +57,17 @@ function submit() {
                 <label for="description" class="block font-medium"
                     >Description</label
                 >
-                <textarea
+                <FormInput
+                    textarea
                     id="description"
                     v-model="form.description"
                     required
                     rows="4"
-                    class="mt-1 w-full rounded border border-slate-300 p-2"
                 />
                 <p
                     v-if="form.errors.description"
                     class="mt-1 text-sm text-red-700"
+                    role="alert"
                 >
                     {{ form.errors.description }}
                 </p>
@@ -83,12 +88,11 @@ function submit() {
                                 :for="`score-name-${i}`"
                                 class="block text-sm"
                                 >Name</label
-                            ><input
+                            ><FormInput
                                 :id="`score-name-${i}`"
                                 v-model="score.name"
                                 required
                                 maxlength="255"
-                                class="mt-1 w-full rounded border border-slate-300 p-2"
                             />
                             <p
                                 v-if="form.errors[`scoring.${i}.name`]"
@@ -102,13 +106,12 @@ function submit() {
                                 :for="`score-value-${i}`"
                                 class="block text-sm"
                                 >Value</label
-                            ><input
+                            ><FormInput
                                 :id="`score-value-${i}`"
                                 v-model.number="score.value"
                                 type="number"
                                 required
                                 step="1"
-                                class="mt-1 w-full rounded border border-slate-300 p-2"
                             />
                             <p
                                 v-if="form.errors[`scoring.${i}.value`]"
