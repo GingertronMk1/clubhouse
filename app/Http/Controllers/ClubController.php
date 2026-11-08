@@ -12,12 +12,12 @@ class ClubController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('directory/Index', ['kind' => 'clubs', 'records' => Club::query()->orderBy('name')->get()]);
+        return Inertia::render('clubs/Index', ['records' => Club::query()->orderBy('name')->get()]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('directory/Form', ['kind' => 'clubs']);
+        return Inertia::render('clubs/Form');
     }
 
     public function store(ClubRequest $request): RedirectResponse
@@ -30,12 +30,12 @@ class ClubController extends Controller
 
     public function show(Club $club): Response
     {
-        return Inertia::render('directory/Show', ['kind' => 'clubs', 'record' => $club]);
+        return Inertia::render('clubs/Show', ['record' => $club]);
     }
 
     public function edit(Club $club): Response
     {
-        return Inertia::render('directory/Form', ['kind' => 'clubs', 'record' => $club]);
+        return Inertia::render('clubs/Form', ['record' => $club]);
     }
 
     public function update(ClubRequest $request, Club $club): RedirectResponse

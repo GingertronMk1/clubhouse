@@ -3,12 +3,11 @@ import { Head, Link } from '@inertiajs/vue3';
 import * as clubs from '@/routes/clubs';
 import * as locations from '@/routes/locations';
 
-const props = defineProps<{
-    kind: 'clubs' | 'locations';
+defineProps<{
     records: { id: string; name: string; description: string }[];
 }>();
-const routes = props.kind === 'clubs' ? clubs : locations;
-const title = props.kind === 'clubs' ? 'Clubs' : 'Locations';
+const routes = clubs;
+const title = 'Clubs';
 </script>
 
 <template>
@@ -26,14 +25,14 @@ const title = props.kind === 'clubs' ? 'Clubs' : 'Locations';
                 <Link
                     :href="routes.create()"
                     class="rounded bg-stone-900 px-4 py-2 text-sm font-medium text-white dark:bg-stone-100 dark:text-stone-900"
-                    >Add {{ kind === 'clubs' ? 'club' : 'location' }}</Link
+                    >Add club</Link
                 >
             </div>
             <p
                 v-if="records.length === 0"
                 class="rounded-lg border border-stone-200 bg-white p-6 text-stone-600 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300"
             >
-                No {{ kind }} yet.
+                No clubs yet.
             </p>
             <ul
                 v-else

@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import * as clubs from '@/routes/clubs';
 import * as locations from '@/routes/locations';
 
 const props = defineProps<{
-    kind: 'clubs' | 'locations';
     record: {
         id: string;
         name: string;
@@ -12,7 +10,7 @@ const props = defineProps<{
         additional_information?: unknown;
     };
 }>();
-const routes = props.kind === 'clubs' ? clubs : locations;
+const routes = locations;
 function remove() {
     if (window.confirm(`Delete ${props.record.name}?`))
         router.delete(routes.destroy.url(props.record.id));
@@ -26,7 +24,7 @@ function remove() {
         <Head :title="record.name" />
         <main class="mx-auto max-w-2xl px-6 py-12">
             <Link :href="routes.index()" class="text-sm underline"
-                >Back to {{ kind }}</Link
+                >Back to locations</Link
             >
             <h1 class="mt-6 text-3xl font-semibold">{{ record.name }}</h1>
             <p
@@ -34,7 +32,7 @@ function remove() {
             >
                 {{ record.description }}
             </p>
-            <section v-if="kind === 'locations'" class="mt-8">
+            <section class="mt-8">
                 <h2 class="font-semibold">Additional information</h2>
                 <pre
                     class="mt-2 overflow-auto rounded bg-stone-100 p-4 text-sm dark:bg-stone-900"

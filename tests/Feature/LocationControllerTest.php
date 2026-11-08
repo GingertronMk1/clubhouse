@@ -5,10 +5,10 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 test('locations can be listed, viewed, created, updated and deleted', function () {
     $location = Location::factory()->create();
-    $this->get(route('locations.index'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('directory/Index')->has('records', 1));
-    $this->get(route('locations.create'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('directory/Form'));
-    $this->get(route('locations.show', $location))->assertOk()->assertInertia(fn (Assert $page) => $page->component('directory/Show')->where('record.id', $location->id));
-    $this->get(route('locations.edit', $location))->assertOk()->assertInertia(fn (Assert $page) => $page->component('directory/Form')->where('record.id', $location->id));
+    $this->get(route('locations.index'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('locations/Index')->has('records', 1));
+    $this->get(route('locations.create'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('locations/Form'));
+    $this->get(route('locations.show', $location))->assertOk()->assertInertia(fn (Assert $page) => $page->component('locations/Show')->where('record.id', $location->id));
+    $this->get(route('locations.edit', $location))->assertOk()->assertInertia(fn (Assert $page) => $page->component('locations/Form')->where('record.id', $location->id));
 
     $this->post(route('locations.store'), ['name' => 'Ground', 'description' => 'A field', 'additional_information' => '{"parking":true}'])->assertRedirect();
     $created = Location::where('name', 'Ground')->firstOrFail();

@@ -5,10 +5,10 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 test('clubs can be listed, viewed, created, updated and deleted', function () {
     $club = Club::factory()->create();
-    $this->get(route('clubs.index'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('directory/Index')->has('records', 1));
-    $this->get(route('clubs.create'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('directory/Form'));
-    $this->get(route('clubs.show', $club))->assertOk()->assertInertia(fn (Assert $page) => $page->component('directory/Show')->where('record.id', $club->id));
-    $this->get(route('clubs.edit', $club))->assertOk()->assertInertia(fn (Assert $page) => $page->component('directory/Form')->where('record.id', $club->id));
+    $this->get(route('clubs.index'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('clubs/Index')->has('records', 1));
+    $this->get(route('clubs.create'))->assertOk()->assertInertia(fn (Assert $page) => $page->component('clubs/Form'));
+    $this->get(route('clubs.show', $club))->assertOk()->assertInertia(fn (Assert $page) => $page->component('clubs/Show')->where('record.id', $club->id));
+    $this->get(route('clubs.edit', $club))->assertOk()->assertInertia(fn (Assert $page) => $page->component('clubs/Form')->where('record.id', $club->id));
     $this->post(route('clubs.store'), ['name' => 'Town', 'description' => 'Local club'])->assertRedirect();
     $created = Club::where('name', 'Town')->firstOrFail();
     $this->put(route('clubs.update', $created), ['name' => 'City', 'description' => 'New description'])->assertRedirect(route('clubs.show', $created));

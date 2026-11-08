@@ -12,12 +12,12 @@ class LocationController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('directory/Index', ['kind' => 'locations', 'records' => Location::query()->orderBy('name')->get()]);
+        return Inertia::render('locations/Index', ['records' => Location::query()->orderBy('name')->get()]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('directory/Form', ['kind' => 'locations']);
+        return Inertia::render('locations/Form');
     }
 
     public function store(LocationRequest $request): RedirectResponse
@@ -32,12 +32,12 @@ class LocationController extends Controller
 
     public function show(Location $location): Response
     {
-        return Inertia::render('directory/Show', ['kind' => 'locations', 'record' => $location]);
+        return Inertia::render('locations/Show', ['record' => $location]);
     }
 
     public function edit(Location $location): Response
     {
-        return Inertia::render('directory/Form', ['kind' => 'locations', 'record' => $location]);
+        return Inertia::render('locations/Form', ['record' => $location]);
     }
 
     public function update(LocationRequest $request, Location $location): RedirectResponse

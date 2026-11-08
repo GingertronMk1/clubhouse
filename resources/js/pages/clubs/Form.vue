@@ -1,27 +1,19 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import * as clubs from '@/routes/clubs';
-import * as locations from '@/routes/locations';
 
 const props = defineProps<{
-    kind: 'clubs' | 'locations';
     record?: {
         id: string;
         name: string;
         description: string;
-        additional_information?: unknown;
     };
 }>();
-const routes = props.kind === 'clubs' ? clubs : locations;
-const label = props.kind === 'clubs' ? 'club' : 'location';
+const routes = clubs;
+const label = 'club';
 const form = useForm({
     name: props.record?.name ?? '',
     description: props.record?.description ?? '',
-    additional_information: JSON.stringify(
-        props.record?.additional_information ?? {},
-        null,
-        2,
-    ),
 });
 function submit() {
     if (props.record) form.put(routes.update.url(props.record.id));
@@ -38,7 +30,7 @@ function submit() {
             <Link
                 :href="record ? routes.show(record.id) : routes.index()"
                 class="text-sm underline"
-                >Back to {{ record ? label : kind }}</Link
+                >Back to {{ record ? label : 'clubs' }}</Link
             >
             <h1 class="mt-6 text-3xl font-semibold">
                 {{ record ? 'Edit' : 'Add' }} {{ label }}
@@ -77,27 +69,6 @@ function submit() {
                         role="alert"
                     >
                         {{ form.errors.description }}
-                    </p>
-                </div>
-                <div v-if="kind === 'locations'">
-                    <label
-                        for="additional_information"
-                        class="mb-2 block font-medium"
-                        >Additional information (JSON)</label
-                    ><textarea
-                        id="additional_information"
-                        v-model="form.additional_information"
-                        required
-                        rows="6"
-                        spellcheck="false"
-                        class="w-full rounded border border-stone-300 bg-white px-3 py-2 font-mono text-sm dark:border-stone-700 dark:bg-stone-900"
-                    />
-                    <p
-                        v-if="form.errors.additional_information"
-                        class="mt-1 text-sm text-red-600"
-                        role="alert"
-                    >
-                        {{ form.errors.additional_information }}
                     </p>
                 </div>
                 <button
