@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->text('description');
+            $table->json('scoring')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

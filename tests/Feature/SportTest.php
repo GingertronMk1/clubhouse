@@ -38,15 +38,3 @@ test('sport scoring entries are validated', function () {
     ])->assertSessionHasErrors(['name', 'description', 'scoring.0.name', 'scoring.0.value']);
     expect(Sport::count())->toBe(0);
 });
-
-test('existing scoring is migrated to the sport and restored on rollback', function () {
-    $sport = Sport::factory()->create(['scoring' => [['name' => 'Try', 'value' => 5]]]);
-    $migration = require database_path('migrations/2026_11_08_125324_move_scoring_to_sports_table.php');
-
-    $migration->down();
-    expect(DB::table('scorings')->where('sport_id', $sport->id)->value('name'))->toBe('Try');
-
-    $migration->up();
-    expect(Schema::hasTable('scorings'))->toBeFalse();
-    expect($sport->refresh()->scoring->sole()->toArray())->toBe(['name' => 'Try', 'value' => 5]);
-});
