@@ -10,11 +10,6 @@ const props = defineProps<{
         start: string | null;
         description: string;
         summary: string;
-        result: { home?: number; away?: number } | null;
-        club1_score_source: string | null;
-        club2_score_source: string | null;
-        club1_score: { name: string; value: number; count: number }[] | null;
-        club2_score: { name: string; value: number; count: number }[] | null;
         sport: Named | null;
         competition: Named | null;
         club1: (Named & { club: Named | null }) | null;
@@ -79,52 +74,6 @@ function remove() {
             <p class="mt-2 whitespace-pre-wrap text-slate-600">
                 {{ record.summary }}
             </p>
-        </section>
-        <section class="mt-6">
-            <h2 class="text-xl font-semibold">Score</h2>
-            <p
-                v-if="
-                    record.result &&
-                    typeof record.result.home === 'number' &&
-                    typeof record.result.away === 'number'
-                "
-                class="mt-2 text-slate-700"
-            >
-                Final result: {{ record.result.home }} –
-                {{ record.result.away }}
-            </p>
-            <div
-                v-for="side in ['club1_score', 'club2_score'] as const"
-                :key="side"
-                class="mt-4"
-            >
-                <h3 class="font-medium">
-                    {{
-                        side === 'club1_score'
-                            ? record.club1?.name
-                            : record.club2?.name
-                    }}
-                </h3>
-                <p
-                    v-if="record[`${side}_source`] === 'inferred'"
-                    class="mt-1 text-sm text-slate-600"
-                >
-                    Estimated from the final result using the fewest scoring
-                    events.
-                </p>
-                <p
-                    v-if="!record[side]?.length"
-                    class="mt-1 text-sm text-slate-600"
-                >
-                    Scoring breakdown unavailable.
-                </p>
-                <ul v-else class="mt-1 text-slate-600">
-                    <li v-for="method in record[side]" :key="method.name">
-                        {{ method.name }}: {{ method.count }} ×
-                        {{ method.value }} = {{ method.count * method.value }}
-                    </li>
-                </ul>
-            </div>
         </section>
     </main>
 </template>

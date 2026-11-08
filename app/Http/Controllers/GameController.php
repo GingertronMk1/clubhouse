@@ -28,7 +28,7 @@ class GameController extends Controller
     public function store(GameRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['result'] = [];
+        $data['score'] = [];
 
         return to_route('games.show', Game::query()->create($data));
     }
@@ -46,11 +46,7 @@ class GameController extends Controller
     public function update(GameRequest $request, Game $game): RedirectResponse
     {
         $data = $request->validated();
-        foreach (['club1_score', 'club2_score'] as $field) {
-            if ($game->{$field} !== $data[$field]) {
-                $game->setAttribute($field.'_source', null);
-            }
-        }
+        $data['score'] = [];
         $game->update($data);
 
         return to_route('games.show', $game);
@@ -67,7 +63,7 @@ class GameController extends Controller
     private function formOptions(): array
     {
         return [
-            'sports' => Sport::query()->orderBy('name')->get(['id', 'name', 'scoring']),
+            'sports' => Sport::query()->orderBy('name')->get(['id', 'name']),
             'competitions' => Competition::query()->orderBy('name')->get(['id', 'name']),
             'teams' => Team::query()->with('club:id,name')->orderBy('name')->get(['id', 'name', 'club_id']),
             'locations' => Location::query()->orderBy('name')->get(['id', 'name']),

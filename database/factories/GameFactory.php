@@ -24,9 +24,7 @@ class GameFactory extends Factory
             'competition_id' => Competition::factory(),
             'club1_id' => Team::factory(),
             'club2_id' => Team::factory(),
-            'result' => [],
-            'club1_score' => [],
-            'club2_score' => [],
+            'score' => [],
             'location_id' => Location::factory(),
         ];
     }
