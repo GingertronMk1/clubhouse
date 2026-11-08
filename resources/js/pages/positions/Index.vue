@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import AppLayout from '@/layouts/AppLayout.vue';
+
+defineOptions({ layout: AppLayout });
 import { Head, Link } from '@inertiajs/vue3';
 import { show as sportShow } from '@/routes/sports';
 import { create, show } from '@/routes/sports/positions';

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import AppLayout from '@/layouts/AppLayout.vue';
+
+defineOptions({ layout: AppLayout });
 import { Head, Link, router } from '@inertiajs/vue3';
 import * as clubs from '@/routes/clubs';
 

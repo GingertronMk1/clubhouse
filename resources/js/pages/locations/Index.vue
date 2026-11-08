@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import AppLayout from '@/layouts/AppLayout.vue';
+
+defineOptions({ layout: AppLayout });
 import { Head, Link } from '@inertiajs/vue3';
-import * as clubs from '@/routes/clubs';
 import * as locations from '@/routes/locations';
 
 defineProps<{
@@ -16,10 +18,6 @@ const title = 'Locations';
     >
         <Head :title="title" />
         <main class="mx-auto max-w-4xl px-6 py-12">
-            <nav class="mb-10 flex gap-6 text-sm font-medium">
-                <Link :href="clubs.index()">Clubs</Link
-                ><Link :href="locations.index()">Locations</Link>
-            </nav>
             <div class="mb-8 flex items-center justify-between gap-4">
                 <h1 class="text-3xl font-semibold">{{ title }}</h1>
                 <Link

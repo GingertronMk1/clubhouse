@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\ClubController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\SportController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'Welcome')->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::resource('sports', SportController::class);
 Route::resource('sports.positions', PositionController::class)->scoped();
