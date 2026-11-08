@@ -45,3 +45,31 @@ test('club permissions require every requested permission for the specified club
 
     expect($user->hasClubPermission($club, Permission::View))->toBeFalse();
 });
+
+test('superadmins have all club permissions without membership', function () {
+    $user = User::factory()->create();
+    $club = Club::factory()->create();
+    $otherClub = Club::factory()->create();
+
+    expect($user->fresh()->superadmin)->toBeFalse();
+    expect($user->hasClubPermission($club, Permission::View))->toBeFalse();
+
+    $user->superadmin = true;
+    $user->save();
+    $user = $user->fresh();
+
+    expect($user->superadmin)->toBeTrue();
+    expect($user->hasClubPermission($club, Permission::View))->toBeTrue();
+    expect($user->hasClubPermission($otherClub, [Permission::Update, Permission::Delete]))->toBeTrue();
+    expect($user->hasClubPermission($club, []))->toBeFalse();
+    expect($user->clubs()->count())->toBe(0);
+});
+
+test('superadmin status cannot be mass assigned', function () {
+    $user = User::factory()->create();
+
+    $user->fill(['superadmin' => true]);
+    $user->save();
+
+    expect($user->fresh()->superadmin)->toBeFalse();
+});

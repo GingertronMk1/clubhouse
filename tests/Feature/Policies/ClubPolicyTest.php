@@ -39,3 +39,18 @@ test('authenticated users can list and create clubs', function () {
     expect(Gate::forUser($user)->allows('viewAny', Club::class))->toBeTrue();
     expect(Gate::forUser($user)->allows('create', Club::class))->toBeTrue();
 });
+
+test('superadmins can perform club abilities without membership', function (Permission $permission) {
+    $user = User::factory()->create();
+    $user->superadmin = true;
+    $user->save();
+    $club = Club::factory()->create();
+
+    expect(Gate::forUser($user)->allows($permission->value, $club))->toBeTrue();
+
+    if (in_array($permission, [Permission::Restore, Permission::ForceDelete], true)) {
+        $club->delete();
+
+        expect(Gate::forUser($user)->allows($permission->value, $club))->toBeTrue();
+    }
+})->with([Permission::View, Permission::Update, Permission::Delete, Permission::Restore, Permission::ForceDelete]);
