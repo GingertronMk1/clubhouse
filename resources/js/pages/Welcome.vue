@@ -6,8 +6,8 @@ import { index as clubsIndex, show as clubShow } from '@/routes/clubs';
 
 defineOptions({ layout: AppLayout });
 defineProps<{
-    sports: { id: string; name: string; description: string }[];
-    clubs: { id: string; name: string; description: string }[];
+    sports: { id: string; slug: string; name: string; description: string }[];
+    clubs: { id: string; slug: string; name: string; description: string }[];
 }>();
 </script>
 
@@ -49,7 +49,7 @@ defineProps<{
                         class="py-3 first:pt-0 last:pb-0"
                     >
                         <Link
-                            :href="sportShow(sport.id)"
+                            :href="sportShow(sport.slug)"
                             class="font-medium underline"
                             >{{ sport.name }}</Link
                         >
@@ -89,7 +89,7 @@ defineProps<{
                         class="py-3 first:pt-0 last:pb-0"
                     >
                         <Link
-                            :href="clubShow(club.id)"
+                            :href="clubShow(club.slug)"
                             class="font-medium underline"
                             >{{ club.name }}</Link
                         >

@@ -8,6 +8,7 @@ import * as clubs from '@/routes/clubs';
 const props = defineProps<{
     record?: {
         id: string;
+        slug: string;
         name: string;
         description: string;
     };
@@ -19,7 +20,7 @@ const form = useForm({
     description: props.record?.description ?? '',
 });
 function submit() {
-    if (props.record) form.put(routes.update.url(props.record.id));
+    if (props.record) form.put(routes.update.url(props.record.slug));
     else form.post(routes.store.url());
 }
 </script>
@@ -28,7 +29,7 @@ function submit() {
     <main class="mx-auto max-w-2xl px-6 py-12 text-slate-900">
         <Head :title="`${record ? 'Edit' : 'Add'} ${label}`" />
         <Link
-            :href="record ? routes.show(record.id) : routes.index()"
+            :href="record ? routes.show(record.slug) : routes.index()"
             class="text-sm underline"
             >Back to {{ record ? label : 'clubs' }}</Link
         >

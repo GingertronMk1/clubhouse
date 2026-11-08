@@ -15,6 +15,17 @@ trait HasSlug
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /** @return array<string, mixed> */
+    protected function slugUniqueScope(): array
+    {
+        return [];
+    }
+
     protected function generateSlug(): string
     {
         $baseSlug = substr(Str::slug($this->name) ?: 'item', 0, 255);
@@ -27,6 +38,7 @@ trait HasSlug
         $suffix = 1;
 
         while ($this->newQueryWithoutScopes()
+            ->where($this->slugUniqueScope())
             ->where('slug', $slug)
             ->when($this->exists, fn ($query) => $query->whereKeyNot($this->getKey()))
             ->exists()) {

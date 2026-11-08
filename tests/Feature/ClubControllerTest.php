@@ -11,7 +11,7 @@ test('clubs can be listed, viewed, created, updated and deleted', function () {
     $this->get(route('clubs.edit', $club))->assertOk()->assertInertia(fn (Assert $page) => $page->component('clubs/Form')->where('record.id', $club->id));
     $this->post(route('clubs.store'), ['name' => 'Town', 'description' => 'Local club'])->assertRedirect();
     $created = Club::where('name', 'Town')->firstOrFail();
-    $this->put(route('clubs.update', $created), ['name' => 'City', 'description' => 'New description'])->assertRedirect(route('clubs.show', $created));
+    $this->put(route('clubs.update', $created), ['name' => 'City', 'description' => 'New description'])->assertRedirect(route('clubs.show', $created->refresh()));
     expect($created->fresh()->name)->toBe('City');
     expect($created->fresh()->description)->toBe('New description');
     $this->delete(route('clubs.destroy', $created))->assertRedirect(route('clubs.index'));

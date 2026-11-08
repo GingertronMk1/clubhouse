@@ -12,6 +12,7 @@ import {
 defineProps<{
     sport: {
         id: string;
+        slug: string;
         name: string;
         description: string;
         scoring: { name: string; value: number }[];
@@ -41,11 +42,11 @@ function deleteSport(id: string) {
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ sport.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link :href="edit.url(sport.id)" class="underline">Edit</Link>
+                <Link :href="edit.url(sport.slug)" class="underline">Edit</Link>
                 <button
                     type="button"
                     class="text-red-700 underline"
-                    @click="deleteSport(sport.id)"
+                    @click="deleteSport(sport.slug)"
                 >
                     Delete
                 </button>
@@ -68,7 +69,7 @@ function deleteSport(id: string) {
                     Positions
                 </h2>
                 <Link
-                    :href="positionsIndex.url(sport.id)"
+                    :href="positionsIndex.url(sport.slug)"
                     class="text-sm underline"
                     >Manage positions</Link
                 >
@@ -96,7 +97,7 @@ function deleteSport(id: string) {
                         <Link
                             v-for="position in positions"
                             :key="position.id"
-                            :href="positionShow.url([sport.id, position.id])"
+                            :href="positionShow.url([sport.slug, position.id])"
                             :style="{
                                 left: fieldCoordinate(position.preview_x),
                                 top: fieldCoordinate(position.preview_y),
@@ -124,7 +125,7 @@ function deleteSport(id: string) {
                 <ul class="mt-4 grid gap-2 text-sm sm:grid-cols-2">
                     <li v-for="position in positions" :key="position.id">
                         <Link
-                            :href="positionShow.url([sport.id, position.id])"
+                            :href="positionShow.url([sport.slug, position.id])"
                             class="underline"
                             >{{ position.default_number }} —
                             {{ position.name }}</Link

@@ -16,8 +16,9 @@ class TeamController extends Controller
     {
         return Inertia::render('teams/Index', [
             'club' => $club,
-            'teams' => $club->teams()->orderBy('name')->get(['id', 'name', 'description'])->map(fn (Team $team) => [
+            'teams' => $club->teams()->orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Team $team) => [
                 'id' => $team->id,
+                'slug' => $team->slug,
                 'name' => $team->name,
                 'description' => Str::limit($team->description, 160),
             ]),

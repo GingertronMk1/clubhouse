@@ -40,3 +40,34 @@ it('allows teams to share a slug', function () {
     expect($first->slug)->toBe('first-team')
         ->and($second->slug)->toBe('first-team');
 });
+
+it('keeps team slugs unique within each club', function () {
+    $club = Club::factory()->create();
+    $first = Team::factory()->for($club)->create(['name' => 'First Team']);
+    $second = Team::factory()->for($club)->create(['name' => 'First Team']);
+
+    expect($first->slug)->toBe('first-team')
+        ->and($second->slug)->toBe('first-team-2');
+});
+
+it('binds slug routes to the correct records', function () {
+    $this->withoutVite();
+    $sport = Sport::factory()->create(['name' => 'Rugby Union']);
+    $club = Club::factory()->create(['name' => 'Town Club']);
+    $otherClub = Club::factory()->create(['name' => 'City Club']);
+    $team = Team::factory()->for($club)->create(['name' => 'First Team']);
+    $otherTeam = Team::factory()->for($otherClub)->create(['name' => 'First Team']);
+    $secondTeam = Team::factory()->for($club)->create(['name' => 'First Team']);
+
+    expect(route('sports.show', $sport))->toEndWith('/sports/rugby-union')
+        ->and(route('clubs.show', $club))->toEndWith('/clubs/town-club')
+        ->and(route('clubs.teams.show', [$club, $team]))->toEndWith('/clubs/town-club/teams/first-team');
+
+    $this->get(route('sports.show', $sport))->assertOk();
+    $this->get(route('clubs.show', $club))->assertOk();
+    $this->get(route('clubs.teams.show', [$club, $team]))->assertInertia(fn ($page) => $page->where('team.id', $team->id));
+    $this->get(route('clubs.teams.show', [$otherClub, $otherTeam]))->assertInertia(fn ($page) => $page->where('team.id', $otherTeam->id));
+    $this->get(route('clubs.teams.show', [$club, $secondTeam]))->assertInertia(fn ($page) => $page->where('team.id', $secondTeam->id));
+    $this->get('/clubs/city-club/teams/first-team-2')->assertNotFound();
+    $this->get('/sports/'.$sport->id)->assertNotFound();
+});

@@ -17,9 +17,13 @@ class Team extends Model
 
     use HasSlug, HasUuids, SoftDeletes;
 
-    protected bool $slugMustBeUnique = false;
-
     protected $fillable = ['name', 'description'];
+
+    /** @return array<string, mixed> */
+    protected function slugUniqueScope(): array
+    {
+        return ['club_id' => $this->club_id];
+    }
 
     /** @return BelongsTo<Club, $this> */
     public function club(): BelongsTo

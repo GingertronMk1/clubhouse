@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('slug')->index();
             $table->text('description');
             $table->foreignIdFor(Club::class)->constrained();
+            $table->unique(['club_id', 'slug']);
             $table->timestamps();
             $table->softDeletes();
         });

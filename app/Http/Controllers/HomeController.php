@@ -12,8 +12,8 @@ class HomeController extends Controller
     public function __invoke(): Response
     {
         return Inertia::render('Welcome', [
-            'sports' => Sport::query()->orderBy('name')->get(['id', 'name', 'description']),
-            'clubs' => Club::query()->orderBy('name')->get(['id', 'name', 'description']),
+            'sports' => Sport::query()->orderBy('name')->get(['id', 'slug', 'name', 'description']),
+            'clubs' => Club::query()->orderBy('name')->get(['id', 'slug', 'name', 'description']),
         ]);
     }
 }
