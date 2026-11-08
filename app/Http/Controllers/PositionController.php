@@ -43,7 +43,11 @@ class PositionController extends Controller
 
     public function edit(Sport $sport, Position $position): Response
     {
-        return Inertia::render('positions/Form', ['sport' => $sport, 'position' => $position]);
+        return Inertia::render('positions/Form', [
+            'sport' => $sport,
+            'position' => $position,
+            'otherPositions' => $sport->positions()->whereKeyNot($position->getKey())->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
+        ]);
     }
 
     public function update(PositionRequest $request, Sport $sport, Position $position): RedirectResponse

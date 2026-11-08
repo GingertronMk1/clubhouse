@@ -49,3 +49,20 @@ test('the positions index shows a shortened description', function () {
         ->where('positions.0.description', str_repeat('A', 160).'...')
         ->missing('positions.0.default_number'));
 });
+
+test('the edit page includes the other positions for the same sport', function () {
+    $this->withoutVite();
+    $sport = Sport::factory()->create();
+    $position = Position::factory()->for($sport)->create(['name' => 'Edited']);
+    Position::factory()->for($sport)->create(['name' => 'Other', 'preview_x' => 25, 'preview_y' => 75, 'default_number' => 7]);
+    Position::factory()->create(['name' => 'Another sport']);
+
+    $this->get(route('sports.positions.edit', [$sport, $position]))->assertInertia(fn (Assert $page) => $page
+        ->component('positions/Form')
+        ->where('position.name', 'Edited')
+        ->has('otherPositions', 1)
+        ->where('otherPositions.0.name', 'Other')
+        ->where('otherPositions.0.preview_x', 25)
+        ->where('otherPositions.0.preview_y', 75)
+        ->where('otherPositions.0.default_number', 7));
+});
