@@ -17,6 +17,8 @@ class Team extends Model
 
     use HasSlug, HasUuids, SoftDeletes;
 
+    protected bool $slugMustBeUnique = false;
+
     protected $fillable = ['name', 'description'];
 
     /** @return BelongsTo<Club, $this> */
