@@ -28,9 +28,7 @@ function submit() {
 <template>
     <main class="mx-auto max-w-2xl px-6 py-12 text-slate-900">
         <Head :title="`${team ? 'Edit' : 'Add'} ${label}`" />
-        <Link
-            :href="routes.index(club.id)"
-            class="text-sm underline"
+        <Link :href="routes.index(club.id)" class="text-sm underline"
             >Back to {{ club.name }} teams</Link
         >
         <h1 class="mt-5 text-3xl font-semibold">

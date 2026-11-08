@@ -48,12 +48,22 @@ function remove() {
         <section class="mt-8" aria-labelledby="teams-heading">
             <div class="flex items-center justify-between gap-4">
                 <h2 id="teams-heading" class="text-xl font-semibold">Teams</h2>
-                <Link :href="teamsIndex.url(record.id)" class="text-sm underline">Manage teams</Link>
+                <Link
+                    :href="teamsIndex.url(record.id)"
+                    class="text-sm underline"
+                    >Manage teams</Link
+                >
             </div>
-            <p v-if="teams.length === 0" class="mt-3 text-slate-600">No teams yet.</p>
+            <p v-if="teams.length === 0" class="mt-3 text-slate-600">
+                No teams yet.
+            </p>
             <ul v-else class="mt-4 space-y-2">
                 <li v-for="team in teams" :key="team.id">
-                    <Link :href="teamShow.url([record.id, team.id])" class="underline">{{ team.name }}</Link>
+                    <Link
+                        :href="teamShow.url([record.id, team.id])"
+                        class="underline"
+                        >{{ team.name }}</Link
+                    >
                 </li>
             </ul>
         </section>

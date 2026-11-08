@@ -28,9 +28,7 @@ function deleteTeam(clubId: string, teamId: string) {
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ team.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link
-                    :href="edit.url([club.id, team.id])"
-                    class="underline"
+                <Link :href="edit.url([club.id, team.id])" class="underline"
                     >Edit</Link
                 >
                 <button
