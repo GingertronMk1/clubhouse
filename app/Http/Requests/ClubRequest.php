@@ -2,13 +2,19 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Club;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class ClubRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $club = $this->route('club');
+
+        return $club instanceof Club
+            ? Gate::allows('update', $club)
+            : Gate::allows('create', Club::class);
     }
 
     /** @return array{name: list<string>, description: list<string>} */

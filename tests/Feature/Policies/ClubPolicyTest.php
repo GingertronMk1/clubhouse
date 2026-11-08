@@ -33,9 +33,9 @@ test('restore and force delete permissions apply to soft deleted clubs', functio
     expect(Gate::forUser(User::factory()->create())->allows($permission->value, $club))->toBeFalse();
 })->with([Permission::Restore, Permission::ForceDelete]);
 
-test('class level club abilities are denied without global permissions', function () {
+test('authenticated users can list and create clubs', function () {
     $user = User::factory()->create();
 
-    expect(Gate::forUser($user)->allows('viewAny', Club::class))->toBeFalse();
-    expect(Gate::forUser($user)->allows('create', Club::class))->toBeFalse();
+    expect(Gate::forUser($user)->allows('viewAny', Club::class))->toBeTrue();
+    expect(Gate::forUser($user)->allows('create', Club::class))->toBeTrue();
 });
