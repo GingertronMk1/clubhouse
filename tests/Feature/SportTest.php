@@ -2,6 +2,7 @@
 
 use App\Models\Scoring;
 use App\Models\Sport;
+use Database\Seeders\SportSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('sports and their scoring can be created, viewed, updated and deleted', function () {
@@ -42,4 +43,22 @@ test('the sport creation page displays an empty form', function () {
 
     $this->get(route('sports.create'))->assertInertia(fn (Assert $page) => $page
         ->component('sports/Form')->missing('sport'));
+});
+
+test('sport fixtures include scoring and can be seeded repeatedly', function () {
+    $this->seed(SportSeeder::class);
+    $this->seed(SportSeeder::class);
+
+    expect(Sport::count())->toBe(4);
+    expect(Sport::orderBy('name')->pluck('name')->all())->toBe([
+        'American Football', 'Rugby League', 'Rugby Union', 'Touch Rugby',
+    ]);
+    expect(Sport::where('name', 'Rugby League')->firstOrFail()->scoring->first()->toArray())
+        ->toBe(['name' => 'Try', 'value' => 4]);
+    expect(Sport::where('name', 'Rugby Union')->firstOrFail()->scoring->first()->toArray())
+        ->toBe(['name' => 'Try', 'value' => 5]);
+    expect(Sport::where('name', 'Touch Rugby')->firstOrFail()->scoring->first()->toArray())
+        ->toBe(['name' => 'Touchdown', 'value' => 1]);
+    expect(Sport::where('name', 'American Football')->firstOrFail()->scoring->first()->toArray())
+        ->toBe(['name' => 'Touchdown', 'value' => 6]);
 });
