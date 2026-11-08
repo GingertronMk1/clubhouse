@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Club;
+use App\Models\User;
 use Database\Seeders\ClubSeeder;
+use Database\Seeders\UserSeeder;
 
 test('club seeding includes the requested competitions and can be repeated', function () {
     $this->seed(ClubSeeder::class);
@@ -27,4 +29,22 @@ test('club seeding preserves existing records including deleted clubs', function
     expect($existing->fresh()->description)->toBe('Custom description');
     expect(Club::withTrashed()->where('name', 'England Touch')->count())->toBe(1);
     $this->assertSoftDeleted($deleted);
+});
+
+test('club seeding assigns 25 users in order and wraps around without changing existing permissions', function () {
+    $this->seed(UserSeeder::class);
+    $users = User::orderBy('email')->pluck('id');
+
+    $this->seed(ClubSeeder::class);
+
+    $firstClub = Club::where('name', 'Bradford Bulls')->firstOrFail();
+    $eleventhClub = Club::where('name', 'Warrington Wolves')->firstOrFail();
+    $firstClub->users()->updateExistingPivot($users[0], ['permissions' => ['manage-team']]);
+
+    $this->seed(ClubSeeder::class);
+
+    expect(Club::withCount('users')->get()->pluck('users_count')->unique()->all())->toBe([25]);
+    expect($firstClub->users()->pluck('users.id')->sort()->values()->all())->toBe($users->slice(0, 25)->sort()->values()->all());
+    expect($eleventhClub->users()->pluck('users.id')->sort()->values()->all())->toBe($users->slice(250)->concat($users->slice(0, 19))->sort()->values()->all());
+    expect($firstClub->users()->whereKey($users[0])->firstOrFail()->pivot->permissions)->toBe(['manage-team']);
 });
