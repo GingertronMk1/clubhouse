@@ -43,7 +43,7 @@ function currentLocalDateTime(): string {
 }
 const eventForm = useForm({
     sport_event_id: '',
-    competitor_type: 'team',
+    competitor_type: 'player',
     competitor_id: '',
     occurred_at: currentLocalDateTime(),
     description: '',
