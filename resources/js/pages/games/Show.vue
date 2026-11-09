@@ -260,21 +260,25 @@ function remove() {
                                 {{ record.team2.name }}
                             </option>
                         </template>
-                        <option
-                            v-for="player in eventForm.competitor_type ===
-                            'player'
-                                ? lineups
-                                : []"
-                            :key="player.game_user_id"
-                            :value="player.game_user_id"
-                        >
-                            {{ player.name }} ({{
-                                (player.team === 1
-                                    ? record.team1
-                                    : record.team2
-                                )?.name
-                            }})
-                        </option>
+                        <template v-else>
+                            <optgroup
+                                v-for="side in [1, 2]"
+                                :key="side"
+                                :label="
+                                    `${(side === 1 ? record.team1 : record.team2)?.club?.name ?? ''} ${(side === 1 ? record.team1 : record.team2)?.name ?? ''}`.trim()
+                                "
+                            >
+                                <option
+                                    v-for="player in lineups.filter(
+                                        (item) => item.team === side,
+                                    )"
+                                    :key="player.game_user_id"
+                                    :value="player.game_user_id"
+                                >
+                                    {{ player.name }}
+                                </option>
+                            </optgroup>
+                        </template>
                     </select>
                     <span
                         v-if="eventForm.errors.competitor_id"
