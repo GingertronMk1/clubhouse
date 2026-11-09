@@ -15,7 +15,6 @@ use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
-Route::get('/live-game', LiveGameController::class)->name('live-game');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -36,4 +35,5 @@ Route::resource('clubs.teams', TeamController::class)->scoped();
 Route::resource('competitions', CompetitionController::class);
 Route::resource('games', GameController::class);
 
+Route::get('games/{game}/live', LiveGameController::class)->name('live-game');
 Route::post('games/{game}/events', [GameSportEventController::class, 'store'])->name('games.events.store');
