@@ -298,7 +298,9 @@ function remove() {
                                     :key="player.game_user_id"
                                     :value="player.game_user_id"
                                 >
-                                    {{ player.name }}
+                                    {{ player.number ?? 'No number' }} -
+                                    {{ player.name }} -
+                                    {{ player.position?.name ?? 'No position' }}
                                 </option>
                             </optgroup>
                         </template>
