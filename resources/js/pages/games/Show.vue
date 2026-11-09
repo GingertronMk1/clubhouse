@@ -34,17 +34,26 @@ const props = defineProps<{
         competitor: string | null;
     }[];
 }>();
+function currentLocalDateTime(): string {
+    const now = new Date();
+    const pad = (value: number) => String(value).padStart(2, '0');
+
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+}
 const eventForm = useForm({
     sport_event_id: '',
     competitor_type: 'team',
     competitor_id: '',
-    occurred_at: '',
+    occurred_at: currentLocalDateTime(),
     description: '',
 });
 function submitEvent() {
     eventForm.post(storeEvent.url(props.record.id), {
         preserveScroll: true,
-        onSuccess: () => eventForm.reset(),
+        onSuccess: () => {
+            eventForm.reset();
+            eventForm.occurred_at = currentLocalDateTime();
+        },
     });
 }
 
