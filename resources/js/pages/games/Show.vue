@@ -26,6 +26,7 @@ const props = defineProps<{
         position: { name: string; preview_x: number; preview_y: number } | null;
     }[];
     sportEvents: (Named & { score: number })[];
+    score: { team1: number; team2: number };
     events: {
         id: string;
         name: string;
@@ -192,6 +193,12 @@ function remove() {
             </div>
         </section>
         <section class="mt-8" aria-labelledby="add-event-heading">
+            <h2 class="text-xl font-semibold">Score</h2>
+            <p class="mt-2 text-lg" aria-label="Game score">
+                {{ record.team1?.club?.name }} {{ record.team1?.name }}
+                <strong>{{ score.team1 }} – {{ score.team2 }}</strong>
+                {{ record.team2?.club?.name }} {{ record.team2?.name }}
+            </p>
             <h2 id="add-event-heading" class="text-xl font-semibold">
                 Add event
             </h2>

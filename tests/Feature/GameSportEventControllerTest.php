@@ -39,3 +39,27 @@ test('game events reject unrelated events and competitors and invalid times', fu
     $this->post(route('games.events.store', $game), [...$data, 'sport_event_id' => $validEvent->id, 'competitor_id' => $game->team1_id, 'occurred_at' => '2026-11-09T12:30', 'description' => ['invalid']])->assertSessionHasErrors('description');
     $this->assertDatabaseCount('game_sport_event', 0);
 });
+
+test('game scores sum repeated team and player events for each side', function () {
+    $this->withoutVite();
+    $game = Game::factory()->create();
+    $players = User::factory()->count(2)->create();
+    $position = Position::factory()->create(['sport_id' => $game->sport_id]);
+    $game->users()->attach($players[0], ['team' => 1, 'position_id' => $position->id]);
+    $game->users()->attach($players[1], ['team' => 2, 'position_id' => $position->id]);
+    $lineup = $game->users()->get()->keyBy('id');
+    $try = SportEvent::factory()->create(['sport_id' => $game->sport_id, 'score' => 5]);
+    $conversion = SportEvent::factory()->create(['sport_id' => $game->sport_id, 'score' => 2]);
+    $penalty = SportEvent::factory()->create(['sport_id' => $game->sport_id, 'score' => 0]);
+    $attributes = ['occurred_at' => '2026-11-09 12:30:00'];
+
+    $this->get(route('games.show', $game))->assertInertia(fn (Assert $page) => $page->where('score.team1', 0)->where('score.team2', 0));
+    $game->sportEvents()->attach($try, [...$attributes, 'competitor_type' => GameUser::class, 'competitor_id' => $lineup[$players[0]->id]->pivot->id]);
+    $game->sportEvents()->attach($try, [...$attributes, 'competitor_type' => GameUser::class, 'competitor_id' => $lineup[$players[0]->id]->pivot->id]);
+    $game->sportEvents()->attach($conversion, [...$attributes, 'competitor_type' => Team::class, 'competitor_id' => $game->team1_id]);
+    $game->sportEvents()->attach($try, [...$attributes, 'competitor_type' => GameUser::class, 'competitor_id' => $lineup[$players[1]->id]->pivot->id]);
+    $game->sportEvents()->attach($conversion, [...$attributes, 'competitor_type' => Team::class, 'competitor_id' => $game->team2_id]);
+    $game->sportEvents()->attach($penalty, [...$attributes, 'competitor_type' => Team::class, 'competitor_id' => $game->team2_id]);
+
+    $this->get(route('games.show', $game))->assertInertia(fn (Assert $page) => $page->where('score.team1', 12)->where('score.team2', 7));
+});

@@ -84,15 +84,29 @@ class GameController extends Controller
             'number' => $user->pivot->jersey_number,
             'position' => $positions->get($user->pivot->position_id)?->only(['name', 'preview_x', 'preview_y']),
         ]);
-        $events = $game->sportEvents->map(fn ($event) => [
-            'id' => $event->pivot->id,
-            'name' => $event->name,
-            'occurred_at' => $event->pivot->occurred_at->toIso8601String(),
-            'description' => $event->pivot->description,
-            'competitor' => $event->pivot->competitor_type === (new Team)->getMorphClass()
-                ? collect([$game->team1, $game->team2])->firstWhere('id', $event->pivot->competitor_id)?->name
-                : $lineups->firstWhere('game_user_id', $event->pivot->competitor_id)['name'] ?? null,
-        ])->sortBy('occurred_at')->values();
+        $events = $game->sportEvents->map(function ($event) use ($game, $lineups) {
+            $isTeam = $event->pivot->competitor_type === (new Team)->getMorphClass();
+            $player = $isTeam ? null : $lineups->firstWhere('game_user_id', $event->pivot->competitor_id);
+            $side = $isTeam
+                ? match ($event->pivot->competitor_id) {
+                    $game->team1_id => 1,
+                    $game->team2_id => 2,
+                    default => null,
+                }
+            : ($player['team'] ?? null);
+
+            return [
+                'id' => $event->pivot->id,
+                'name' => $event->name,
+                'score' => $event->score,
+                'side' => $side,
+                'occurred_at' => $event->pivot->occurred_at->toIso8601String(),
+                'description' => $event->pivot->description,
+                'competitor' => $isTeam
+                    ? collect([$game->team1, $game->team2])->firstWhere('id', $event->pivot->competitor_id)?->name
+                    : ($player['name'] ?? null),
+            ];
+        })->sortBy('occurred_at')->values();
         $game->unsetRelation('users');
         $game->unsetRelation('sportEvents');
 
@@ -100,6 +114,10 @@ class GameController extends Controller
             'record' => $game,
             'lineups' => $lineups,
             'events' => $events,
+            'score' => [
+                'team1' => $events->where('side', 1)->sum('score'),
+                'team2' => $events->where('side', 2)->sum('score'),
+            ],
             'sportEvents' => $game->sport->events()->orderBy('name')->get(['id', 'name', 'score']),
         ]);
     }
