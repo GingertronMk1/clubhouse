@@ -27,7 +27,11 @@ const props = defineProps<{
         team2_id: string;
         team1: { name: string; club: { name: string } | null } | null;
         team2: { name: string; club: { name: string } | null } | null;
-        users: { name: string; pivot: { id: string; team: number } }[];
+        users: {
+            name: string;
+            position: string | null;
+            pivot: { id: string; team: number; jersey_number: number | null };
+        }[];
         sport_events: GameEvent[];
     };
 }>();
@@ -79,9 +83,13 @@ function competitorName(event: GameEvent): string | undefined {
         return undefined;
     }
 
-    return props.game.users.find(
+    const player = props.game.users.find(
         (user) => user.pivot.id === event.pivot.competitor_id,
-    )?.name;
+    );
+
+    return player
+        ? `${player.name} - ${player.pivot.jersey_number ?? 'No number'} - ${player.position ?? 'No position'}`
+        : undefined;
 }
 </script>
 

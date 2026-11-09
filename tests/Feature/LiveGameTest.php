@@ -22,8 +22,9 @@ test('the live game page is accessible', function () {
 test('the live game page includes team and player events without exposing user details', function () {
     $game = Game::factory()->create();
     $player = User::factory()->create(['name' => 'Alex Smith']);
-    $position = Position::factory()->create(['sport_id' => $game->sport_id]);
-    $game->users()->attach($player, ['team' => 1, 'position_id' => $position->id]);
+    $position = Position::factory()->create(['sport_id' => $game->sport_id, 'name' => 'Fly-half']);
+    $game->users()->attach($player, ['team' => 1, 'position_id' => $position->id, 'jersey_number' => 10]);
+    $position->delete();
     $gameUser = $game->users()->firstOrFail()->pivot;
     $event = SportEvent::factory()->create(['sport_id' => $game->sport_id, 'name' => 'Try']);
     $game->sportEvents()->attach($event, ['competitor_type' => GameUser::class, 'competitor_id' => $gameUser->id, 'occurred_at' => '2026-11-09 12:30:00']);
@@ -33,6 +34,8 @@ test('the live game page includes team and player events without exposing user d
         ->where('game.team1_id', $game->team1_id)
         ->where('game.team2.name', $game->team2->name)
         ->where('game.users.0.name', 'Alex Smith')
+        ->where('game.users.0.position', 'Fly-half')
+        ->where('game.users.0.pivot.jersey_number', 10)
         ->where('game.users.0.pivot.id', $gameUser->id)
         ->missing('game.users.0.email')
         ->has('game.sport_events', 2)
