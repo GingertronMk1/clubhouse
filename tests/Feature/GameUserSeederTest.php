@@ -44,3 +44,18 @@ test('games without positions or club members are skipped', function () {
 
     $this->assertDatabaseCount('game_user', 0);
 });
+
+test('each seeded team has no more players than the sport has positions', function () {
+    $game = Game::factory()->create();
+    $firstPlayers = User::factory()->count(4)->create();
+    $secondPlayers = User::factory()->count(4)->create();
+    $game->team1->club->users()->attach($firstPlayers->mapWithKeys(fn (User $user) => [$user->id => ['permissions' => '[]']])->all());
+    $game->team2->club->users()->attach($secondPlayers->mapWithKeys(fn (User $user) => [$user->id => ['permissions' => '[]']])->all());
+    Position::factory()->create(['sport_id' => $game->sport_id]);
+    Position::factory()->count(3)->create();
+
+    $this->seed(GameUserSeeder::class);
+
+    expect($game->team1Users()->count())->toBe(1);
+    expect($game->team2Users()->count())->toBe(1);
+});
