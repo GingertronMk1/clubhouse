@@ -27,6 +27,9 @@ class GameController extends Controller
             'team' => ['nullable', 'uuid'],
             'club' => ['nullable', 'uuid'],
         ]);
+        if (! is_array($filters)) {
+            throw new \LogicException('Expected validated filters to be an array.');
+        }
 
         $games = Game::query()->with(['team1', 'team2', 'competition', 'location']);
         if (! empty($filters['sport'])) {
@@ -59,6 +62,9 @@ class GameController extends Controller
     {
         $data = $request->validated();
         $lineup = $data['lineup'] ?? [];
+        if (! is_array($lineup)) {
+            throw new \LogicException('Expected a validated lineup array.');
+        }
         unset($data['lineup']);
         $data['score'] = [];
 
@@ -118,19 +124,24 @@ class GameController extends Controller
                 'team1' => $events->where('side', 1)->sum('score'),
                 'team2' => $events->where('side', 2)->sum('score'),
             ],
-            'sportEvents' => $game->sport->events()->orderBy('name')->get(['id', 'name', 'score']),
+            'sportEvents' => ($game->sport ?? abort(404))->events()->orderBy('name')->get(['id', 'name', 'score']),
         ]);
     }
 
     public function edit(Game $game): Response
     {
-        return Inertia::render('games/Form', [...$this->formOptions(), 'record' => $game->load('users'), 'start' => $game->start ? Carbon::parse($game->getRawOriginal('start'))->format('Y-m-d\TH:i:s') : null]);
+        $start = $game->getRawOriginal('start');
+
+        return Inertia::render('games/Form', [...$this->formOptions(), 'record' => $game->load('users'), 'start' => is_string($start) ? Carbon::parse($start)->format('Y-m-d\TH:i:s') : null]);
     }
 
     public function update(GameRequest $request, Game $game): RedirectResponse
     {
         $data = $request->validated();
         $lineup = $data['lineup'] ?? [];
+        if (! is_array($lineup)) {
+            throw new \LogicException('Expected a validated lineup array.');
+        }
         unset($data['lineup']);
         $data['score'] = [];
         DB::transaction(function () use ($game, $data, $lineup): void {
@@ -148,14 +159,20 @@ class GameController extends Controller
         return to_route('games.index');
     }
 
-    /** @param array<int, array{user_id: string, team: int, position_id: string, jersey_number?: int|null}> $lineup */
+    /** @param array<array-key, mixed> $lineup */
     private function syncLineup(Game $game, array $lineup): void
     {
-        $game->users()->sync(collect($lineup)->mapWithKeys(fn (array $player) => [$player['user_id'] => [
-            'team' => $player['team'],
-            'position_id' => $player['position_id'],
-            'jersey_number' => $player['jersey_number'] ?? null,
-        ]])->all());
+        $game->users()->sync(collect($lineup)->mapWithKeys(function (mixed $player): array {
+            if (! is_array($player) || ! isset($player['user_id']) || ! is_string($player['user_id'])) {
+                throw new \LogicException('Expected a validated lineup player.');
+            }
+
+            return [$player['user_id'] => [
+                'team' => $player['team'],
+                'position_id' => $player['position_id'],
+                'jersey_number' => $player['jersey_number'] ?? null,
+            ]];
+        })->all());
     }
 
     /** @return array<string, mixed> */

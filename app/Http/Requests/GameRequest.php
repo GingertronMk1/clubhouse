@@ -17,6 +17,8 @@ class GameRequest extends FormRequest
     /** @return array<string, mixed> */
     public function rules(): array
     {
+        $sportId = $this->input('sport_id');
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'start' => ['nullable', 'date'],
@@ -40,7 +42,7 @@ class GameRequest extends FormRequest
                 }
             }],
             'lineup.*.team' => ['required', 'integer', Rule::in([1, 2])],
-            'lineup.*.position_id' => ['required', 'uuid', Rule::exists('positions', 'id')->where('sport_id', $this->input('sport_id'))->whereNull('deleted_at')],
+            'lineup.*.position_id' => ['required', 'uuid', Rule::exists('positions', 'id')->where('sport_id', is_string($sportId) ? $sportId : null)->whereNull('deleted_at')],
             'lineup.*.jersey_number' => ['nullable', 'integer', 'min:0', 'max:65535'],
             'location_id' => ['required', 'uuid', Rule::exists('locations', 'id')->whereNull('deleted_at')],
         ];

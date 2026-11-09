@@ -30,7 +30,7 @@ class SportController extends Controller
     public function store(SportRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
-            $sport = Sport::query()->create($request->safe()->except('events'));
+            $sport = Sport::query()->create(['name' => $request->validated('name'), 'description' => $request->validated('description')]);
             /** @var array<int, array{name: string, description: ?string, score: int}> $events */
             $events = $request->validated('events');
             $sport->events()->createMany(collect($events)->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
@@ -55,7 +55,7 @@ class SportController extends Controller
     public function update(SportRequest $request, Sport $sport): RedirectResponse
     {
         DB::transaction(function () use ($request, $sport) {
-            $sport->update($request->safe()->except('events'));
+            $sport->update(['name' => $request->validated('name'), 'description' => $request->validated('description')]);
             $sport->events()->delete();
             /** @var array<int, array{name: string, description: ?string, score: int}> $events */
             $events = $request->validated('events');

@@ -21,7 +21,18 @@ return new class extends Migration
         });
 
         foreach (DB::table('sports')->get(['id', 'scoring']) as $sport) {
-            foreach (json_decode($sport->scoring ?? '[]', true, 512, JSON_THROW_ON_ERROR) as $event) {
+            $scoring = $sport->scoring ?? '[]';
+            if (! is_string($scoring)) {
+                throw new UnexpectedValueException('Sport scoring must be JSON.');
+            }
+            $events = json_decode($scoring, true, 512, JSON_THROW_ON_ERROR);
+            if (! is_array($events)) {
+                throw new UnexpectedValueException('Sport scoring must be an array.');
+            }
+            foreach ($events as $event) {
+                if (! is_array($event) || ! isset($event['name'], $event['value'])) {
+                    throw new UnexpectedValueException('Sport scoring events must have a name and value.');
+                }
                 DB::table('sport_events')->insert([
                     'id' => (string) Str::uuid(), 'sport_id' => $sport->id,
                     'name' => $event['name'], 'description' => '', 'score' => $event['value'],
