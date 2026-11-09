@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
+import { useEchoPublic } from '@laravel/echo-vue';
 import { computed } from 'vue';
 import { useGameTeamEvents } from '@/composables/useGameTeamEvents';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -30,6 +31,17 @@ const props = defineProps<{
         sport_events: GameEvent[];
     };
 }>();
+
+function refreshGame(): void {
+    router.reload({ only: ['game'] });
+}
+
+const { channel } = useEchoPublic(
+    `games.${props.game.id}`,
+    'GameEventRecorded',
+    refreshGame,
+);
+channel().subscribed(refreshGame);
 
 const { team1Events, team2Events, team1Score, team2Score } = useGameTeamEvents(
     () => props.game,
