@@ -17,7 +17,6 @@ class SportEventFactory extends Factory
             'name' => fake()->word(),
             'description' => fake()->sentence(),
             'score' => 0,
-            'is_team_event' => true,
         ];
     }
 }

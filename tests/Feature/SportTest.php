@@ -10,27 +10,25 @@ test('sports and their events can be created, viewed, updated and deleted', func
     $this->withoutVite();
     $this->post(route('sports.store'), [
         'name' => 'Rugby', 'description' => 'A team sport',
-        'events' => [['name' => 'Try', 'description' => 'Ground the ball', 'score' => 5, 'is_team_event' => false]],
+        'events' => [['name' => 'Try', 'description' => 'Ground the ball', 'score' => 5]],
     ])->assertRedirect(route('sports.index'));
 
     $sport = Sport::query()->firstOrFail();
     expect($sport->events->sole())->toBeInstanceOf(SportEvent::class)
-        ->and($sport->events->sole()->score)->toBe(5)
-        ->and($sport->events->sole()->is_team_event)->toBeFalse();
+        ->and($sport->events->sole()->score)->toBe(5);
     $this->get(route('sports.index'))->assertInertia(fn (Assert $page) => $page
         ->component('sports/Index')->where('sports.0.name', 'Rugby')->missing('sports.0.events'));
     $this->get(route('sports.show', $sport))->assertInertia(fn (Assert $page) => $page
-        ->component('sports/Show')->where('sport.name', 'Rugby')->where('sport.events.0.name', 'Try')->where('sport.events.0.is_team_event', false));
+        ->component('sports/Show')->where('sport.name', 'Rugby')->where('sport.events.0.name', 'Try'));
     $this->get(route('sports.edit', $sport))->assertInertia(fn (Assert $page) => $page
-        ->component('sports/Form')->where('sport.name', 'Rugby')->where('sport.events.0.is_team_event', false));
+        ->component('sports/Form')->where('sport.name', 'Rugby'));
 
     $this->put(route('sports.update', $sport), [
         'name' => 'Rugby union', 'description' => 'Updated',
-        'events' => [['name' => 'Conversion', 'description' => '', 'score' => 2, 'is_team_event' => true]],
+        'events' => [['name' => 'Conversion', 'description' => '', 'score' => 2]],
     ])->assertRedirect(route('sports.index'));
     expect($sport->refresh()->name)->toBe('Rugby union');
-    expect($sport->events->sole()->name)->toBe('Conversion')
-        ->and($sport->events->sole()->is_team_event)->toBeTrue();
+    expect($sport->events->sole()->name)->toBe('Conversion');
     $this->delete(route('sports.destroy', $sport))->assertRedirect(route('sports.index'));
     $this->assertSoftDeleted($sport);
 });
@@ -38,8 +36,8 @@ test('sports and their events can be created, viewed, updated and deleted', func
 test('sport events entries are validated', function () {
     $this->post(route('sports.store'), [
         'name' => '', 'description' => '',
-        'events' => [['name' => '', 'description' => '', 'score' => 'invalid', 'is_team_event' => 'invalid']],
-    ])->assertSessionHasErrors(['name', 'description', 'events.0.name', 'events.0.score', 'events.0.is_team_event']);
+        'events' => [['name' => '', 'description' => '', 'score' => 'invalid']],
+    ])->assertSessionHasErrors(['name', 'description', 'events.0.name', 'events.0.score']);
     expect(Sport::query()->count())->toBe(0);
 });
 
@@ -98,6 +96,5 @@ test('sport events default to zero and belong to their sport', function () {
     $event = $sport->events()->create(['name' => 'Foul', 'description' => 'A foul']);
 
     expect($event->refresh()->score)->toBe(0)
-        ->and($event->is_team_event)->toBeTrue()
         ->and($event->sport->is($sport))->toBeTrue();
 });
