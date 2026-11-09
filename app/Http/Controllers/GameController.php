@@ -74,18 +74,52 @@ class GameController extends Controller
 
     public function show(Game $game): Response
     {
-        $game->load(['sport', 'competition', 'team1.club', 'team2.club', 'location', 'users']);
+        $game->load(['sport', 'competition', 'team1.club', 'team2.club', 'location', 'users', 'sportEvents']);
         $positions = Position::query()->withTrashed()->without('sport')->whereIn('id', $game->users->pluck('pivot.position_id'))->get()->keyBy('id');
         $lineups = $game->users->sortBy('name')->values()->map(fn ($user) => [
             'id' => $user->id,
+            'game_user_id' => $user->pivot->id,
             'name' => $user->name,
             'team' => $user->pivot->team,
             'number' => $user->pivot->jersey_number,
             'position' => $positions->get($user->pivot->position_id)?->only(['name', 'preview_x', 'preview_y']),
         ]);
-        $game->unsetRelation('users');
+        $events = $game->sportEvents->map(function ($event) use ($game, $lineups) {
+            $isTeam = $event->pivot->competitor_type === (new Team)->getMorphClass();
+            $player = $isTeam ? null : $lineups->firstWhere('game_user_id', $event->pivot->competitor_id);
+            $side = $isTeam
+                ? match ($event->pivot->competitor_id) {
+                    $game->team1_id => 1,
+                    $game->team2_id => 2,
+                    default => null,
+                }
+            : ($player['team'] ?? null);
 
-        return Inertia::render('games/Show', ['record' => $game, 'lineups' => $lineups]);
+            return [
+                'id' => $event->pivot->id,
+                'name' => $event->name,
+                'score' => $event->score,
+                'side' => $side,
+                'occurred_at' => $event->pivot->occurred_at->toIso8601String(),
+                'description' => $event->pivot->description,
+                'competitor' => $isTeam
+                    ? collect([$game->team1, $game->team2])->firstWhere('id', $event->pivot->competitor_id)?->name
+                    : ($player['name'] ?? null),
+            ];
+        })->sortBy('occurred_at')->values();
+        $game->unsetRelation('users');
+        $game->unsetRelation('sportEvents');
+
+        return Inertia::render('games/Show', [
+            'record' => $game,
+            'lineups' => $lineups,
+            'events' => $events,
+            'score' => [
+                'team1' => $events->where('side', 1)->sum('score'),
+                'team2' => $events->where('side', 2)->sum('score'),
+            ],
+            'sportEvents' => $game->sport->events()->orderBy('name')->get(['id', 'name', 'score']),
+        ]);
     }
 
     public function edit(Game $game): Response

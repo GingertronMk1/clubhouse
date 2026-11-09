@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class GameUser extends Pivot
 {
+    use HasUuids;
+
     /** @return array<string, string> */
     protected function casts(): array
     {
