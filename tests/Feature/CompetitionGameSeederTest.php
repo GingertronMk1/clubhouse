@@ -64,8 +64,7 @@ test('competition and game seeders import the fixtures and can be repeated', fun
     expect(Competition::query()->count())->toBe(6);
     expect(Game::query()->count())->toBe(array_sum($counts));
     expect($game->fresh()->summary)->toBe('Custom summary');
-    expect($game->fresh()->score)->toBe([]);
-    expect(Game::query()->get()->every(fn (Game $fixture): bool => $fixture->score === []))->toBeTrue();
+    expect($game->fresh()->score)->toBe(['home' => 2, 'away' => 1]);
 });
 
 test('games without an announced kickoff can be viewed and edited', function () {

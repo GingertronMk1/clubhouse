@@ -94,9 +94,6 @@ class GameSeeder extends Seeder
                 $game->save();
             }
 
-            if ($game->score !== []) {
-                $game->update(['score' => []]);
-            }
         }
     }
 }
