@@ -59,3 +59,24 @@ test('each seeded team has no more players than the sport has positions', functi
     expect($game->team1Users()->count())->toBe(1);
     expect($game->team2Users()->count())->toBe(1);
 });
+
+test('seeded players on each side have distinct positions from the game sport', function () {
+    $game = Game::factory()->create();
+    $firstPlayers = User::factory()->count(8)->create();
+    $secondPlayers = User::factory()->count(8)->create();
+    $game->team1->club->users()->attach($firstPlayers->mapWithKeys(fn (User $user) => [$user->id => ['permissions' => '[]']])->all());
+    $game->team2->club->users()->attach($secondPlayers->mapWithKeys(fn (User $user) => [$user->id => ['permissions' => '[]']])->all());
+    $positions = Position::factory()->count(3)->create(['sport_id' => $game->sport_id]);
+    Position::factory()->create();
+    Game::factory()->count(20)->create(['sport_id' => $game->sport_id, 'competition_id' => $game->competition_id, 'team1_id' => $game->team1_id, 'team2_id' => $game->team2_id, 'location_id' => $game->location_id]);
+
+    $this->seed(GameUserSeeder::class);
+
+    foreach (Game::query()->with(['team1Users', 'team2Users'])->get() as $seededGame) {
+        foreach ([$seededGame->team1Users, $seededGame->team2Users] as $lineup) {
+            $positionIds = $lineup->pluck('pivot.position_id');
+            expect($positionIds)->toHaveCount($positionIds->unique()->count());
+            expect($positionIds->diff($positions->modelKeys()))->toBeEmpty();
+        }
+    }
+});

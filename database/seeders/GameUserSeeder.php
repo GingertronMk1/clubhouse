@@ -46,8 +46,9 @@ class GameUserSeeder extends Seeder
                             continue;
                         }
 
+                        $availablePositions = $sportPositions->shuffle();
                         foreach ($candidates->random(random_int(1, min($candidates->count(), $sportPositions->count()))) as $player) {
-                            $position = $sportPositions->random();
+                            $position = $availablePositions->pop();
                             $rows[] = [
                                 'game_id' => $game->id,
                                 'user_id' => $player->id,
