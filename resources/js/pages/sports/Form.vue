@@ -12,14 +12,18 @@ const props = defineProps<{
         slug: string;
         name: string;
         description: string;
-        scoring: { name: string; value: number }[];
+        events: { name: string; description: string; score: number }[];
     };
 }>();
 const form = useForm({
     name: props.sport?.name ?? '',
     description: props.sport?.description ?? '',
-    scoring:
-        props.sport?.scoring.map(({ name, value }) => ({ name, value })) ?? [],
+    events:
+        props.sport?.events.map(({ name, description, score }) => ({
+            name,
+            description,
+            score,
+        })) ?? [],
 });
 function submit() {
     if (props.sport) form.put(update.url(props.sport.slug));
@@ -73,12 +77,12 @@ function submit() {
                 </p>
             </div>
             <fieldset class="space-y-4">
-                <legend class="font-medium">Scoring</legend>
-                <p v-if="form.errors.scoring" class="text-sm text-red-700">
-                    {{ form.errors.scoring }}
+                <legend class="font-medium">Events</legend>
+                <p v-if="form.errors.events" class="text-sm text-red-700">
+                    {{ form.errors.events }}
                 </p>
                 <div
-                    v-for="(score, i) in form.scoring"
+                    v-for="(score, i) in form.events"
                     :key="i"
                     class="rounded border border-slate-200 p-4"
                 >
@@ -95,46 +99,71 @@ function submit() {
                                 maxlength="255"
                             />
                             <p
-                                v-if="form.errors[`scoring.${i}.name`]"
+                                v-if="form.errors[`events.${i}.name`]"
                                 class="text-sm text-red-700"
                             >
-                                {{ form.errors[`scoring.${i}.name`] }}
+                                {{ form.errors[`events.${i}.name`] }}
                             </p>
                         </div>
                         <div>
                             <label
-                                :for="`score-value-${i}`"
+                                :for="`score-score-${i}`"
                                 class="block text-sm"
-                                >Value</label
+                                >Score</label
                             ><FormInput
-                                :id="`score-value-${i}`"
-                                v-model.number="score.value"
+                                :id="`score-score-${i}`"
+                                v-model.number="score.score"
                                 type="number"
                                 required
                                 step="1"
                             />
                             <p
-                                v-if="form.errors[`scoring.${i}.value`]"
+                                v-if="form.errors[`events.${i}.score`]"
                                 class="text-sm text-red-700"
                             >
-                                {{ form.errors[`scoring.${i}.value`] }}
+                                {{ form.errors[`events.${i}.score`] }}
                             </p>
                         </div>
+                    </div>
+                    <div class="mt-4">
+                        <label
+                            :for="`event-description-${i}`"
+                            class="block text-sm"
+                            >Description</label
+                        >
+                        <FormInput
+                            :id="`event-description-${i}`"
+                            v-model="score.description"
+                            textarea
+                            rows="2"
+                        />
+                        <p
+                            v-if="form.errors[`events.${i}.description`]"
+                            class="text-sm text-red-700"
+                        >
+                            {{ form.errors[`events.${i}.description`] }}
+                        </p>
                     </div>
                     <button
                         type="button"
                         class="mt-3 text-sm text-red-700 underline"
-                        @click="form.scoring.splice(i, 1)"
+                        @click="form.events.splice(i, 1)"
                     >
-                        Remove scoring entry
+                        Remove events entry
                     </button>
                 </div>
                 <button
                     type="button"
                     class="text-sm underline"
-                    @click="form.scoring.push({ name: '', value: 0 })"
+                    @click="
+                        form.events.push({
+                            name: '',
+                            description: '',
+                            score: 0,
+                        })
+                    "
                 >
-                    Add scoring entry
+                    Add events entry
                 </button>
             </fieldset>
             <button
