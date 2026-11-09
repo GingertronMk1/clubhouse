@@ -6,10 +6,12 @@ use App\Http\Requests\GameRequest;
 use App\Models\Competition;
 use App\Models\Game;
 use App\Models\Location;
+use App\Models\Position;
 use App\Models\Sport;
 use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,9 +30,18 @@ class GameController extends Controller
     public function store(GameRequest $request): RedirectResponse
     {
         $data = $request->validated();
+        $lineup = $data['lineup'] ?? [];
+        unset($data['lineup']);
         $data['score'] = [];
 
-        return to_route('games.show', Game::query()->create($data));
+        $game = DB::transaction(function () use ($data, $lineup) {
+            $game = Game::query()->create($data);
+            $this->syncLineup($game, $lineup);
+
+            return $game;
+        });
+
+        return to_route('games.show', $game);
     }
 
     public function show(Game $game): Response
@@ -40,14 +51,19 @@ class GameController extends Controller
 
     public function edit(Game $game): Response
     {
-        return Inertia::render('games/Form', [...$this->formOptions(), 'record' => $game, 'start' => $game->start ? Carbon::parse($game->getRawOriginal('start'))->format('Y-m-d\TH:i:s') : null]);
+        return Inertia::render('games/Form', [...$this->formOptions(), 'record' => $game->load('users'), 'start' => $game->start ? Carbon::parse($game->getRawOriginal('start'))->format('Y-m-d\TH:i:s') : null]);
     }
 
     public function update(GameRequest $request, Game $game): RedirectResponse
     {
         $data = $request->validated();
+        $lineup = $data['lineup'] ?? [];
+        unset($data['lineup']);
         $data['score'] = [];
-        $game->update($data);
+        DB::transaction(function () use ($game, $data, $lineup): void {
+            $game->update($data);
+            $this->syncLineup($game, $lineup);
+        });
 
         return to_route('games.show', $game);
     }
@@ -59,13 +75,24 @@ class GameController extends Controller
         return to_route('games.index');
     }
 
+    /** @param array<int, array{user_id: string, team_id: string, position_id: string, jersey_number?: int|null}> $lineup */
+    private function syncLineup(Game $game, array $lineup): void
+    {
+        $game->users()->sync(collect($lineup)->mapWithKeys(fn (array $player) => [$player['user_id'] => [
+            'team_id' => $player['team_id'],
+            'position_id' => $player['position_id'],
+            'jersey_number' => $player['jersey_number'] ?? null,
+        ]])->all());
+    }
+
     /** @return array<string, mixed> */
     private function formOptions(): array
     {
         return [
             'sports' => Sport::query()->orderBy('name')->get(['id', 'name']),
             'competitions' => Competition::query()->orderBy('name')->get(['id', 'name']),
-            'teams' => Team::query()->with('club:id,name')->orderBy('name')->get(['id', 'name', 'club_id']),
+            'positions' => Position::query()->orderBy('sort_order')->get(['id', 'name', 'sport_id']),
+            'teams' => Team::query()->with(['club:id,name', 'club.users:id,name'])->orderBy('name')->get(['id', 'name', 'club_id']),
             'locations' => Location::query()->orderBy('name')->get(['id', 'name']),
         ];
     }

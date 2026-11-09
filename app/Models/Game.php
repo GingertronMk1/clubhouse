@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /** @property array<array-key, mixed> $score */
@@ -20,6 +21,12 @@ class Game extends Model
     use HasUuids, SoftDeletes;
 
     protected $with = ['sport', 'competition', 'team1', 'team2', 'location'];
+
+    /** @return BelongsToMany<User, $this, GameUser> */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->using(GameUser::class)->withPivot(['team_id', 'position_id', 'jersey_number'])->withTimestamps();
+    }
 
     /** @return BelongsTo<Sport, $this> */
     public function sport(): BelongsTo

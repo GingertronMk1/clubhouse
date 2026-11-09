@@ -36,6 +36,12 @@ class User extends Authenticatable
 
     use HasUuids, SoftDeletes;
 
+    /** @return BelongsToMany<Game, $this, GameUser> */
+    public function games(): BelongsToMany
+    {
+        return $this->belongsToMany(Game::class)->using(GameUser::class)->withPivot(['team_id', 'position_id', 'jersey_number'])->withTimestamps();
+    }
+
     /** @return BelongsToMany<Club, $this, ClubUser> */
     public function clubs(): BelongsToMany
     {
