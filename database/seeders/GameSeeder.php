@@ -31,7 +31,7 @@ class GameSeeder extends Seeder
         $competitionNames = ['nfl' => '2026 NFL season', 'nrl' => '2026 NRL season', 'super' => '2026 Super League season', 'touch' => '2024 Touch World Cup'];
         $sportNames = ['nfl' => 'American Football', 'nrl' => 'Rugby League', 'super' => 'Rugby League', 'touch' => 'Touch Rugby'];
 
-        /** @var list<array{competition: string, key: string, division: string, home: string, away: string, start: ?string, venue: string, round: string}> $fixtures */
+        /** @var list<array{id: string, competition: string, key: string, division: string, home: string, away: string, start: ?string, venue: string, round: string}> $fixtures */
         $fixtures = json_decode(File::get(database_path('seeders/data/competition-fixtures.json')), true, flags: JSON_THROW_ON_ERROR);
 
         foreach ($fixtures as $fixture) {
@@ -68,7 +68,7 @@ class GameSeeder extends Seeder
                 $locations->put($fixture['venue'], $location);
             }
 
-            $game = Game::query()->without(['sport', 'competition', 'team1', 'team2', 'location'])->firstOrCreate(
+            $game = Game::query()->without(['sport', 'competition', 'team1', 'team2', 'location'])->firstOrNew(
                 ['competition_id' => $competition->id, 'description' => "{$fixture['competition']} fixture {$fixture['key']}"],
                 [
                     'name' => "{$fixture['home']} vs {$fixture['away']}",
@@ -81,6 +81,11 @@ class GameSeeder extends Seeder
                     'location_id' => $location->id,
                 ],
             );
+
+            if (! $game->exists) {
+                $game->id = $fixture['id'];
+                $game->save();
+            }
 
             if ($game->score !== []) {
                 $game->update(['score' => []]);

@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { watch } from 'vue';
 import * as routes from '@/routes/games';
 defineOptions({ layout: AppLayout });
 type Option = { id: string; name: string };
-type Team = Option & { club: { name: string } | null };
+type Team = Option & { club: (Option & { users: Option[] }) | null };
+type LineupPlayer = {
+    user_id: string;
+    team: number;
+    position_id: string;
+    jersey_number: number | null;
+};
+type Position = Option & { sport_id: string };
 const props = defineProps<{
     record?: {
         id: string;
@@ -16,12 +24,14 @@ const props = defineProps<{
         team1_id: string;
         team2_id: string;
         location_id: string;
+        users: (Option & { pivot: LineupPlayer })[];
     };
     start?: string | null;
     sports: Option[];
     competitions: Option[];
     teams: Team[];
     locations: Option[];
+    positions: Position[];
 }>();
 const form = useForm({
     name: props.record?.name ?? '',
@@ -33,7 +43,52 @@ const form = useForm({
     team1_id: props.record?.team1_id ?? '',
     team2_id: props.record?.team2_id ?? '',
     location_id: props.record?.location_id ?? '',
+    lineup:
+        props.record?.users.map(({ id, pivot }) => ({
+            user_id: id,
+            team: pivot.team,
+            position_id: pivot.position_id,
+            jersey_number: pivot.jersey_number,
+        })) ?? ([] as LineupPlayer[]),
 });
+watch(
+    () => form.team1_id,
+    () => {
+        form.lineup = form.lineup.filter((player) => player.team !== 1);
+    },
+);
+watch(
+    () => form.team2_id,
+    () => {
+        form.lineup = form.lineup.filter((player) => player.team !== 2);
+    },
+);
+watch(
+    () => form.sport_id,
+    () => {
+        for (const player of form.lineup) {
+            if (
+                !props.positions.some(
+                    (position) =>
+                        position.id === player.position_id &&
+                        position.sport_id === form.sport_id,
+                )
+            )
+                player.position_id = '';
+        }
+    },
+);
+function togglePlayer(team: number, userId: string) {
+    const index = form.lineup.findIndex((player) => player.user_id === userId);
+    if (index >= 0) form.lineup.splice(index, 1);
+    else
+        form.lineup.push({
+            user_id: userId,
+            team,
+            position_id: '',
+            jersey_number: null,
+        });
+}
 function submit() {
     if (props.record) form.put(routes.update.url(props.record.id));
     else form.post(routes.store.url());
@@ -248,6 +303,143 @@ function submit() {
                     {{ form.errors.location_id }}
                 </p>
             </div>
+            <fieldset
+                v-for="side in [1, 2]"
+                v-show="side === 1 ? form.team1_id : form.team2_id"
+                :key="side"
+                class="space-y-3 rounded border border-slate-300 p-4"
+            >
+                <legend class="font-medium">
+                    {{
+                        teams.find(
+                            (team) =>
+                                team.id ===
+                                (side === 1 ? form.team1_id : form.team2_id),
+                        )?.name
+                    }}
+                    lineup
+                </legend>
+                <p class="text-sm text-slate-600">
+                    Select players from this team’s club and assign their
+                    positions.
+                </p>
+                <p
+                    v-if="
+                        !teams.find(
+                            (team) =>
+                                team.id ===
+                                (side === 1 ? form.team1_id : form.team2_id),
+                        )?.club?.users.length
+                    "
+                    class="text-sm text-slate-600"
+                >
+                    No club members available.
+                </p>
+                <div
+                    v-for="player in teams.find(
+                        (team) =>
+                            team.id ===
+                            (side === 1 ? form.team1_id : form.team2_id),
+                    )?.club?.users ?? []"
+                    :key="player.id"
+                    class="space-y-2 border-t border-slate-200 pt-3"
+                >
+                    <label class="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            :checked="
+                                form.lineup.some(
+                                    (entry) =>
+                                        entry.user_id === player.id &&
+                                        entry.team === side,
+                                )
+                            "
+                            :disabled="
+                                form.lineup.some(
+                                    (entry) =>
+                                        entry.user_id === player.id &&
+                                        entry.team !== side,
+                                )
+                            "
+                            @change="togglePlayer(side, player.id)"
+                        />
+                        {{ player.name }}
+                    </label>
+                    <template
+                        v-for="(entry, index) in form.lineup"
+                        :key="entry.user_id"
+                    >
+                        <div
+                            v-if="
+                                entry.user_id === player.id &&
+                                entry.team === side
+                            "
+                            class="space-y-2 pl-6"
+                        >
+                            <label
+                                :for="`position-${side}-${player.id}`"
+                                class="block text-sm"
+                                >Position</label
+                            >
+                            <select
+                                :id="`position-${side}-${player.id}`"
+                                v-model="entry.position_id"
+                                required
+                                class="w-full rounded border border-slate-300 p-2"
+                            >
+                                <option value="" disabled>
+                                    Select a position
+                                </option>
+                                <option
+                                    v-for="position in positions.filter(
+                                        (item) =>
+                                            item.sport_id === form.sport_id,
+                                    )"
+                                    :key="position.id"
+                                    :value="position.id"
+                                >
+                                    {{ position.name }}
+                                </option>
+                            </select>
+                            <label
+                                :for="`number-${side}-${player.id}`"
+                                class="block text-sm"
+                                >Jersey number (optional)</label
+                            >
+                            <input
+                                :id="`number-${side}-${player.id}`"
+                                v-model.number="entry.jersey_number"
+                                type="number"
+                                min="0"
+                                max="65535"
+                                class="w-full rounded border border-slate-300 p-2"
+                            />
+                            <p
+                                v-for="(error, key) in form.errors"
+                                :key="key"
+                                class="text-sm text-red-700"
+                                role="alert"
+                            >
+                                <template
+                                    v-if="
+                                        String(key).startsWith(
+                                            `lineup.${index}.`,
+                                        )
+                                    "
+                                    >{{ error }}</template
+                                >
+                            </p>
+                        </div>
+                    </template>
+                </div>
+            </fieldset>
+            <p
+                v-if="form.errors.lineup"
+                role="alert"
+                class="text-sm text-red-700"
+            >
+                {{ form.errors.lineup }}
+            </p>
             <p
                 v-if="
                     !sports.length ||

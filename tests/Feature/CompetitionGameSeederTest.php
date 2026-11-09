@@ -7,6 +7,7 @@ use Database\Seeders\CompetitionSeeder;
 use Database\Seeders\GameSeeder;
 use Database\Seeders\SportSeeder;
 use Database\Seeders\TeamSeeder;
+use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('competition and game seeders import the fixtures and can be repeated', function () {
@@ -17,6 +18,13 @@ test('competition and game seeders import the fixtures and can be repeated', fun
         $competition = Competition::query()->where('name', $name)->firstOrFail();
         expect($competition->games()->count())->toBe($count);
     }
+
+    $fixtures = json_decode(file_get_contents(database_path('seeders/data/competition-fixtures.json')), true, flags: JSON_THROW_ON_ERROR);
+    $fixtureIds = array_column($fixtures, 'id');
+    expect($fixtureIds)->toHaveCount(array_sum($counts));
+    expect(array_unique($fixtureIds))->toHaveCount(array_sum($counts));
+    expect(collect($fixtureIds)->every(fn (string $id): bool => Str::isUuid($id)))->toBeTrue();
+    expect(Game::query()->pluck('id')->sort()->values()->all())->toBe(collect($fixtureIds)->sort()->values()->all());
 
     $game = Game::query()->where('description', 'nfl fixture 1')->firstOrFail();
     expect($game->team1->name)->toBe('First team');
