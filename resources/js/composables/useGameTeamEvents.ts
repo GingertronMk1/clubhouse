@@ -1,6 +1,7 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue';
 
 type GameEvent = {
+    score: number;
     pivot: {
         competitor_type: string;
         competitor_id: string;
@@ -53,5 +54,17 @@ export function useGameTeamEvents<Event extends GameEvent>(
     return {
         team1Events: computed(() => teamEvents.value.team1),
         team2Events: computed(() => teamEvents.value.team2),
+        team1Score: computed(() =>
+            teamEvents.value.team1.reduce(
+                (total, event) => total + event.score,
+                0,
+            ),
+        ),
+        team2Score: computed(() =>
+            teamEvents.value.team2.reduce(
+                (total, event) => total + event.score,
+                0,
+            ),
+        ),
     };
 }

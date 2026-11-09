@@ -31,7 +31,9 @@ const props = defineProps<{
     };
 }>();
 
-const { team1Events, team2Events } = useGameTeamEvents(() => props.game);
+const { team1Events, team2Events, team1Score, team2Score } = useGameTeamEvents(
+    () => props.game,
+);
 const timeline = computed(() => {
     const team1Ids = new Set(team1Events.value.map((event) => event.pivot.id));
     const team2Ids = new Set(team2Events.value.map((event) => event.pivot.id));
@@ -74,9 +76,11 @@ function competitorName(event: GameEvent): string | undefined {
         >
             <h3>
                 {{ game.team1?.club?.name }} {{ game.team1?.name ?? 'Team 1' }}
+                <span>{{ team1Score }}</span>
             </h3>
             <h3>
                 {{ game.team2?.club?.name }} {{ game.team2?.name ?? 'Team 2' }}
+                <span>{{ team2Score }}</span>
             </h3>
         </div>
         <p v-if="timeline.length === 0" class="mt-4 text-slate-600">
