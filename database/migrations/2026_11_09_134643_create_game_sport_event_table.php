@@ -15,6 +15,7 @@ return new class extends Migration
             $table->foreignIdFor(Game::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(SportEvent::class)->constrained()->cascadeOnDelete();
             $table->uuidMorphs('competitor');
+            $table->dateTime('occurred_at');
             $table->timestamps();
         });
     }

@@ -10,6 +10,12 @@ class GameSportEvent extends Pivot
 {
     use HasUuids;
 
+    /** @return array<string, string> */
+    protected function casts(): array
+    {
+        return ['occurred_at' => 'datetime'];
+    }
+
     /** @return MorphTo<GameUser|Team, $this> */
     public function competitor(): MorphTo
     {

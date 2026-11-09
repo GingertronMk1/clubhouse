@@ -36,7 +36,7 @@ class Game extends Model
     public function sportEvents(): BelongsToMany
     {
         return $this->belongsToMany(SportEvent::class, 'game_sport_event')->using(GameSportEvent::class)
-            ->withPivot(['id', 'competitor_type', 'competitor_id'])->withTimestamps();
+            ->withPivot(['id', 'competitor_type', 'competitor_id', 'occurred_at'])->withTimestamps();
     }
 
     /** @return BelongsToMany<User, $this, GameUser> */

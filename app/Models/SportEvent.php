@@ -17,7 +17,7 @@ class SportEvent extends Model
     public function games(): BelongsToMany
     {
         return $this->belongsToMany(Game::class, 'game_sport_event')->using(GameSportEvent::class)
-            ->withPivot(['id', 'competitor_type', 'competitor_id'])->withTimestamps();
+            ->withPivot(['id', 'competitor_type', 'competitor_id', 'occurred_at'])->withTimestamps();
     }
 
     /** @use HasFactory<SportEventFactory> */
