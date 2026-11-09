@@ -88,6 +88,7 @@ class GameController extends Controller
             'id' => $event->pivot->id,
             'name' => $event->name,
             'occurred_at' => $event->pivot->occurred_at->toIso8601String(),
+            'description' => $event->pivot->description,
             'competitor' => $event->pivot->competitor_type === (new Team)->getMorphClass()
                 ? collect([$game->team1, $game->team2])->firstWhere('id', $event->pivot->competitor_id)?->name
                 : $lineups->firstWhere('game_user_id', $event->pivot->competitor_id)['name'] ?? null,

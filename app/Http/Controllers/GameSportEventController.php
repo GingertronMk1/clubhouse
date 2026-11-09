@@ -17,6 +17,7 @@ class GameSportEventController extends Controller
             'competitor_type' => (new ($data['competitor_type'] === 'team' ? Team::class : GameUser::class))->getMorphClass(),
             'competitor_id' => $data['competitor_id'],
             'occurred_at' => $data['occurred_at'],
+            'description' => $data['description'] ?? null,
         ]);
 
         return to_route('games.show', $game);

@@ -30,6 +30,7 @@ const props = defineProps<{
         id: string;
         name: string;
         occurred_at: string;
+        description: string | null;
         competitor: string | null;
     }[];
 }>();
@@ -38,6 +39,7 @@ const eventForm = useForm({
     competitor_type: 'team',
     competitor_id: '',
     occurred_at: '',
+    description: '',
 });
 function submitEvent() {
     eventForm.post(storeEvent.url(props.record.id), {
@@ -192,6 +194,9 @@ function remove() {
                     {{ new Date(event.occurred_at).toLocaleString() }} ·
                     {{ event.name }} ·
                     {{ event.competitor ?? 'Former competitor' }}
+                    <p v-if="event.description" class="whitespace-pre-wrap">
+                        {{ event.description }}
+                    </p>
                 </li>
             </ul>
             <p v-if="sportEvents.length === 0" class="mt-3 text-slate-600">
@@ -298,6 +303,19 @@ function remove() {
                         v-if="eventForm.errors.occurred_at"
                         class="text-red-700"
                         >{{ eventForm.errors.occurred_at }}</span
+                    >
+                </label>
+                <label class="grid gap-1 text-sm font-medium"
+                    >Description (optional)
+                    <textarea
+                        v-model="eventForm.description"
+                        rows="3"
+                        class="rounded border border-slate-300 p-2"
+                    ></textarea>
+                    <span
+                        v-if="eventForm.errors.description"
+                        class="text-red-700"
+                        >{{ eventForm.errors.description }}</span
                     >
                 </label>
                 <button

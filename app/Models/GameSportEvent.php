@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Carbon;
 
-/** @property Carbon $occurred_at */
+/**
+ * @property Carbon $occurred_at
+ * @property string|null $description
+ */
 class GameSportEvent extends Pivot
 {
     use HasUuids;

@@ -28,6 +28,7 @@ class StoreGameSportEventRequest extends FormRequest
             'competitor_type' => ['required', Rule::in(['team', 'player'])],
             'competitor_id' => ['required', 'uuid', Rule::in($competitors)],
             'occurred_at' => ['required', 'date'],
+            'description' => ['nullable', 'string'],
         ];
     }
 }
