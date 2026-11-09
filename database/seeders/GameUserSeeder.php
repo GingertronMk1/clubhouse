@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Game;
 use App\Models\Position;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class GameUserSeeder extends Seeder
@@ -20,6 +21,7 @@ class GameUserSeeder extends Seeder
                 $now = now();
 
                 foreach ($games as $game) {
+                    /** @var Collection<Position> $sportPositions */
                     $sportPositions = $positions->get($game->sport_id);
                     if (! $sportPositions || $sportPositions->isEmpty()) {
                         continue;
