@@ -65,7 +65,7 @@ const timeline = computed(() => {
         .slice()
         .sort(
             (a, b) =>
-                a.pivot.occurred_at.localeCompare(b.pivot.occurred_at) ||
+                b.pivot.occurred_at.localeCompare(a.pivot.occurred_at) ||
                 a.pivot.id.localeCompare(b.pivot.id),
         )
         .map((event) => ({
