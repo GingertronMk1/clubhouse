@@ -80,3 +80,19 @@ test('seeded players on each side have distinct positions from the game sport', 
         }
     }
 });
+
+test('lineup assignments follow stable player and position order', function () {
+    $game = Game::factory()->create();
+    $firstPlayer = User::factory()->create(['email' => 'a@example.com']);
+    $secondPlayer = User::factory()->create(['email' => 'b@example.com']);
+    $extraPlayer = User::factory()->create(['email' => 'c@example.com']);
+    $game->team1->club->users()->attach([$extraPlayer->id => ['permissions' => '[]'], $secondPlayer->id => ['permissions' => '[]'], $firstPlayer->id => ['permissions' => '[]']]);
+    $laterPosition = Position::factory()->create(['sport_id' => $game->sport_id, 'sort_order' => 2]);
+    $firstPosition = Position::factory()->create(['sport_id' => $game->sport_id, 'sort_order' => 1]);
+
+    $this->seed(GameUserSeeder::class);
+
+    $this->assertDatabaseHas('game_user', ['game_id' => $game->id, 'user_id' => $firstPlayer->id, 'team' => 1, 'position_id' => $firstPosition->id]);
+    $this->assertDatabaseHas('game_user', ['game_id' => $game->id, 'user_id' => $secondPlayer->id, 'team' => 1, 'position_id' => $laterPosition->id]);
+    $this->assertDatabaseMissing('game_user', ['game_id' => $game->id, 'user_id' => $extraPlayer->id]);
+});

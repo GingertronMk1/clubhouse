@@ -12,7 +12,7 @@ class GameUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $positions = Position::query()->without('sport')->get()->groupBy('sport_id');
+        $positions = Position::query()->without('sport')->orderBy('sort_order')->orderBy('name')->orderBy('id')->get()->groupBy('sport_id');
 
         Game::query()->without(['sport', 'competition', 'location'])
             ->with(['team1.club.users', 'team2.club.users', 'users'])
@@ -29,8 +29,10 @@ class GameUserSeeder extends Seeder
 
                     $assigned = $game->users->modelKeys();
                     $secondCandidates = $game->team2?->club?->users->whereNotIn('id', $assigned) ?? collect();
+                    $firstCandidateIds = $game->team1?->club?->users->modelKeys() ?? [];
+                    $secondCandidates = $secondCandidates->sortBy('email');
                     $reservedSecondPlayer = $game->users->contains(fn ($user) => $user->pivot->team === 2)
-                        ? null : $secondCandidates->random(min(1, $secondCandidates->count()))->first()?->id;
+                        ? null : ($secondCandidates->first(fn ($user) => ! in_array($user->id, $firstCandidateIds, true)) ?? $secondCandidates->first())?->id;
 
                     foreach ([1, 2] as $side) {
                         if ($game->users->contains(fn ($user) => $user->pivot->team === $side)) {
@@ -46,9 +48,9 @@ class GameUserSeeder extends Seeder
                             continue;
                         }
 
-                        $availablePositions = $sportPositions->shuffle();
-                        foreach ($candidates->random(random_int(1, min($candidates->count(), $sportPositions->count()))) as $player) {
-                            $position = $availablePositions->pop();
+                        $availablePositions = $sportPositions->values();
+                        foreach ($candidates->sortBy('email')->take($sportPositions->count()) as $player) {
+                            $position = $availablePositions->shift();
                             $rows[] = [
                                 'game_id' => $game->id,
                                 'user_id' => $player->id,
