@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SportRequest;
 use App\Models\Sport;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,7 +29,10 @@ class SportController extends Controller
 
     public function store(SportRequest $request): RedirectResponse
     {
-        Sport::query()->create($request->validated());
+        DB::transaction(function () use ($request) {
+            $sport = Sport::query()->create($request->safe()->except('events'));
+            $sport->events()->createMany(collect($request->validated('events'))->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
+        });
 
         return to_route('sports.index');
     }
@@ -36,19 +40,23 @@ class SportController extends Controller
     public function show(Sport $sport): Response
     {
         return Inertia::render('sports/Show', [
-            'sport' => $sport,
+            'sport' => $sport->load('events'),
             'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'slug', 'name', 'preview_x', 'preview_y', 'default_number']),
         ]);
     }
 
     public function edit(Sport $sport): Response
     {
-        return Inertia::render('sports/Form', ['sport' => $sport]);
+        return Inertia::render('sports/Form', ['sport' => $sport->load('events')]);
     }
 
     public function update(SportRequest $request, Sport $sport): RedirectResponse
     {
-        $sport->update($request->validated());
+        DB::transaction(function () use ($request, $sport) {
+            $sport->update($request->safe()->except('events'));
+            $sport->events()->delete();
+            $sport->events()->createMany(collect($request->validated('events'))->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
+        });
 
         return to_route('sports.index');
     }

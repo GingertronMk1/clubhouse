@@ -15,7 +15,7 @@ defineProps<{
         slug: string;
         name: string;
         description: string;
-        scoring: { name: string; value: number }[];
+        events: { name: string; description: string; score: number }[];
     };
     positions: {
         id: string;
@@ -56,11 +56,12 @@ function deleteSport(id: string) {
         <p class="mt-5 whitespace-pre-wrap text-slate-600">
             {{ sport.description }}
         </p>
-        <section v-if="sport.scoring.length" class="mt-6">
-            <h2 class="text-xl font-semibold">Scoring</h2>
+        <section v-if="sport.events.length" class="mt-6">
+            <h2 class="text-xl font-semibold">Events</h2>
             <ul class="mt-2 text-slate-700">
-                <li v-for="(score, i) in sport.scoring" :key="i">
-                    {{ score.name }}: {{ score.value }}
+                <li v-for="(score, i) in sport.events" :key="i">
+                    {{ score.name }}: {{ score.score }}
+                    <span v-if="score.description"> — {{ score.description }}</span>
                 </li>
             </ul>
         </section>

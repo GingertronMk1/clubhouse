@@ -17,10 +17,11 @@ class SportRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'scoring' => ['present', 'array'],
-            'scoring.*' => ['required', 'array:name,value'],
-            'scoring.*.name' => ['required', 'string', 'max:255'],
-            'scoring.*.value' => ['required', 'integer', 'between:-2147483648,2147483647'],
+            'events' => ['present', 'array'],
+            'events.*' => ['required', 'array:name,description,score'],
+            'events.*.name' => ['required', 'string', 'max:255'],
+            'events.*.description' => ['present', 'nullable', 'string'],
+            'events.*.score' => ['required', 'integer', 'between:-2147483648,2147483647'],
         ];
     }
 }
