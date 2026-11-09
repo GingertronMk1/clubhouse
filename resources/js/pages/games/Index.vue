@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import * as routes from '@/routes/games';
 defineOptions({ layout: AppLayout });
 type Named = { name: string };
@@ -12,7 +13,7 @@ const props = defineProps<{
     };
     sports: { id: string; name: string }[];
     clubs: { id: string; name: string }[];
-    teams: { id: string; name: string; club: Named | null }[];
+    teams: { id: string; name: string; club_id: string; club: Named | null }[];
     records: {
         data: {
             id: string;
@@ -34,6 +35,21 @@ const filters = useForm({
     sport: props.filters.sport ?? '',
     team: props.filters.team ?? '',
     club: props.filters.club ?? '',
+});
+const teamGroups = computed(() => {
+    const groups = props.clubs
+        .map((club) => ({
+            id: club.id,
+            name: club.name,
+            teams: props.teams.filter((team) => team.club_id === club.id),
+        }))
+        .filter((group) => group.teams.length > 0);
+    const otherTeams = props.teams.filter(
+        (team) => !props.clubs.some((club) => club.id === team.club_id),
+    );
+    if (otherTeams.length)
+        groups.push({ id: '', name: 'Other clubs', teams: otherTeams });
+    return groups;
 });
 function applyFilters() {
     filters.get(routes.index.url(), {
@@ -102,13 +118,19 @@ function formatDate(value: string | null) {
                     class="rounded border border-slate-300 p-2"
                 >
                     <option value="">All teams</option>
-                    <option
-                        v-for="team in teams"
-                        :key="team.id"
-                        :value="team.id"
+                    <optgroup
+                        v-for="group in teamGroups"
+                        :key="group.id"
+                        :label="group.name"
                     >
-                        {{ team.club?.name }} — {{ team.name }}
-                    </option>
+                        <option
+                            v-for="team in group.teams"
+                            :key="team.id"
+                            :value="team.id"
+                        >
+                            {{ team.name }}
+                        </option>
+                    </optgroup>
                 </select>
             </label>
             <button
