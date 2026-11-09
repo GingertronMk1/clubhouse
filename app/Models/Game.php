@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\GameFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/** @property array<array-key, mixed> $score */
+/**
+ * @property array<array-key, mixed> $score
+ * @property-read Collection<int, User&object{pivot: GameUser}> $users
+ */
 #[Fillable(['name', 'start', 'description', 'summary', 'sport_id', 'competition_id', 'team1_id', 'team2_id', 'score', 'location_id'])]
 class Game extends Model
 {

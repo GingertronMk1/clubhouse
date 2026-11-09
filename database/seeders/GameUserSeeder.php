@@ -21,7 +21,7 @@ class GameUserSeeder extends Seeder
                 $now = now();
 
                 foreach ($games as $game) {
-                    /** @var Collection<Position> $sportPositions */
+                    /** @var Collection<int, Position>|null $sportPositions */
                     $sportPositions = $positions->get($game->sport_id);
                     if (! $sportPositions || $sportPositions->isEmpty()) {
                         continue;

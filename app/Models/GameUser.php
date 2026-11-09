@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * @property int $team
+ * @property string $position_id
+ * @property int|null $jersey_number
+ */
 class GameUser extends Pivot
 {
     /** @return array<string, string> */
