@@ -19,7 +19,11 @@ const form = useForm({
     name: props.sport?.name ?? '',
     description: props.sport?.description ?? '',
     events:
-        props.sport?.events.map(({ name, description, score }) => ({ name, description, score })) ?? [],
+        props.sport?.events.map(({ name, description, score }) => ({
+            name,
+            description,
+            score,
+        })) ?? [],
 });
 function submit() {
     if (props.sport) form.put(update.url(props.sport.slug));
@@ -122,9 +126,23 @@ function submit() {
                         </div>
                     </div>
                     <div class="mt-4">
-                        <label :for="`event-description-${i}`" class="block text-sm">Description</label>
-                        <FormInput :id="`event-description-${i}`" v-model="score.description" textarea rows="2" />
-                        <p v-if="form.errors[`events.${i}.description`]" class="text-sm text-red-700">{{ form.errors[`events.${i}.description`] }}</p>
+                        <label
+                            :for="`event-description-${i}`"
+                            class="block text-sm"
+                            >Description</label
+                        >
+                        <FormInput
+                            :id="`event-description-${i}`"
+                            v-model="score.description"
+                            textarea
+                            rows="2"
+                        />
+                        <p
+                            v-if="form.errors[`events.${i}.description`]"
+                            class="text-sm text-red-700"
+                        >
+                            {{ form.errors[`events.${i}.description`] }}
+                        </p>
                     </div>
                     <button
                         type="button"
@@ -137,7 +155,13 @@ function submit() {
                 <button
                     type="button"
                     class="text-sm underline"
-                    @click="form.events.push({ name: '', description: '', score: 0 })"
+                    @click="
+                        form.events.push({
+                            name: '',
+                            description: '',
+                            score: 0,
+                        })
+                    "
                 >
                     Add events entry
                 </button>

@@ -61,7 +61,9 @@ function deleteSport(id: string) {
             <ul class="mt-2 text-slate-700">
                 <li v-for="(score, i) in sport.events" :key="i">
                     {{ score.name }}: {{ score.score }}
-                    <span v-if="score.description"> — {{ score.description }}</span>
+                    <span v-if="score.description">
+                        — {{ score.description }}</span
+                    >
                 </li>
             </ul>
         </section>

@@ -31,7 +31,9 @@ class SportController extends Controller
     {
         DB::transaction(function () use ($request) {
             $sport = Sport::query()->create($request->safe()->except('events'));
-            $sport->events()->createMany(collect($request->validated('events'))->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
+            /** @var array<int, array{name: string, description: ?string, score: int}> $events */
+            $events = $request->validated('events');
+            $sport->events()->createMany(collect($events)->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
         });
 
         return to_route('sports.index');
@@ -55,7 +57,9 @@ class SportController extends Controller
         DB::transaction(function () use ($request, $sport) {
             $sport->update($request->safe()->except('events'));
             $sport->events()->delete();
-            $sport->events()->createMany(collect($request->validated('events'))->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
+            /** @var array<int, array{name: string, description: ?string, score: int}> $events */
+            $events = $request->validated('events');
+            $sport->events()->createMany(collect($events)->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
         });
 
         return to_route('sports.index');
