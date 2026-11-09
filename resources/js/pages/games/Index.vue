@@ -6,14 +6,21 @@ defineOptions({ layout: AppLayout });
 type Named = { name: string };
 defineProps<{
     records: {
-        id: string;
-        name: string;
-        start: string | null;
-        team1: Named | null;
-        team2: Named | null;
-        competition: Named | null;
-        location: Named | null;
-    }[];
+        data: {
+            id: string;
+            name: string;
+            start: string | null;
+            team1: Named | null;
+            team2: Named | null;
+            competition: Named | null;
+            location: Named | null;
+        }[];
+        current_page: number;
+        last_page: number;
+        prev_page_url: string | null;
+        next_page_url: string | null;
+        total: number;
+    };
 }>();
 function formatDate(value: string | null) {
     return value ? new Date(value).toLocaleString() : 'Kickoff to be announced';
@@ -30,12 +37,16 @@ function formatDate(value: string | null) {
                 >Add game</Link
             >
         </div>
-        <p v-if="!records.length" class="text-slate-600">
-            No games yet. Add one to get started.
+        <p v-if="!records.data.length" class="text-slate-600">
+            {{
+                records.total === 0
+                    ? 'No games yet. Add one to get started.'
+                    : 'No games on this page.'
+            }}
         </p>
         <ul v-else class="space-y-4">
             <li
-                v-for="record in records"
+                v-for="record in records.data"
                 :key="record.id"
                 class="rounded-lg border border-slate-200 p-5"
             >
@@ -60,5 +71,29 @@ function formatDate(value: string | null) {
                 </p>
             </li>
         </ul>
+        <nav
+            v-if="records.last_page > 1"
+            aria-label="Game pages"
+            class="mt-8 flex items-center justify-between gap-4 text-sm"
+        >
+            <Link
+                v-if="records.prev_page_url"
+                :href="records.prev_page_url"
+                class="underline"
+                >Previous</Link
+            >
+            <span v-else class="text-slate-400">Previous</span>
+            <span
+                >Page {{ records.current_page }} of
+                {{ records.last_page }}</span
+            >
+            <Link
+                v-if="records.next_page_url"
+                :href="records.next_page_url"
+                class="underline"
+                >Next</Link
+            >
+            <span v-else class="text-slate-400">Next</span>
+        </nav>
     </main>
 </template>

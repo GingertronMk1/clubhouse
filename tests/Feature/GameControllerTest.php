@@ -14,7 +14,7 @@ test('games can be created viewed updated and deleted', function () {
     $this->get(route('games.create'))->assertInertia(fn (Assert $page) => $page->component('games/Form')->has('teams', 2));
     $this->post(route('games.store'), $data)->assertRedirect();
     $game = Game::query()->where('name', 'Final')->firstOrFail();
-    $this->get(route('games.index'))->assertInertia(fn (Assert $page) => $page->component('games/Index')->has('records', 2));
+    $this->get(route('games.index'))->assertInertia(fn (Assert $page) => $page->component('games/Index')->has('records.data', 2));
     $this->get(route('games.show', $game))->assertInertia(fn (Assert $page) => $page->component('games/Show')->where('record.score', []));
     $this->get(route('games.edit', $game))->assertInertia(fn (Assert $page) => $page->component('games/Form')->where('start', '2026-11-08T12:30:00'));
     $this->put(route('games.update', $game), [...$data, 'name' => 'Semi-final'])->assertRedirect();
@@ -124,4 +124,21 @@ test('game show includes each player side number and position without exposing u
         ->where('lineups.1.team', 2)
         ->where('lineups.1.number', null)
         ->missing('record.users'));
+});
+
+test('games are paginated in start order', function () {
+    $this->withoutVite();
+    $sample = Game::factory()->create(['start' => '2026-01-01 00:00:00']);
+    Game::factory()->count(20)->recycle([$sample->sport, $sample->competition, $sample->team1, $sample->team2, $sample->location])->create(['start' => '2026-01-02 00:00:00']);
+
+    $this->get(route('games.index'))->assertInertia(fn (Assert $page) => $page
+        ->has('records.data', 20)
+        ->where('records.data.0.id', $sample->id)
+        ->where('records.current_page', 1)
+        ->where('records.total', 21)
+        ->where('records.last_page', 2));
+    $this->get(route('games.index', ['page' => 2]))->assertInertia(fn (Assert $page) => $page
+        ->has('records.data', 1)
+        ->where('records.current_page', 2)
+        ->where('records.total', 21));
 });
