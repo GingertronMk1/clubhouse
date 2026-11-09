@@ -39,7 +39,7 @@ function currentLocalDateTime(): string {
     const now = new Date();
     const pad = (value: number) => String(value).padStart(2, '0');
 
-    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
 }
 const eventForm = useForm({
     sport_event_id: '',
@@ -312,6 +312,7 @@ function remove() {
                     <input
                         v-model="eventForm.occurred_at"
                         type="datetime-local"
+                        step="1"
                         required
                         class="rounded border border-slate-300 p-2"
                     />
