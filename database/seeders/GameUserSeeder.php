@@ -7,6 +7,7 @@ use App\Models\Position;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class GameUserSeeder extends Seeder
 {
@@ -52,6 +53,7 @@ class GameUserSeeder extends Seeder
                         foreach ($candidates->sortBy('email')->take($sportPositions->count()) as $player) {
                             $position = $availablePositions->shift();
                             $rows[] = [
+                                'id' => (string) Str::uuid7(),
                                 'game_id' => $game->id,
                                 'user_id' => $player->id,
                                 'team' => $side,

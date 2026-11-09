@@ -29,7 +29,14 @@ class Game extends Model
     /** @return BelongsToMany<User, $this, GameUser> */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->using(GameUser::class)->withPivot(['team', 'position_id', 'jersey_number'])->withTimestamps();
+        return $this->belongsToMany(User::class)->using(GameUser::class)->withPivot(['id', 'team', 'position_id', 'jersey_number'])->withTimestamps();
+    }
+
+    /** @return BelongsToMany<SportEvent, $this, GameSportEvent> */
+    public function sportEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(SportEvent::class, 'game_sport_event')->using(GameSportEvent::class)
+            ->withPivot(['id', 'competitor_type', 'competitor_id'])->withTimestamps();
     }
 
     /** @return BelongsToMany<User, $this, GameUser> */

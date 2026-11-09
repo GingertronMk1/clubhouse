@@ -8,10 +8,18 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[Fillable(['name', 'description', 'score'])]
 class SportEvent extends Model
 {
+    /** @return BelongsToMany<Game, $this, GameSportEvent> */
+    public function games(): BelongsToMany
+    {
+        return $this->belongsToMany(Game::class, 'game_sport_event')->using(GameSportEvent::class)
+            ->withPivot(['id', 'competitor_type', 'competitor_id'])->withTimestamps();
+    }
+
     /** @use HasFactory<SportEventFactory> */
     use HasFactory;
 
