@@ -64,6 +64,17 @@ test('sport fixtures include events and can be seeded repeatedly', function () {
         ->toBe(['name' => 'Touchdown', 'score' => 1]);
     expect(Sport::query()->where('name', 'American Football')->firstOrFail()->events->first()->only(['name', 'score']))
         ->toBe(['name' => 'Touchdown', 'score' => 6]);
+
+    foreach ([
+        'Rugby League' => ['Penalty', 'Scrum', 'Turnover', 'Sin bin'],
+        'Rugby Union' => ['Penalty', 'Scrum', 'Lineout', 'Turnover', 'Yellow card', 'Red card'],
+        'Touch Rugby' => ['Touch', 'Penalty', 'Turnover'],
+        'American Football' => ['First down', 'Turnover', 'Interception', 'Fumble', 'Sack', 'Punt', 'Penalty'],
+    ] as $sportName => $eventNames) {
+        $events = Sport::query()->where('name', $sportName)->firstOrFail()->events()->whereIn('name', $eventNames)->get();
+        expect($events)->toHaveCount(count($eventNames));
+        expect($events->pluck('score')->unique()->all())->toBe([0]);
+    }
 });
 
 test('the sports index shows a shortened description', function () {

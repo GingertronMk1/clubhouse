@@ -18,6 +18,10 @@ class SportSeeder extends Seeder
                     ['name' => 'Conversion', 'score' => 2],
                     ['name' => 'Penalty goal', 'score' => 2],
                     ['name' => 'Drop goal', 'score' => 1],
+                    ['name' => 'Penalty', 'score' => 0],
+                    ['name' => 'Scrum', 'score' => 0],
+                    ['name' => 'Turnover', 'score' => 0],
+                    ['name' => 'Sin bin', 'score' => 0],
                 ],
             ],
             [
@@ -29,6 +33,12 @@ class SportSeeder extends Seeder
                     ['name' => 'Penalty try', 'score' => 7],
                     ['name' => 'Penalty goal', 'score' => 3],
                     ['name' => 'Drop goal', 'score' => 3],
+                    ['name' => 'Penalty', 'score' => 0],
+                    ['name' => 'Scrum', 'score' => 0],
+                    ['name' => 'Lineout', 'score' => 0],
+                    ['name' => 'Turnover', 'score' => 0],
+                    ['name' => 'Yellow card', 'score' => 0],
+                    ['name' => 'Red card', 'score' => 0],
                 ],
             ],
             [
@@ -36,6 +46,9 @@ class SportSeeder extends Seeder
                 'description' => 'A rugby-derived sport in which a touch replaces a tackle.',
                 'events' => [
                     ['name' => 'Touchdown', 'score' => 1],
+                    ['name' => 'Touch', 'score' => 0],
+                    ['name' => 'Penalty', 'score' => 0],
+                    ['name' => 'Turnover', 'score' => 0],
                 ],
             ],
             [
@@ -47,6 +60,13 @@ class SportSeeder extends Seeder
                     ['name' => 'Safety', 'score' => 2],
                     ['name' => 'Extra point', 'score' => 1],
                     ['name' => 'Two-point conversion', 'score' => 2],
+                    ['name' => 'First down', 'score' => 0],
+                    ['name' => 'Turnover', 'score' => 0],
+                    ['name' => 'Interception', 'score' => 0],
+                    ['name' => 'Fumble', 'score' => 0],
+                    ['name' => 'Sack', 'score' => 0],
+                    ['name' => 'Punt', 'score' => 0],
+                    ['name' => 'Penalty', 'score' => 0],
                 ],
             ],
         ];
