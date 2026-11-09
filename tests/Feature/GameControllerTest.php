@@ -101,3 +101,27 @@ test('game team relationships select and assign the corresponding side', functio
     expect($game->team1Users->first()->pivot->team)->toBe(1);
     expect($game->team2Users->first()->pivot->team)->toBe(2);
 });
+
+test('game show includes each player side number and position without exposing user details', function () {
+    $this->withoutVite();
+    $game = Game::factory()->create();
+    $firstPlayer = User::factory()->create(['name' => 'Alex Smith']);
+    $secondPlayer = User::factory()->create(['name' => 'Sam Jones']);
+    $position = Position::factory()->create(['sport_id' => $game->sport_id, 'preview_x' => 25, 'preview_y' => 40]);
+    $game->team1Users()->attach($firstPlayer, ['position_id' => $position->id, 'jersey_number' => 7]);
+    $game->team2Users()->attach($secondPlayer, ['position_id' => $position->id, 'jersey_number' => null]);
+    $position->delete();
+
+    $this->get(route('games.show', $game))->assertInertia(fn (Assert $page) => $page
+        ->component('games/Show')
+        ->has('lineups', 2)
+        ->where('lineups.0.name', 'Alex Smith')
+        ->where('lineups.0.team', 1)
+        ->where('lineups.0.number', 7)
+        ->where('lineups.0.position.preview_x', 25)
+        ->where('lineups.0.position.preview_y', 40)
+        ->missing('lineups.0.email')
+        ->where('lineups.1.team', 2)
+        ->where('lineups.1.number', null)
+        ->missing('record.users'));
+});

@@ -46,7 +46,18 @@ class GameController extends Controller
 
     public function show(Game $game): Response
     {
-        return Inertia::render('games/Show', ['record' => $game->load(['sport', 'competition', 'team1.club', 'team2.club', 'location'])]);
+        $game->load(['sport', 'competition', 'team1.club', 'team2.club', 'location', 'users']);
+        $positions = Position::query()->withTrashed()->without('sport')->whereIn('id', $game->users->pluck('pivot.position_id'))->get()->keyBy('id');
+        $lineups = $game->users->sortBy('name')->values()->map(fn ($user) => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'team' => $user->pivot->team,
+            'number' => $user->pivot->jersey_number,
+            'position' => $positions->get($user->pivot->position_id)?->only(['name', 'preview_x', 'preview_y']),
+        ]);
+        $game->unsetRelation('users');
+
+        return Inertia::render('games/Show', ['record' => $game, 'lineups' => $lineups]);
     }
 
     public function edit(Game $game): Response
