@@ -78,14 +78,28 @@ class GameController extends Controller
         $positions = Position::query()->withTrashed()->without('sport')->whereIn('id', $game->users->pluck('pivot.position_id'))->get()->keyBy('id');
         $lineups = $game->users->sortBy('name')->values()->map(fn ($user) => [
             'id' => $user->id,
+            'game_user_id' => $user->pivot->id,
             'name' => $user->name,
             'team' => $user->pivot->team,
             'number' => $user->pivot->jersey_number,
             'position' => $positions->get($user->pivot->position_id)?->only(['name', 'preview_x', 'preview_y']),
         ]);
+        $events = $game->sportEvents()->get()->map(fn ($event) => [
+            'id' => $event->pivot->id,
+            'name' => $event->name,
+            'occurred_at' => $event->pivot->occurred_at->toIso8601String(),
+            'competitor' => $event->pivot->competitor_type === (new Team)->getMorphClass()
+                ? collect([$game->team1, $game->team2])->firstWhere('id', $event->pivot->competitor_id)?->name
+                : $lineups->firstWhere('game_user_id', $event->pivot->competitor_id)['name'] ?? null,
+        ])->sortBy('occurred_at')->values();
         $game->unsetRelation('users');
 
-        return Inertia::render('games/Show', ['record' => $game, 'lineups' => $lineups]);
+        return Inertia::render('games/Show', [
+            'record' => $game,
+            'lineups' => $lineups,
+            'events' => $events,
+            'sportEvents' => $game->sport->events()->orderBy('name')->get(['id', 'name', 'score']),
+        ]);
     }
 
     public function edit(Game $game): Response

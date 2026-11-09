@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import * as routes from '@/routes/games';
 import * as competitions from '@/routes/competitions';
+import { store as storeEvent } from '@/routes/games/events';
 defineOptions({ layout: AppLayout });
 type Named = { id: string; name: string };
 const props = defineProps<{
@@ -18,12 +19,33 @@ const props = defineProps<{
     };
     lineups: {
         id: string;
+        game_user_id: string;
         name: string;
         team: number;
         number: number | null;
         position: { name: string; preview_x: number; preview_y: number } | null;
     }[];
+    sportEvents: (Named & { score: number })[];
+    events: {
+        id: string;
+        name: string;
+        occurred_at: string;
+        competitor: string | null;
+    }[];
 }>();
+const eventForm = useForm({
+    sport_event_id: '',
+    competitor_type: 'team',
+    competitor_id: '',
+    occurred_at: '',
+});
+function submitEvent() {
+    eventForm.post(storeEvent.url(props.record.id), {
+        preserveScroll: true,
+        onSuccess: () => eventForm.reset(),
+    });
+}
+
 function initials(name: string): string {
     return name
         .trim()
@@ -157,6 +179,131 @@ function remove() {
                     </template>
                 </section>
             </div>
+        </section>
+        <section class="mt-8" aria-labelledby="add-event-heading">
+            <h2 id="add-event-heading" class="text-xl font-semibold">
+                Add event
+            </h2>
+            <ul
+                v-if="events.length"
+                class="mt-4 space-y-2 text-sm text-slate-700"
+            >
+                <li v-for="event in events" :key="event.id">
+                    {{ new Date(event.occurred_at).toLocaleString() }} ·
+                    {{ event.name }} ·
+                    {{ event.competitor ?? 'Former competitor' }}
+                </li>
+            </ul>
+            <p v-if="sportEvents.length === 0" class="mt-3 text-slate-600">
+                No events are defined for this sport.
+            </p>
+            <form v-else class="mt-4 grid gap-4" @submit.prevent="submitEvent">
+                <label class="grid gap-1 text-sm font-medium"
+                    >Event
+                    <select
+                        v-model="eventForm.sport_event_id"
+                        required
+                        class="rounded border border-slate-300 p-2"
+                    >
+                        <option value="" disabled>Select an event</option>
+                        <option
+                            v-for="event in sportEvents"
+                            :key="event.id"
+                            :value="event.id"
+                        >
+                            {{ event.name }} ({{ event.score }})
+                        </option>
+                    </select>
+                    <span
+                        v-if="eventForm.errors.sport_event_id"
+                        class="text-red-700"
+                        >{{ eventForm.errors.sport_event_id }}</span
+                    >
+                </label>
+                <label class="grid gap-1 text-sm font-medium"
+                    >Competitor type
+                    <select
+                        v-model="eventForm.competitor_type"
+                        class="rounded border border-slate-300 p-2"
+                        @change="eventForm.competitor_id = ''"
+                    >
+                        <option value="team">Team</option>
+                        <option value="player">Player</option>
+                    </select>
+                    <span
+                        v-if="eventForm.errors.competitor_type"
+                        class="text-red-700"
+                        >{{ eventForm.errors.competitor_type }}</span
+                    >
+                </label>
+                <label class="grid gap-1 text-sm font-medium"
+                    >Competitor
+                    <select
+                        v-model="eventForm.competitor_id"
+                        required
+                        class="rounded border border-slate-300 p-2"
+                    >
+                        <option value="" disabled>Select a competitor</option>
+                        <template v-if="eventForm.competitor_type === 'team'">
+                            <option
+                                v-if="record.team1"
+                                :value="record.team1.id"
+                            >
+                                {{ record.team1.club?.name }}
+                                {{ record.team1.name }}
+                            </option>
+                            <option
+                                v-if="record.team2"
+                                :value="record.team2.id"
+                            >
+                                {{ record.team2.club?.name }}
+                                {{ record.team2.name }}
+                            </option>
+                        </template>
+                        <option
+                            v-for="player in eventForm.competitor_type ===
+                            'player'
+                                ? lineups
+                                : []"
+                            :key="player.game_user_id"
+                            :value="player.game_user_id"
+                        >
+                            {{ player.name }} ({{
+                                (player.team === 1
+                                    ? record.team1
+                                    : record.team2
+                                )?.name
+                            }})
+                        </option>
+                    </select>
+                    <span
+                        v-if="eventForm.errors.competitor_id"
+                        class="text-red-700"
+                        >{{ eventForm.errors.competitor_id }}</span
+                    >
+                </label>
+                <label class="grid gap-1 text-sm font-medium"
+                    >Occurred at
+                    <input
+                        v-model="eventForm.occurred_at"
+                        type="datetime-local"
+                        required
+                        class="rounded border border-slate-300 p-2"
+                    />
+                    <span
+                        v-if="eventForm.errors.occurred_at"
+                        class="text-red-700"
+                        >{{ eventForm.errors.occurred_at }}</span
+                    >
+                </label>
+                <button
+                    type="submit"
+                    :disabled="eventForm.processing"
+                    class="w-fit rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+                >
+                    Add event
+                </button>
+            </form>
         </section>
         <section class="mt-6">
             <h2 class="text-xl font-semibold">Description</h2>
