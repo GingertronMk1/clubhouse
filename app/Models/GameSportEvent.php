@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Carbon;
 
+/** @property Carbon $occurred_at */
 class GameSportEvent extends Pivot
 {
     use HasUuids;
@@ -16,7 +19,7 @@ class GameSportEvent extends Pivot
         return ['occurred_at' => 'datetime'];
     }
 
-    /** @return MorphTo<GameUser|Team, $this> */
+    /** @return MorphTo<Model, $this> */
     public function competitor(): MorphTo
     {
         return $this->morphTo();

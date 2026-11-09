@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property array<array-key, mixed> $score
  * @property-read Collection<int, User&object{pivot: GameUser}> $users
+ * @property-read Collection<int, SportEvent> $sportEvents
  */
 #[Fillable(['name', 'start', 'description', 'summary', 'sport_id', 'competition_id', 'team1_id', 'team2_id', 'score', 'location_id'])]
 class Game extends Model
