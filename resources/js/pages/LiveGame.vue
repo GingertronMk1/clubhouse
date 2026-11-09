@@ -36,12 +36,19 @@ function refreshGame(): void {
     router.reload({ only: ['game'] });
 }
 
-const { channel } = useEchoPublic(
-    `games.${props.game.id}`,
-    'GameEventRecorded',
-    refreshGame,
+const liveUpdatesAvailable = Boolean(
+    import.meta.env.VITE_PUSHER_APP_KEY &&
+    import.meta.env.VITE_PUSHER_APP_CLUSTER,
 );
-channel().subscribed(refreshGame);
+
+if (liveUpdatesAvailable) {
+    const { channel } = useEchoPublic(
+        `games.${props.game.id}`,
+        'GameEventRecorded',
+        refreshGame,
+    );
+    channel().subscribed(refreshGame);
+}
 
 const { team1Events, team2Events, team1Score, team2Score } = useGameTeamEvents(
     () => props.game,
@@ -82,6 +89,9 @@ function competitorName(event: GameEvent): string | undefined {
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="`Live Game: ${game.name}`" />
         <h1 class="text-3xl font-semibold">{{ game.name }}</h1>
+        <p v-if="!liveUpdatesAvailable" class="mt-2 text-sm text-slate-600">
+            Live updates are unavailable. Refresh the page to see new events.
+        </p>
         <h2 class="mt-8 text-xl font-semibold">Game events</h2>
         <div
             class="mt-4 grid grid-cols-2 gap-4 border-b border-slate-200 pb-3 font-semibold"
