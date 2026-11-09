@@ -43,7 +43,7 @@ function currentLocalDateTime(): string {
 }
 const eventForm = useForm({
     sport_event_id: '',
-    competitor_type: 'team',
+    competitor_type: 'player',
     competitor_id: '',
     occurred_at: currentLocalDateTime(),
     description: '',
@@ -298,7 +298,9 @@ function remove() {
                                     :key="player.game_user_id"
                                     :value="player.game_user_id"
                                 >
-                                    {{ player.name }}
+                                    {{ player.number ?? 'No number' }} -
+                                    {{ player.name }} -
+                                    {{ player.position?.name ?? 'No position' }}
                                 </option>
                             </optgroup>
                         </template>

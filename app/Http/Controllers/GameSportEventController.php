@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GameEventRecorded;
 use App\Http\Requests\StoreGameSportEventRequest;
 use App\Models\Game;
 use App\Models\GameUser;
@@ -19,6 +20,8 @@ class GameSportEventController extends Controller
             'occurred_at' => $data['occurred_at'],
             'description' => $data['description'] ?? null,
         ]);
+
+        GameEventRecorded::dispatch($game->id);
 
         return to_route('games.show', $game);
     }

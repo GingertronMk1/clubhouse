@@ -6,6 +6,7 @@ use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameSportEventController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LiveGameController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\ProfileController;
@@ -34,4 +35,5 @@ Route::resource('clubs.teams', TeamController::class)->scoped();
 Route::resource('competitions', CompetitionController::class);
 Route::resource('games', GameController::class);
 
+Route::get('games/{game}/live', LiveGameController::class)->name('live-game');
 Route::post('games/{game}/events', [GameSportEventController::class, 'store'])->name('games.events.store');
