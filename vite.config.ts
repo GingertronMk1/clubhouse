@@ -64,10 +64,12 @@ export default defineConfig({
         tabWidth: 4,
         singleQuote: true,
         semi: true,
-        singleAttributePerLine: false,
+        singleAttributePerLine: true,
         htmlWhitespaceSensitivity: 'css',
         ignorePatterns: [
             '.github/**',
+            './AGENTS.md',
+            './rules/**',
             '.agents/**',
             'composer.json',
             'resources/js/components/ui/*',
