@@ -24,8 +24,8 @@ const props = defineProps<{
         name: string;
         team1_id: string;
         team2_id: string;
-        team1: { name: string } | null;
-        team2: { name: string } | null;
+        team1: { name: string; club: { name: string } | null } | null;
+        team2: { name: string; club: { name: string } | null } | null;
         users: { name: string; pivot: { id: string; team: number } }[];
         sport_events: GameEvent[];
     };
@@ -72,8 +72,12 @@ function competitorName(event: GameEvent): string | undefined {
         <div
             class="mt-4 grid grid-cols-2 gap-4 border-b border-slate-200 pb-3 font-semibold"
         >
-            <h3>{{ game.team1?.name ?? 'Team 1' }}</h3>
-            <h3>{{ game.team2?.name ?? 'Team 2' }}</h3>
+            <h3>
+                {{ game.team1?.club?.name }} {{ game.team1?.name ?? 'Team 1' }}
+            </h3>
+            <h3>
+                {{ game.team2?.club?.name }} {{ game.team2?.name ?? 'Team 2' }}
+            </h3>
         </div>
         <p v-if="timeline.length === 0" class="mt-4 text-slate-600">
             No events yet.

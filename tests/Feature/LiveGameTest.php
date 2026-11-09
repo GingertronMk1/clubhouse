@@ -14,7 +14,9 @@ test('the live game page is accessible', function () {
     $this->get(route('live-game', $game))->assertOk()->assertInertia(fn (Assert $page) => $page
         ->component('LiveGame')
         ->where('game.id', $game->id)
-        ->where('game.name', $game->name));
+        ->where('game.name', $game->name)
+        ->where('game.team1.club.name', $game->team1->club->name)
+        ->where('game.team2.club.name', $game->team2->club->name));
 });
 
 test('the live game page includes team and player events without exposing user details', function () {

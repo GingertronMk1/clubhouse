@@ -10,13 +10,13 @@ class LiveGameController extends Controller
 {
     public function __invoke(Game $game): Response
     {
-        $game->load(['users', 'sportEvents']);
+        $game->load(['team1.club', 'team2.club', 'users', 'sportEvents']);
 
         return Inertia::render('LiveGame', [
             'game' => [
                 ...$game->only(['id', 'name', 'team1_id', 'team2_id']),
-                'team1' => $game->team1?->only(['name']),
-                'team2' => $game->team2?->only(['name']),
+                'team1' => $game->team1 ? ['name' => $game->team1->name, 'club' => $game->team1->club?->only(['name'])] : null,
+                'team2' => $game->team2 ? ['name' => $game->team2->name, 'club' => $game->team2->club?->only(['name'])] : null,
                 'users' => $game->users->map(fn ($user) => [
                     'name' => $user->name,
                     'pivot' => $user->pivot->only(['id', 'team']),
