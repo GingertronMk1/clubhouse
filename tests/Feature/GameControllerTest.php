@@ -142,3 +142,36 @@ test('games are paginated in start order', function () {
         ->where('records.current_page', 2)
         ->where('records.total', 21));
 });
+
+test('games can be filtered by sport team and club on either side', function () {
+    $this->withoutVite();
+    $game = Game::factory()->create();
+    $otherGame = Game::factory()->create();
+    $matchingSecondSide = Game::factory()->create(['sport_id' => $game->sport_id, 'team2_id' => $game->team1_id]);
+    $matchingFirstSide = Game::factory()->create(['sport_id' => $game->sport_id, 'team1_id' => $game->team1_id]);
+
+    $this->get(route('games.index', ['sport' => $game->sport_id, 'team' => $game->team1_id, 'club' => $game->team1->club_id]))
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('records.data', 3)
+            ->where('records.total', 3)
+            ->where('filters.sport', $game->sport_id)
+            ->where('filters.team', $game->team1_id)
+            ->where('filters.club', $game->team1->club_id));
+    $this->get(route('games.index', ['team' => $game->team2_id]))
+        ->assertInertia(fn (Assert $page) => $page->where('records.total', 1)->where('records.data.0.id', $game->id));
+    $this->get(route('games.index', ['club' => $game->team2->club_id]))
+        ->assertInertia(fn (Assert $page) => $page->where('records.total', 1)->where('records.data.0.id', $game->id));
+    $this->get(route('games.index', ['sport' => $otherGame->sport_id, 'team' => $game->team1_id]))
+        ->assertInertia(fn (Assert $page) => $page->where('records.total', 0));
+});
+
+test('game pagination retains filters', function () {
+    $this->withoutVite();
+    $game = Game::factory()->create();
+    Game::factory()->count(20)->create(['sport_id' => $game->sport_id]);
+
+    $this->get(route('games.index', ['sport' => $game->sport_id]))
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('records.total', 21)
+            ->where('records.next_page_url', fn (string $url) => str_contains($url, 'sport='.$game->sport_id) && str_contains($url, 'page=2')));
+});

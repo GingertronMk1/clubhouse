@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GameRequest;
+use App\Models\Club;
 use App\Models\Competition;
 use App\Models\Game;
 use App\Models\Location;
 use App\Models\Position;
 use App\Models\Sport;
 use App\Models\Team;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -17,9 +20,34 @@ use Inertia\Response;
 
 class GameController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('games/Index', ['records' => Game::query()->with(['team1', 'team2', 'competition', 'location'])->orderBy('start')->orderBy('id')->paginate(20)->withQueryString()]);
+        $filters = $request->validate([
+            'sport' => ['nullable', 'uuid'],
+            'team' => ['nullable', 'uuid'],
+            'club' => ['nullable', 'uuid'],
+        ]);
+
+        $games = Game::query()->with(['team1', 'team2', 'competition', 'location']);
+        if (! empty($filters['sport'])) {
+            $games->where('sport_id', $filters['sport']);
+        }
+        if (! empty($filters['team'])) {
+            $games->where(fn (Builder $query) => $query->where('team1_id', $filters['team'])->orWhere('team2_id', $filters['team']));
+        }
+        if (! empty($filters['club'])) {
+            $games->where(fn (Builder $query) => $query
+                ->whereHas('team1', fn (Builder $team) => $team->where('club_id', $filters['club']))
+                ->orWhereHas('team2', fn (Builder $team) => $team->where('club_id', $filters['club'])));
+        }
+
+        return Inertia::render('games/Index', [
+            'records' => $games->orderBy('start')->orderBy('id')->paginate(20)->withQueryString(),
+            'filters' => $filters,
+            'sports' => Sport::query()->orderBy('name')->get(['id', 'name']),
+            'teams' => Team::query()->with('club:id,name')->orderBy('name')->get(['id', 'name', 'club_id']),
+            'clubs' => Club::query()->orderBy('name')->get(['id', 'name']),
+        ]);
     }
 
     public function create(): Response

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { index as gamesIndex } from '@/routes/games';
 
 defineOptions({ layout: AppLayout });
 import { Head, Link, router } from '@inertiajs/vue3';
@@ -43,6 +44,11 @@ function remove() {
                 </button>
             </div>
         </div>
+        <Link
+            :href="gamesIndex({ query: { club: record.id } })"
+            class="mt-5 inline-block text-sm underline"
+            >View games</Link
+        >
         <p class="mt-5 whitespace-pre-wrap text-slate-600">
             {{ record.description }}
         </p>

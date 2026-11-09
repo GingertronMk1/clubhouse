@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import * as routes from '@/routes/games';
 defineOptions({ layout: AppLayout });
 type Named = { name: string };
-defineProps<{
+const props = defineProps<{
+    filters: {
+        sport?: string | null;
+        team?: string | null;
+        club?: string | null;
+    };
+    sports: { id: string; name: string }[];
+    clubs: { id: string; name: string }[];
+    teams: { id: string; name: string; club: Named | null }[];
     records: {
         data: {
             id: string;
@@ -22,6 +30,17 @@ defineProps<{
         total: number;
     };
 }>();
+const filters = useForm({
+    sport: props.filters.sport ?? '',
+    team: props.filters.team ?? '',
+    club: props.filters.club ?? '',
+});
+function applyFilters() {
+    filters.get(routes.index.url(), {
+        preserveState: true,
+        preserveScroll: true,
+    });
+}
 function formatDate(value: string | null) {
     return value ? new Date(value).toLocaleString() : 'Kickoff to be announced';
 }
@@ -37,10 +56,74 @@ function formatDate(value: string | null) {
                 >Add game</Link
             >
         </div>
+        <form
+            class="mb-8 flex flex-wrap items-end gap-4"
+            @submit.prevent="applyFilters"
+        >
+            <label
+                class="flex min-w-40 flex-1 flex-col gap-1 text-sm font-medium"
+                >Sport
+                <select
+                    v-model="filters.sport"
+                    class="rounded border border-slate-300 p-2"
+                >
+                    <option value="">All sports</option>
+                    <option
+                        v-for="sport in sports"
+                        :key="sport.id"
+                        :value="sport.id"
+                    >
+                        {{ sport.name }}
+                    </option>
+                </select>
+            </label>
+            <label
+                class="flex min-w-40 flex-1 flex-col gap-1 text-sm font-medium"
+                >Club
+                <select
+                    v-model="filters.club"
+                    class="rounded border border-slate-300 p-2"
+                >
+                    <option value="">All clubs</option>
+                    <option
+                        v-for="club in clubs"
+                        :key="club.id"
+                        :value="club.id"
+                    >
+                        {{ club.name }}
+                    </option>
+                </select>
+            </label>
+            <label
+                class="flex min-w-40 flex-1 flex-col gap-1 text-sm font-medium"
+                >Team
+                <select
+                    v-model="filters.team"
+                    class="rounded border border-slate-300 p-2"
+                >
+                    <option value="">All teams</option>
+                    <option
+                        v-for="team in teams"
+                        :key="team.id"
+                        :value="team.id"
+                    >
+                        {{ team.club?.name }} — {{ team.name }}
+                    </option>
+                </select>
+            </label>
+            <button
+                type="submit"
+                class="rounded bg-slate-900 px-4 py-2 text-white"
+            >
+                Filter games
+            </button>
+        </form>
         <p v-if="!records.data.length" class="text-slate-600">
             {{
                 records.total === 0
-                    ? 'No games yet. Add one to get started.'
+                    ? filters.sport || filters.team || filters.club
+                        ? 'No games match these filters.'
+                        : 'No games yet. Add one to get started.'
                     : 'No games on this page.'
             }}
         </p>
