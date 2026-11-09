@@ -85,7 +85,9 @@ function remove() {
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ record.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link :href="routes.edit(record.id)" class="underline"
+                <Link
+                    :href="routes.edit(record.id)"
+                    class="underline"
                     >Edit</Link
                 ><button
                     type="button"
@@ -96,7 +98,10 @@ function remove() {
                 </button>
             </div>
         </div>
-        <p v-if="record.team1 && record.team2" class="mt-5 text-xl font-medium">
+        <p
+            v-if="record.team1 && record.team2"
+            class="mt-5 text-xl font-medium"
+        >
             {{ record.team1.club?.name }} {{ record.team1.name }} vs
             {{ record.team2.club?.name }} {{ record.team2.name }}
         </p>
@@ -108,7 +113,10 @@ function remove() {
             }}<span v-if="record.location"> · {{ record.location.name }}</span
             ><span v-if="record.sport"> · {{ record.sport.name }}</span>
         </p>
-        <p v-if="record.competition" class="mt-2 text-slate-600">
+        <p
+            v-if="record.competition"
+            class="mt-2 text-slate-600"
+        >
             Competition:
             <Link
                 :href="competitions.show(record.competition.id)"
@@ -116,10 +124,21 @@ function remove() {
                 >{{ record.competition.name }}</Link
             >
         </p>
-        <section class="mt-8" aria-labelledby="lineups-heading">
-            <h2 id="lineups-heading" class="text-xl font-semibold">Lineups</h2>
+        <section
+            class="mt-8"
+            aria-labelledby="lineups-heading"
+        >
+            <h2
+                id="lineups-heading"
+                class="text-xl font-semibold"
+            >
+                Lineups
+            </h2>
             <div class="mt-4 grid gap-8 md:grid-cols-2">
-                <section v-for="side in [1, 2]" :key="side">
+                <section
+                    v-for="side in [1, 2]"
+                    :key="side"
+                >
                     <h3 class="text-lg font-semibold">
                         {{
                             (side === 1 ? record.team1 : record.team2)?.club
@@ -149,7 +168,10 @@ function remove() {
                                     class="absolute top-1/2 left-1/2 h-1/4 w-1/4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/70"
                                 ></div>
                             </div>
-                            <div class="absolute inset-5" aria-hidden="true">
+                            <div
+                                class="absolute inset-5"
+                                aria-hidden="true"
+                            >
                                 <div
                                     v-for="player in lineups.filter(
                                         (item) =>
@@ -193,34 +215,62 @@ function remove() {
             </div>
         </section>
         <hr class="my-2" />
-        <section class="mt-8" aria-labelledby="add-event-heading">
-            <h2 class="text-xl font-semibold">Score</h2>
-            <p class="mt-2 text-lg" aria-label="Game score">
+        <section
+            class="club-panel mt-8 rounded-sm p-5 sm:p-7"
+            aria-labelledby="add-event-heading"
+        >
+            <p class="club-eyebrow">Match centre</p>
+            <h2 class="mt-1 text-2xl font-black tracking-tight">
+                Score<span class="text-club-orange">.</span>
+            </h2>
+            <p
+                class="mt-4 rounded-sm bg-club-ink px-5 py-6 text-center text-lg font-semibold text-white sm:text-xl"
+                aria-label="Game score"
+            >
                 {{ record.team1?.club?.name }} {{ record.team1?.name }}
-                <strong>{{ score.team1 }} – {{ score.team2 }}</strong>
+                <strong
+                    class="mx-3 inline-block text-3xl font-black text-orange-300"
+                    >{{ score.team1 }} – {{ score.team2 }}</strong
+                >
                 {{ record.team2?.club?.name }} {{ record.team2?.name }}
             </p>
             <ul
                 v-if="events.length"
                 class="mt-4 space-y-2 text-sm text-slate-700"
             >
-                <li v-for="event in events" :key="event.id">
+                <li
+                    v-for="event in events"
+                    :key="event.id"
+                >
                     {{ new Date(event.occurred_at).toLocaleString() }} ·
                     {{ event.name }} ·
                     {{ event.competitor ?? 'Former competitor' }}
-                    <p v-if="event.description" class="whitespace-pre-wrap">
+                    <p
+                        v-if="event.description"
+                        class="whitespace-pre-wrap"
+                    >
                         {{ event.description }}
                     </p>
                 </li>
             </ul>
             <hr class="my-2" />
-            <h2 id="add-event-heading" class="text-xl font-semibold">
+            <h2
+                id="add-event-heading"
+                class="text-xl font-semibold"
+            >
                 Add event
             </h2>
-            <p v-if="sportEvents.length === 0" class="mt-3 text-slate-600">
+            <p
+                v-if="sportEvents.length === 0"
+                class="mt-3 text-slate-600"
+            >
                 No events are defined for this sport.
             </p>
-            <form v-else class="mt-4 grid gap-4" @submit.prevent="submitEvent">
+            <form
+                v-else
+                class="mt-4 grid gap-4"
+                @submit.prevent="submitEvent"
+            >
                 <label class="grid gap-1 text-sm font-medium"
                     >Event
                     <select
@@ -228,7 +278,12 @@ function remove() {
                         required
                         class="rounded border border-slate-300 p-2"
                     >
-                        <option value="" disabled>Select an event</option>
+                        <option
+                            value=""
+                            disabled
+                        >
+                            Select an event
+                        </option>
                         <option
                             v-for="event in sportEvents"
                             :key="event.id"
@@ -266,7 +321,12 @@ function remove() {
                         required
                         class="rounded border border-slate-300 p-2"
                     >
-                        <option value="" disabled>Select a competitor</option>
+                        <option
+                            value=""
+                            disabled
+                        >
+                            Select a competitor
+                        </option>
                         <template v-if="eventForm.competitor_type === 'team'">
                             <option
                                 v-if="record.team1"
