@@ -192,6 +192,7 @@ function remove() {
                 </section>
             </div>
         </section>
+        <hr class="my-2" />
         <section class="mt-8" aria-labelledby="add-event-heading">
             <h2 class="text-xl font-semibold">Score</h2>
             <p class="mt-2 text-lg" aria-label="Game score">
@@ -199,9 +200,6 @@ function remove() {
                 <strong>{{ score.team1 }} – {{ score.team2 }}</strong>
                 {{ record.team2?.club?.name }} {{ record.team2?.name }}
             </p>
-            <h2 id="add-event-heading" class="text-xl font-semibold">
-                Add event
-            </h2>
             <ul
                 v-if="events.length"
                 class="mt-4 space-y-2 text-sm text-slate-700"
@@ -215,6 +213,10 @@ function remove() {
                     </p>
                 </li>
             </ul>
+            <hr class="my-2" />
+            <h2 id="add-event-heading" class="text-xl font-semibold">
+                Add event
+            </h2>
             <p v-if="sportEvents.length === 0" class="mt-3 text-slate-600">
                 No events are defined for this sport.
             </p>
