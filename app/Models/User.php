@@ -39,7 +39,7 @@ class User extends Authenticatable
     /** @return BelongsToMany<Game, $this, GameUser> */
     public function games(): BelongsToMany
     {
-        return $this->belongsToMany(Game::class)->using(GameUser::class)->withPivot(['team_id', 'position_id', 'jersey_number'])->withTimestamps();
+        return $this->belongsToMany(Game::class)->using(GameUser::class)->withPivot(['team', 'position_id', 'jersey_number'])->withTimestamps();
     }
 
     /** @return BelongsToMany<Club, $this, ClubUser> */

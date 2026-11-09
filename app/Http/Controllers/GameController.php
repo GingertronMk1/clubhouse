@@ -75,11 +75,11 @@ class GameController extends Controller
         return to_route('games.index');
     }
 
-    /** @param array<int, array{user_id: string, team_id: string, position_id: string, jersey_number?: int|null}> $lineup */
+    /** @param array<int, array{user_id: string, team: int, position_id: string, jersey_number?: int|null}> $lineup */
     private function syncLineup(Game $game, array $lineup): void
     {
         $game->users()->sync(collect($lineup)->mapWithKeys(fn (array $player) => [$player['user_id'] => [
-            'team_id' => $player['team_id'],
+            'team' => $player['team'],
             'position_id' => $player['position_id'],
             'jersey_number' => $player['jersey_number'] ?? null,
         ]])->all());

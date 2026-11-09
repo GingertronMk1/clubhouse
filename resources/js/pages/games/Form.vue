@@ -8,7 +8,7 @@ type Option = { id: string; name: string };
 type Team = Option & { club: (Option & { users: Option[] }) | null };
 type LineupPlayer = {
     user_id: string;
-    team_id: string;
+    team: number;
     position_id: string;
     jersey_number: number | null;
 };
@@ -46,17 +46,26 @@ const form = useForm({
     lineup:
         props.record?.users.map(({ id, pivot }) => ({
             user_id: id,
-            team_id: pivot.team_id,
+            team: pivot.team,
             position_id: pivot.position_id,
             jersey_number: pivot.jersey_number,
         })) ?? ([] as LineupPlayer[]),
 });
 watch(
-    () => [form.team1_id, form.team2_id, form.sport_id],
+    () => form.team1_id,
     () => {
-        form.lineup = form.lineup.filter((player) =>
-            [form.team1_id, form.team2_id].includes(player.team_id),
-        );
+        form.lineup = form.lineup.filter((player) => player.team !== 1);
+    },
+);
+watch(
+    () => form.team2_id,
+    () => {
+        form.lineup = form.lineup.filter((player) => player.team !== 2);
+    },
+);
+watch(
+    () => form.sport_id,
+    () => {
         for (const player of form.lineup) {
             if (
                 !props.positions.some(
@@ -69,13 +78,13 @@ watch(
         }
     },
 );
-function togglePlayer(teamId: string, userId: string) {
+function togglePlayer(team: number, userId: string) {
     const index = form.lineup.findIndex((player) => player.user_id === userId);
     if (index >= 0) form.lineup.splice(index, 1);
     else
         form.lineup.push({
             user_id: userId,
-            team_id: teamId,
+            team,
             position_id: '',
             jersey_number: null,
         });
@@ -295,12 +304,20 @@ function submit() {
                 </p>
             </div>
             <fieldset
-                v-for="teamId in [form.team1_id, form.team2_id].filter(Boolean)"
-                :key="teamId"
+                v-for="side in [1, 2]"
+                v-show="side === 1 ? form.team1_id : form.team2_id"
+                :key="side"
                 class="space-y-3 rounded border border-slate-300 p-4"
             >
                 <legend class="font-medium">
-                    {{ teams.find((team) => team.id === teamId)?.name }} lineup
+                    {{
+                        teams.find(
+                            (team) =>
+                                team.id ===
+                                (side === 1 ? form.team1_id : form.team2_id),
+                        )?.name
+                    }}
+                    lineup
                 </legend>
                 <p class="text-sm text-slate-600">
                     Select players from this team’s club and assign their
@@ -308,16 +325,22 @@ function submit() {
                 </p>
                 <p
                     v-if="
-                        !teams.find((team) => team.id === teamId)?.club?.users
-                            .length
+                        !teams.find(
+                            (team) =>
+                                team.id ===
+                                (side === 1 ? form.team1_id : form.team2_id),
+                        )?.club?.users.length
                     "
                     class="text-sm text-slate-600"
                 >
                     No club members available.
                 </p>
                 <div
-                    v-for="player in teams.find((team) => team.id === teamId)
-                        ?.club?.users ?? []"
+                    v-for="player in teams.find(
+                        (team) =>
+                            team.id ===
+                            (side === 1 ? form.team1_id : form.team2_id),
+                    )?.club?.users ?? []"
                     :key="player.id"
                     class="space-y-2 border-t border-slate-200 pt-3"
                 >
@@ -328,17 +351,17 @@ function submit() {
                                 form.lineup.some(
                                     (entry) =>
                                         entry.user_id === player.id &&
-                                        entry.team_id === teamId,
+                                        entry.team === side,
                                 )
                             "
                             :disabled="
                                 form.lineup.some(
                                     (entry) =>
                                         entry.user_id === player.id &&
-                                        entry.team_id !== teamId,
+                                        entry.team !== side,
                                 )
                             "
-                            @change="togglePlayer(teamId, player.id)"
+                            @change="togglePlayer(side, player.id)"
                         />
                         {{ player.name }}
                     </label>
@@ -349,17 +372,17 @@ function submit() {
                         <div
                             v-if="
                                 entry.user_id === player.id &&
-                                entry.team_id === teamId
+                                entry.team === side
                             "
                             class="space-y-2 pl-6"
                         >
                             <label
-                                :for="`position-${teamId}-${player.id}`"
+                                :for="`position-${side}-${player.id}`"
                                 class="block text-sm"
                                 >Position</label
                             >
                             <select
-                                :id="`position-${teamId}-${player.id}`"
+                                :id="`position-${side}-${player.id}`"
                                 v-model="entry.position_id"
                                 required
                                 class="w-full rounded border border-slate-300 p-2"
@@ -379,12 +402,12 @@ function submit() {
                                 </option>
                             </select>
                             <label
-                                :for="`number-${teamId}-${player.id}`"
+                                :for="`number-${side}-${player.id}`"
                                 class="block text-sm"
                                 >Jersey number (optional)</label
                             >
                             <input
-                                :id="`number-${teamId}-${player.id}`"
+                                :id="`number-${side}-${player.id}`"
                                 v-model.number="entry.jersey_number"
                                 type="number"
                                 min="0"
