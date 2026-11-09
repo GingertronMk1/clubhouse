@@ -12,14 +12,14 @@ const props = defineProps<{
         slug: string;
         name: string;
         description: string;
-        events: { name: string; description: string; score: number }[];
+        events: { name: string; description: string; score: number; is_team_event: boolean }[];
     };
 }>();
 const form = useForm({
     name: props.sport?.name ?? '',
     description: props.sport?.description ?? '',
     events:
-        props.sport?.events.map(({ name, description, score }) => ({ name, description, score })) ?? [],
+        props.sport?.events.map(({ name, description, score, is_team_event }) => ({ name, description, score, is_team_event })) ?? [],
 });
 function submit() {
     if (props.sport) form.put(update.url(props.sport.slug));
@@ -126,6 +126,14 @@ function submit() {
                         <FormInput :id="`event-description-${i}`" v-model="score.description" textarea rows="2" />
                         <p v-if="form.errors[`events.${i}.description`]" class="text-sm text-red-700">{{ form.errors[`events.${i}.description`] }}</p>
                     </div>
+                    <div class="mt-4">
+                        <label :for="`event-scope-${i}`" class="block text-sm">Applies to</label>
+                        <select :id="`event-scope-${i}`" v-model="score.is_team_event" class="mt-1 rounded border border-slate-300 p-2">
+                            <option :value="true">Whole team</option>
+                            <option :value="false">Individual</option>
+                        </select>
+                        <p v-if="form.errors[`events.${i}.is_team_event`]" class="text-sm text-red-700">{{ form.errors[`events.${i}.is_team_event`] }}</p>
+                    </div>
                     <button
                         type="button"
                         class="mt-3 text-sm text-red-700 underline"
@@ -137,7 +145,7 @@ function submit() {
                 <button
                     type="button"
                     class="text-sm underline"
-                    @click="form.events.push({ name: '', description: '', score: 0 })"
+                    @click="form.events.push({ name: '', description: '', score: 0, is_team_event: true })"
                 >
                     Add events entry
                 </button>

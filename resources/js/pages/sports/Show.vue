@@ -15,7 +15,7 @@ defineProps<{
         slug: string;
         name: string;
         description: string;
-        events: { name: string; description: string; score: number }[];
+        events: { name: string; description: string; score: number; is_team_event: boolean }[];
     };
     positions: {
         id: string;
@@ -61,6 +61,7 @@ function deleteSport(id: string) {
             <ul class="mt-2 text-slate-700">
                 <li v-for="(score, i) in sport.events" :key="i">
                     {{ score.name }}: {{ score.score }}
+                    ({{ score.is_team_event ? 'Whole team' : 'Individual' }})
                     <span v-if="score.description"> — {{ score.description }}</span>
                 </li>
             </ul>

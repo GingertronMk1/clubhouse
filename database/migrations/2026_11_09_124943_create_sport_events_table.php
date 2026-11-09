@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->integer('score')->default(0);
+            $table->boolean('is_team_event')->default(true);
             $table->timestamps();
         });
 
