@@ -28,6 +28,18 @@ class Game extends Model
         return $this->belongsToMany(User::class)->using(GameUser::class)->withPivot(['team', 'position_id', 'jersey_number'])->withTimestamps();
     }
 
+    /** @return BelongsToMany<User, $this, GameUser> */
+    public function team1Users(): BelongsToMany
+    {
+        return $this->users()->withPivotValue('team', 1);
+    }
+
+    /** @return BelongsToMany<User, $this, GameUser> */
+    public function team2Users(): BelongsToMany
+    {
+        return $this->users()->withPivotValue('team', 2);
+    }
+
     /** @return BelongsTo<Sport, $this> */
     public function sport(): BelongsTo
     {

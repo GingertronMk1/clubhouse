@@ -85,3 +85,19 @@ test('lineups reject invalid sides and duplicate players', function () {
     $this->put(route('games.update', $game), $data)->assertSessionHasErrors(['lineup.0.team', 'lineup.0.user_id']);
     $this->assertDatabaseCount('game_user', 0);
 });
+
+test('game team relationships select and assign the corresponding side', function () {
+    $game = Game::factory()->create();
+    $firstPlayer = User::factory()->create();
+    $secondPlayer = User::factory()->create();
+    $position = Position::factory()->create(['sport_id' => $game->sport_id]);
+
+    $game->team1Users()->attach($firstPlayer, ['position_id' => $position->id]);
+    $game->team2Users()->attach($secondPlayer, ['position_id' => $position->id]);
+    $game->load(['team1Users', 'team2Users']);
+
+    expect($game->team1Users->modelKeys())->toBe([$firstPlayer->id]);
+    expect($game->team2Users->modelKeys())->toBe([$secondPlayer->id]);
+    expect($game->team1Users->first()->pivot->team)->toBe(1);
+    expect($game->team2Users->first()->pivot->team)->toBe(2);
+});
