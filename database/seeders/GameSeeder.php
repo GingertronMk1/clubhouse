@@ -31,6 +31,10 @@ class GameSeeder extends Seeder
         $locations = Location::query()->get()->keyBy('name');
         $competitionNames = ['nfl' => '2026 NFL season', 'nrl' => '2026 NRL season', 'super' => '2026 Super League season', 'touch' => '2024 Touch World Cup', 'urc' => '2025–26 United Rugby Championship season', 'prem' => '2025–26 Premiership Rugby season'];
         $sportNames = ['nfl' => 'American Football', 'nrl' => 'Rugby League', 'super' => 'Rugby League', 'touch' => 'Touch Rugby', 'urc' => 'Rugby Union', 'prem' => 'Rugby Union'];
+        $existingGames = Game::query()->without(['sport', 'competition', 'team1', 'team2', 'location'])
+            ->whereIn('competition_id', $competitions->modelKeys())
+            ->get(['id', 'competition_id', 'description'])
+            ->keyBy(fn (Game $game): string => $game->competition_id.'|'.$game->description);
 
         /** @var list<array{id: string, competition: string, key: string, division: string, home: string, away: string, start: ?string, venue: string, venue_id?: string, round: string}> $fixtures */
         $fixtures = json_decode(File::get(database_path('seeders/data/competition-fixtures.json')), true, flags: JSON_THROW_ON_ERROR);
@@ -75,9 +79,12 @@ class GameSeeder extends Seeder
                 $locations->put($fixture['venue'], $location);
             }
 
-            $game = Game::query()->without(['sport', 'competition', 'team1', 'team2', 'location'])->firstOrNew(
-                ['competition_id' => $competition->id, 'description' => "{$fixture['competition']} fixture {$fixture['key']}"],
-                [
+            $description = "{$fixture['competition']} fixture {$fixture['key']}";
+            $gameKey = $competition->id.'|'.$description;
+            if (! $existingGames->has($gameKey)) {
+                $game = new Game([
+                    'competition_id' => $competition->id,
+                    'description' => $description,
                     'name' => "{$fixture['home']} vs {$fixture['away']}",
                     'start' => $fixture['start'],
                     'summary' => trim($fixture['division'].' — '.$fixture['round']),
@@ -86,14 +93,11 @@ class GameSeeder extends Seeder
                     'team2_id' => $fixtureTeams['away']->id,
                     'score' => [],
                     'location_id' => $location->id,
-                ],
-            );
-
-            if (! $game->exists) {
+                ]);
                 $game->id = $fixture['id'];
                 $game->save();
+                $existingGames->put($gameKey, $game);
             }
-
         }
     }
 }

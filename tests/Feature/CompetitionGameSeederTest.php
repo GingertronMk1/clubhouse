@@ -7,6 +7,7 @@ use Database\Seeders\CompetitionSeeder;
 use Database\Seeders\GameSeeder;
 use Database\Seeders\SportSeeder;
 use Database\Seeders\TeamSeeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -59,8 +60,17 @@ test('competition and game seeders import the fixtures and can be repeated', fun
     expect($premFinal->start->format('Y-m-d H:i:s'))->toBe('2026-06-20 14:00:00');
     expect($premFinal->summary)->toBe('First team — Final');
 
+    DB::flushQueryLog();
+    DB::enableQueryLog();
     $this->seed([CompetitionSeeder::class, GameSeeder::class]);
+    $gameSelects = collect(DB::getQueryLog())->filter(function (array $query): bool {
+        $sql = str_replace(['"', '`'], '', strtolower($query['query']));
 
+        return str_starts_with($sql, 'select') && str_contains($sql, 'from games');
+    });
+    DB::disableQueryLog();
+
+    expect($gameSelects->count())->toBeLessThan(10);
     expect(Competition::query()->count())->toBe(6);
     expect(Game::query()->count())->toBe(array_sum($counts));
     expect($game->fresh()->summary)->toBe('Custom summary');
