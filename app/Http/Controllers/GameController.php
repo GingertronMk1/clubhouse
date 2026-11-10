@@ -138,15 +138,16 @@ class GameController extends Controller
     public function update(GameRequest $request, Game $game): RedirectResponse
     {
         $data = $request->validated();
-        $lineup = $data['lineup'] ?? [];
-        if (! is_array($lineup)) {
+        $lineup = $data['lineup'] ?? null;
+        if ($lineup !== null && ! is_array($lineup)) {
             throw new \LogicException('Expected a validated lineup array.');
         }
         unset($data['lineup']);
-        $data['score'] = [];
         DB::transaction(function () use ($game, $data, $lineup): void {
             $game->update($data);
-            $this->syncLineup($game, $lineup);
+            if ($lineup !== null) {
+                $this->syncLineup($game, $lineup);
+            }
         });
 
         return to_route('games.show', $game);

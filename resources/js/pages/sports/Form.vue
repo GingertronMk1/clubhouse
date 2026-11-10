@@ -12,14 +12,20 @@ const props = defineProps<{
         slug: string;
         name: string;
         description: string;
-        events: { name: string; description: string; score: number }[];
+        events: {
+            id: string;
+            name: string;
+            description: string;
+            score: number;
+        }[];
     };
 }>();
 const form = useForm({
     name: props.sport?.name ?? '',
     description: props.sport?.description ?? '',
     events:
-        props.sport?.events.map(({ name, description, score }) => ({
+        props.sport?.events.map(({ id, name, description, score }) => ({
+            id,
             name,
             description,
             score,
@@ -171,6 +177,7 @@ function submit() {
                     class="text-sm underline"
                     @click="
                         form.events.push({
+                            id: '',
                             name: '',
                             description: '',
                             score: 0,

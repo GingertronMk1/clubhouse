@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Game;
 use App\Models\Position;
 use App\Models\Sport;
 use App\Models\SportEvent;
+use App\Models\Team;
 use Database\Seeders\SportSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -39,6 +41,31 @@ test('sport events entries are validated', function () {
         'events' => [['name' => '', 'description' => '', 'score' => 'invalid']],
     ])->assertSessionHasErrors(['name', 'description', 'events.0.name', 'events.0.score']);
     expect(Sport::query()->count())->toBe(0);
+});
+
+test('editing a sport preserves recorded events and rejects removing or changing their scores', function () {
+    $game = Game::factory()->create();
+    $event = SportEvent::factory()->create(['sport_id' => $game->sport_id, 'name' => 'Try', 'score' => 5]);
+    $game->sportEvents()->attach($event, ['competitor_type' => Team::class, 'competitor_id' => $game->team1_id, 'occurred_at' => now()]);
+    $sport = $game->sport;
+    $data = ['name' => 'Updated sport', 'description' => 'Updated description', 'events' => [['id' => $event->id, 'name' => 'Try', 'description' => '', 'score' => 5]]];
+
+    $this->put(route('sports.update', $sport), $data)->assertRedirect(route('sports.index'));
+    $this->assertDatabaseHas('game_sport_event', ['game_id' => $game->id, 'sport_event_id' => $event->id]);
+    expect($sport->events()->firstOrFail()->id)->toBe($event->id);
+
+    $this->put(route('sports.update', $sport->fresh()), [...$data, 'events' => []])->assertSessionHasErrors('events');
+    $this->put(route('sports.update', $sport->fresh()), [...$data, 'events' => [[...$data['events'][0], 'score' => 10]]])->assertSessionHasErrors('events');
+    $this->assertDatabaseHas('game_sport_event', ['game_id' => $game->id, 'sport_event_id' => $event->id]);
+    expect($event->fresh()->score)->toBe(5);
+});
+
+test('sport updates reject event IDs from another sport', function () {
+    $sport = Sport::factory()->create();
+    $otherEvent = SportEvent::factory()->create();
+
+    $this->put(route('sports.update', $sport), ['name' => $sport->name, 'description' => $sport->description, 'events' => [['id' => $otherEvent->id, 'name' => 'Try', 'description' => '', 'score' => 5]]])->assertSessionHasErrors('events.0.id');
+    $this->assertModelExists($otherEvent);
 });
 
 test('the sport creation page displays an empty form', function () {

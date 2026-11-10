@@ -51,6 +51,19 @@ test('lineups can be saved and replaced when editing a game', function () {
     $this->assertDatabaseMissing('game_user', ['game_id' => $game->id, 'user_id' => $player->id]);
 });
 
+test('updating a game without a lineup preserves its existing lineup and score', function () {
+    $game = Game::factory()->create(['score' => ['home' => 2, 'away' => 1]]);
+    $player = User::factory()->create();
+    $position = Position::factory()->create(['sport_id' => $game->sport_id]);
+    $game->users()->attach($player, ['team' => 1, 'position_id' => $position->id]);
+    $data = ['name' => 'Updated', 'description' => 'Match', 'summary' => 'Summary', 'sport_id' => $game->sport_id, 'competition_id' => $game->competition_id, 'team1_id' => $game->team1_id, 'team2_id' => $game->team2_id, 'location_id' => $game->location_id];
+
+    $this->put(route('games.update', $game), $data)->assertRedirect(route('games.show', $game));
+
+    $this->assertDatabaseHas('game_user', ['game_id' => $game->id, 'user_id' => $player->id]);
+    expect($game->fresh()->score)->toBe(['home' => 2, 'away' => 1]);
+});
+
 test('lineups reject players outside the team club and positions outside the sport', function () {
     $game = Game::factory()->create();
     $player = User::factory()->create();

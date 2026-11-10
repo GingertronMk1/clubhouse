@@ -56,10 +56,17 @@ class SportController extends Controller
     {
         DB::transaction(function () use ($request, $sport) {
             $sport->update(['name' => $request->validated('name'), 'description' => $request->validated('description')]);
-            $sport->events()->delete();
-            /** @var array<int, array{name: string, description: ?string, score: int}> $events */
+            /** @var array<int, array{id?: string|null, name: string, description: ?string, score: int}> $events */
             $events = $request->validated('events');
-            $sport->events()->createMany(collect($events)->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
+            $sport->events()->whereNotIn('id', collect($events)->pluck('id')->filter()->all())->delete();
+            foreach ($events as $event) {
+                $attributes = ['name' => $event['name'], 'description' => $event['description'] ?? '', 'score' => $event['score']];
+                if (! empty($event['id'])) {
+                    $sport->events()->whereKey($event['id'])->update($attributes);
+                } else {
+                    $sport->events()->create($attributes);
+                }
+            }
         });
 
         return to_route('sports.index');
