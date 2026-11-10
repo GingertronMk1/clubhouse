@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import GameCard from '@/components/GameCard.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import * as routes from '@/routes/games';
@@ -56,9 +57,6 @@ function applyFilters() {
         preserveState: true,
         preserveScroll: true,
     });
-}
-function formatDate(value: string | null) {
-    return value ? new Date(value).toLocaleString() : 'Kickoff to be announced';
 }
 </script>
 <template>
@@ -181,44 +179,11 @@ function formatDate(value: string | null) {
             v-if="records.data.length"
             class="space-y-3"
         >
-            <li
+            <GameCard
                 v-for="record in records.data"
                 :key="record.id"
-                class="club-panel rounded-sm border-l-4 border-l-club-orange p-5 transition hover:shadow-md"
-            >
-                <p
-                    class="mb-3 text-xs font-bold tracking-wide text-club-orange uppercase"
-                >
-                    {{ record.competition?.name ?? 'Game' }}
-                    <span class="text-slate-400">
-                        / {{ formatDate(record.start) }}</span
-                    >
-                </p>
-                <h2 class="text-xl font-black tracking-tight">
-                    <Link
-                        :href="routes.show(record.id)"
-                        class="hover:text-club-orange"
-                        >{{ record.name }}
-                        <span
-                            aria-hidden="true"
-                            class="text-club-orange"
-                            >↗</span
-                        ></Link
-                    >
-                </h2>
-                <p
-                    v-if="record.team1 && record.team2"
-                    class="mt-2 font-semibold text-slate-700"
-                >
-                    {{ record.team1.name }} vs {{ record.team2.name }}
-                </p>
-                <p
-                    v-if="record.location"
-                    class="mt-2 text-sm text-slate-500"
-                >
-                    {{ record.location.name }}
-                </p>
-            </li>
+                :game="record"
+            />
         </ul>
         <nav
             v-if="records.last_page > 1"

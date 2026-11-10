@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import GameCard from '@/components/GameCard.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import * as routes from '@/routes/competitions';
 import * as games from '@/routes/games';
@@ -11,7 +12,13 @@ const props = defineProps<{
         location: Named | null;
         parent: Named | null;
         children: Named[];
-        games: (Named & { team1: Named | null; team2: Named | null })[];
+        games: (Named & {
+            start: string | null;
+            team1: Named | null;
+            team2: Named | null;
+            competition: Named | null;
+            location: Named | null;
+        })[];
     };
 }>();
 function remove() {
@@ -103,23 +110,13 @@ function remove() {
             </p>
             <ul
                 v-else
-                class="mt-2 space-y-2"
+                class="mt-2 space-y-3"
             >
-                <li
+                <GameCard
                     v-for="game in record.games"
                     :key="game.id"
-                >
-                    <Link
-                        :href="games.show(game.id)"
-                        class="underline"
-                        >{{ game.name }}</Link
-                    ><span
-                        v-if="game.team1 && game.team2"
-                        class="text-slate-600"
-                    >
-                        — {{ game.team1.name }} vs {{ game.team2.name }}</span
-                    >
-                </li>
+                    :game="game"
+                />
             </ul>
         </section>
     </main>
