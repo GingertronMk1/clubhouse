@@ -72,7 +72,7 @@ class GameUserSeeder extends Seeder
                     }
                 }
 
-                foreach (array_chunk($rows, 500) as $chunk) {
+                foreach (array_chunk($rows, 100) as $chunk) {
                     DB::table('game_user')->insert($chunk);
                 }
             });
