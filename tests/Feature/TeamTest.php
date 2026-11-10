@@ -10,7 +10,7 @@ test('teams can be created, listed, viewed, updated and deleted for a club', fun
     $this->withoutVite();
     $club = Club::factory()->create();
     $user = User::factory()->create();
-    $user->clubs()->attach($club, ['permissions' => [Permission::View->value]]);
+    $user->clubs()->attach($club, ['permissions' => [Permission::View->value, Permission::Create->value, Permission::Update->value, Permission::Delete->value]]);
     $this->actingAs($user);
     Team::factory()->for($club)->create(['name' => 'Zebras']);
     Team::factory()->create(['name' => 'Other club']);
@@ -31,6 +31,7 @@ test('teams can be created, listed, viewed, updated and deleted for a club', fun
 });
 
 test('teams require valid fields and cannot be assigned to another club', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $club = Club::factory()->create();
     $otherClub = Club::factory()->create();
     $this->post(route('clubs.teams.store', $club), [])->assertSessionHasErrors(['name', 'description']);

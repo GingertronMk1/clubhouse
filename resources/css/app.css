@@ -9,3 +9,61 @@
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 }
+
+/* Give the existing resource pages the same visual language as the home page. */
+main :is(a, button).bg-slate-900 {
+    background-color: var(--color-club-orange);
+    font-weight: 700;
+    transition: background-color 150ms ease;
+}
+
+main :is(a, button).bg-slate-900:hover {
+    background-color: var(--color-club-orange-dark);
+}
+
+main li.rounded-lg.border {
+    background: white;
+    border-color: var(--color-club-line);
+    box-shadow: 0 5px 18px rgb(24 39 43 / 4%);
+}
+
+main :is(input, select, textarea):not([type='range']) {
+    background-color: white;
+    border-color: #cfc7bb;
+}
+
+@theme {
+    --color-club-orange: #bd4c21;
+    --color-club-orange-dark: #963815;
+    --color-club-ink: #18272b;
+    --color-club-paper: #f5f2ec;
+    --color-club-line: #e3ddd3;
+}
+
+@layer base {
+    body {
+        background: var(--color-club-paper);
+        color: var(--color-club-ink);
+    }
+
+    :focus-visible {
+        outline: 3px solid #e9743c;
+        outline-offset: 3px;
+    }
+}
+
+@layer components {
+    .club-panel {
+        border: 1px solid var(--color-club-line);
+        background: #fff;
+        box-shadow: 0 8px 24px rgb(24 39 43 / 4%);
+    }
+
+    .club-eyebrow {
+        color: var(--color-club-orange);
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+}

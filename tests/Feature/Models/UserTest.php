@@ -3,6 +3,7 @@
 use App\Models\Club;
 use App\Models\User;
 use App\Permission;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Support\Str;
 
 test('users are persisted with UUIDv7 identifiers', function () {
@@ -68,8 +69,7 @@ test('superadmins have all club permissions without membership', function () {
 test('superadmin status cannot be mass assigned', function () {
     $user = User::factory()->create();
 
-    $user->fill(['superadmin' => true]);
-    $user->save();
+    expect(fn () => $user->fill(['superadmin' => true]))->toThrow(MassAssignmentException::class);
 
     expect($user->fresh()->superadmin)->toBeFalse();
 });

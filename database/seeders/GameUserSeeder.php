@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Game;
 use App\Models\Position;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -32,8 +33,9 @@ class GameUserSeeder extends Seeder
                     $secondCandidates = $game->team2?->club?->users->whereNotIn('id', $assigned) ?? collect();
                     $firstCandidateIds = $game->team1?->club?->users->modelKeys() ?? [];
                     $secondCandidates = $secondCandidates->sortBy('email');
-                    $reservedSecondPlayer = $game->users->contains(fn ($user) => $user->pivot->team === 2)
-                        ? null : ($secondCandidates->first(fn ($user) => ! in_array($user->id, $firstCandidateIds, true)) ?? $secondCandidates->first())?->id;
+                    $secondPlayer = $secondCandidates->first(fn ($user) => $user instanceof User && ! in_array($user->id, $firstCandidateIds, true)) ?? $secondCandidates->first();
+                    $reservedSecondPlayer = ! $game->users->contains(fn ($user) => $user->pivot->team === 2) && $secondPlayer instanceof User
+                        ? $secondPlayer->id : null;
 
                     foreach ([1, 2] as $side) {
                         if ($game->users->contains(fn ($user) => $user->pivot->team === $side)) {
@@ -52,6 +54,9 @@ class GameUserSeeder extends Seeder
                         $availablePositions = $sportPositions->values();
                         foreach ($candidates->sortBy('email')->take($sportPositions->count()) as $player) {
                             $position = $availablePositions->shift();
+                            if (! $player instanceof User || ! $position instanceof Position) {
+                                continue;
+                            }
                             $rows[] = [
                                 'id' => (string) Str::uuid7(),
                                 'game_id' => $game->id,
@@ -67,7 +72,7 @@ class GameUserSeeder extends Seeder
                     }
                 }
 
-                foreach (array_chunk($rows, 500) as $chunk) {
+                foreach (array_chunk($rows, 100) as $chunk) {
                     DB::table('game_user')->insert($chunk);
                 }
             });

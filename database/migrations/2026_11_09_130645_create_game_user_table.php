@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('game_user', function (Blueprint $table) {
+            $table->uuid('id')->unique();
             $table->foreignIdFor(Game::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('team');

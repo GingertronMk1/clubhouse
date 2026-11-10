@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Event;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('a game can record events for its teams and lineup players', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $this->withoutVite();
     $game = Game::factory()->create();
     $player = User::factory()->create();
@@ -34,6 +35,7 @@ test('a game can record events for its teams and lineup players', function () {
 });
 
 test('game events reject unrelated events and competitors and invalid times', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $game = Game::factory()->create();
     $otherGame = Game::factory()->create();
     $otherEvent = SportEvent::factory()->create();

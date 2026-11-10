@@ -31,7 +31,7 @@ class CompetitionRequest extends FormRequest
                         return;
                     }
                     $visited[$value] = true;
-                    $value = Competition::query()->whereKey($value)->value('parent_id');
+                    $value = Competition::query()->without(['parent', 'location'])->whereKey($value)->value('parent_id');
                 }
             }],
         ];

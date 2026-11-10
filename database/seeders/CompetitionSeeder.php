@@ -28,5 +28,25 @@ class CompetitionSeeder extends Seeder
                 ['description' => $description, 'location_id' => $location->id],
             );
         }
+
+        foreach ([
+            ['2025–26 United Rugby Championship season', 'The 2025–26 United Rugby Championship season, including play-offs.', 'United Rugby Championship venues', '1283f3b2-ee8f-4ad7-929f-f0bc3631ece5', '25dc85c9-2728-40c2-8388-bba2d1c638a7'],
+            ['2025–26 Premiership Rugby season', 'The 2025–26 Premiership Rugby season, including play-offs.', 'Premiership Rugby venues', '4d69e5e0-70b6-4b94-999e-79b16699ba3d', '06770b14-2235-4cce-b0d5-7a701f2d4fd6'],
+        ] as [$name, $description, $locationName, $competitionId, $locationId]) {
+            $location = Location::query()->firstOrNew(['name' => $locationName], ['description' => $locationName, 'additional_information' => []]);
+            if (! $location->exists) {
+                $location->id = $locationId;
+                $location->save();
+            }
+
+            $competition = Competition::query()->without(['parent', 'location'])->firstOrNew(
+                ['name' => $name],
+                ['description' => $description, 'location_id' => $location->id],
+            );
+            if (! $competition->exists) {
+                $competition->id = $competitionId;
+                $competition->save();
+            }
+        }
     }
 }

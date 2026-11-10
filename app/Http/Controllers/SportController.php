@@ -6,6 +6,7 @@ use App\Http\Requests\SportRequest;
 use App\Models\Sport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,13 +25,15 @@ class SportController extends Controller
 
     public function create(): Response
     {
+        Gate::authorize('manage-sports');
+
         return Inertia::render('sports/Form');
     }
 
     public function store(SportRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
-            $sport = Sport::query()->create($request->safe()->except('events'));
+            $sport = Sport::query()->create(['name' => $request->validated('name'), 'description' => $request->validated('description')]);
             /** @var array<int, array{name: string, description: ?string, score: int}> $events */
             $events = $request->validated('events');
             $sport->events()->createMany(collect($events)->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
@@ -43,23 +46,32 @@ class SportController extends Controller
     {
         return Inertia::render('sports/Show', [
             'sport' => $sport->load('events'),
-            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'slug', 'name', 'preview_x', 'preview_y', 'default_number']),
+            'positions' => $sport->positions()->without('sport')->orderBy('sort_order')->orderBy('name')->get(['id', 'slug', 'name', 'preview_x', 'preview_y', 'default_number']),
         ]);
     }
 
     public function edit(Sport $sport): Response
     {
+        Gate::authorize('manage-sports');
+
         return Inertia::render('sports/Form', ['sport' => $sport->load('events')]);
     }
 
     public function update(SportRequest $request, Sport $sport): RedirectResponse
     {
         DB::transaction(function () use ($request, $sport) {
-            $sport->update($request->safe()->except('events'));
-            $sport->events()->delete();
-            /** @var array<int, array{name: string, description: ?string, score: int}> $events */
+            $sport->update(['name' => $request->validated('name'), 'description' => $request->validated('description')]);
+            /** @var array<int, array{id?: string|null, name: string, description: ?string, score: int}> $events */
             $events = $request->validated('events');
-            $sport->events()->createMany(collect($events)->map(fn (array $event) => [...$event, 'description' => $event['description'] ?? ''])->all());
+            $sport->events()->whereNotIn('id', collect($events)->pluck('id')->filter()->all())->delete();
+            foreach ($events as $event) {
+                $attributes = ['name' => $event['name'], 'description' => $event['description'] ?? '', 'score' => $event['score']];
+                if (! empty($event['id'])) {
+                    $sport->events()->whereKey($event['id'])->update($attributes);
+                } else {
+                    $sport->events()->create($attributes);
+                }
+            }
         });
 
         return to_route('sports.index');
@@ -67,6 +79,8 @@ class SportController extends Controller
 
     public function destroy(Sport $sport): RedirectResponse
     {
+        Gate::authorize('manage-sports');
+
         $sport->delete();
 
         return to_route('sports.index');

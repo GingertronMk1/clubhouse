@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { confirmDelete } from '@/lib/confirmDelete';
+import { fieldCoordinate } from '@/lib/utils';
+import RadioOption from '@/components/RadioOption.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import * as routes from '@/routes/games';
 import * as competitions from '@/routes/competitions';
 import { store as storeEvent } from '@/routes/games/events';
@@ -67,12 +70,11 @@ function initials(name: string): string {
         .join('')
         .toUpperCase();
 }
-function fieldCoordinate(value: number): string {
-    return `${Math.max(0, Math.min(100, value))}%`;
-}
 function remove() {
-    if (window.confirm(`Delete ${props.record.name}?`))
-        router.delete(routes.destroy.url(props.record.id));
+    confirmDelete(
+        routes.destroy.url(props.record.id),
+        `Delete ${props.record.name}?`,
+    );
 }
 </script>
 <template>
@@ -85,7 +87,9 @@ function remove() {
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ record.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link :href="routes.edit(record.id)" class="underline"
+                <Link
+                    :href="routes.edit(record.id)"
+                    class="underline"
                     >Edit</Link
                 ><button
                     type="button"
@@ -96,7 +100,10 @@ function remove() {
                 </button>
             </div>
         </div>
-        <p v-if="record.team1 && record.team2" class="mt-5 text-xl font-medium">
+        <p
+            v-if="record.team1 && record.team2"
+            class="mt-5 text-xl font-medium"
+        >
             {{ record.team1.club?.name }} {{ record.team1.name }} vs
             {{ record.team2.club?.name }} {{ record.team2.name }}
         </p>
@@ -108,7 +115,10 @@ function remove() {
             }}<span v-if="record.location"> · {{ record.location.name }}</span
             ><span v-if="record.sport"> · {{ record.sport.name }}</span>
         </p>
-        <p v-if="record.competition" class="mt-2 text-slate-600">
+        <p
+            v-if="record.competition"
+            class="mt-2 text-slate-600"
+        >
             Competition:
             <Link
                 :href="competitions.show(record.competition.id)"
@@ -116,10 +126,21 @@ function remove() {
                 >{{ record.competition.name }}</Link
             >
         </p>
-        <section class="mt-8" aria-labelledby="lineups-heading">
-            <h2 id="lineups-heading" class="text-xl font-semibold">Lineups</h2>
+        <section
+            class="mt-8"
+            aria-labelledby="lineups-heading"
+        >
+            <h2
+                id="lineups-heading"
+                class="text-xl font-semibold"
+            >
+                Lineups
+            </h2>
             <div class="mt-4 grid gap-8 md:grid-cols-2">
-                <section v-for="side in [1, 2]" :key="side">
+                <section
+                    v-for="side in [1, 2]"
+                    :key="side"
+                >
                     <h3 class="text-lg font-semibold">
                         {{
                             (side === 1 ? record.team1 : record.team2)?.club
@@ -149,7 +170,10 @@ function remove() {
                                     class="absolute top-1/2 left-1/2 h-1/4 w-1/4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/70"
                                 ></div>
                             </div>
-                            <div class="absolute inset-5" aria-hidden="true">
+                            <div
+                                class="absolute inset-5"
+                                aria-hidden="true"
+                            >
                                 <div
                                     v-for="player in lineups.filter(
                                         (item) =>
@@ -193,124 +217,199 @@ function remove() {
             </div>
         </section>
         <hr class="my-2" />
-        <section class="mt-8" aria-labelledby="add-event-heading">
-            <h2 class="text-xl font-semibold">Score</h2>
-            <p class="mt-2 text-lg" aria-label="Game score">
+        <section
+            class="club-panel mt-8 rounded-sm p-5 sm:p-7"
+            aria-labelledby="add-event-heading"
+        >
+            <p class="club-eyebrow">Match centre</p>
+            <h2 class="mt-1 text-2xl font-black tracking-tight">
+                Score<span class="text-club-orange">.</span>
+            </h2>
+            <p
+                class="mt-4 rounded-sm bg-club-ink px-5 py-6 text-center text-lg font-semibold text-white sm:text-xl"
+                aria-label="Game score"
+            >
                 {{ record.team1?.club?.name }} {{ record.team1?.name }}
-                <strong>{{ score.team1 }} – {{ score.team2 }}</strong>
+                <strong
+                    class="mx-3 inline-block text-3xl font-black text-orange-300"
+                    >{{ score.team1 }} – {{ score.team2 }}</strong
+                >
                 {{ record.team2?.club?.name }} {{ record.team2?.name }}
             </p>
             <ul
                 v-if="events.length"
                 class="mt-4 space-y-2 text-sm text-slate-700"
             >
-                <li v-for="event in events" :key="event.id">
+                <li
+                    v-for="event in events"
+                    :key="event.id"
+                >
                     {{ new Date(event.occurred_at).toLocaleString() }} ·
                     {{ event.name }} ·
                     {{ event.competitor ?? 'Former competitor' }}
-                    <p v-if="event.description" class="whitespace-pre-wrap">
+                    <p
+                        v-if="event.description"
+                        class="whitespace-pre-wrap"
+                    >
                         {{ event.description }}
                     </p>
                 </li>
             </ul>
             <hr class="my-2" />
-            <h2 id="add-event-heading" class="text-xl font-semibold">
+            <h2
+                id="add-event-heading"
+                class="text-xl font-semibold"
+            >
                 Add event
             </h2>
-            <p v-if="sportEvents.length === 0" class="mt-3 text-slate-600">
+            <p
+                v-if="sportEvents.length === 0"
+                class="mt-3 text-slate-600"
+            >
                 No events are defined for this sport.
             </p>
-            <form v-else class="mt-4 grid gap-4" @submit.prevent="submitEvent">
-                <label class="grid gap-1 text-sm font-medium"
-                    >Event
-                    <select
-                        v-model="eventForm.sport_event_id"
-                        required
-                        class="rounded border border-slate-300 p-2"
-                    >
-                        <option value="" disabled>Select an event</option>
-                        <option
+            <form
+                v-else
+                class="mt-4 grid gap-4"
+                @submit.prevent="submitEvent"
+            >
+                <fieldset
+                    :aria-describedby="
+                        eventForm.errors.sport_event_id
+                            ? 'event-error'
+                            : undefined
+                    "
+                >
+                    <legend class="text-sm font-medium">Event</legend>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        <RadioOption
                             v-for="event in sportEvents"
                             :key="event.id"
+                            v-model="eventForm.sport_event_id"
+                            name="sport_event_id"
                             :value="event.id"
+                            required
                         >
                             {{ event.name }} ({{ event.score }})
-                        </option>
-                    </select>
-                    <span
+                        </RadioOption>
+                    </div>
+                    <p
                         v-if="eventForm.errors.sport_event_id"
-                        class="text-red-700"
-                        >{{ eventForm.errors.sport_event_id }}</span
+                        id="event-error"
+                        class="mt-1 text-sm text-red-700"
+                        role="alert"
                     >
-                </label>
-                <label class="grid gap-1 text-sm font-medium"
-                    >Competitor type
-                    <select
-                        v-model="eventForm.competitor_type"
-                        class="rounded border border-slate-300 p-2"
-                        @change="eventForm.competitor_id = ''"
-                    >
-                        <option value="team">Team</option>
-                        <option value="player">Player</option>
-                    </select>
-                    <span
+                        {{ eventForm.errors.sport_event_id }}
+                    </p>
+                </fieldset>
+                <fieldset
+                    :aria-describedby="
+                        eventForm.errors.competitor_type
+                            ? 'competitor-type-error'
+                            : undefined
+                    "
+                >
+                    <legend class="text-sm font-medium">Competitor type</legend>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        <RadioOption
+                            v-model="eventForm.competitor_type"
+                            name="competitor_type"
+                            value="team"
+                            @update:model-value="eventForm.competitor_id = ''"
+                            >Team</RadioOption
+                        >
+                        <RadioOption
+                            v-model="eventForm.competitor_type"
+                            name="competitor_type"
+                            value="player"
+                            @update:model-value="eventForm.competitor_id = ''"
+                            >Player</RadioOption
+                        >
+                    </div>
+                    <p
                         v-if="eventForm.errors.competitor_type"
-                        class="text-red-700"
-                        >{{ eventForm.errors.competitor_type }}</span
+                        id="competitor-type-error"
+                        class="mt-1 text-sm text-red-700"
+                        role="alert"
                     >
-                </label>
-                <label class="grid gap-1 text-sm font-medium"
-                    >Competitor
-                    <select
-                        v-model="eventForm.competitor_id"
-                        required
-                        class="rounded border border-slate-300 p-2"
+                        {{ eventForm.errors.competitor_type }}
+                    </p>
+                </fieldset>
+                <fieldset
+                    :aria-describedby="
+                        eventForm.errors.competitor_id
+                            ? 'competitor-error'
+                            : undefined
+                    "
+                >
+                    <legend class="text-sm font-medium">Competitor</legend>
+                    <div
+                        v-if="eventForm.competitor_type === 'team'"
+                        class="mt-2 flex flex-wrap gap-2"
                     >
-                        <option value="" disabled>Select a competitor</option>
-                        <template v-if="eventForm.competitor_type === 'team'">
-                            <option
-                                v-if="record.team1"
-                                :value="record.team1.id"
-                            >
-                                {{ record.team1.club?.name }}
-                                {{ record.team1.name }}
-                            </option>
-                            <option
-                                v-if="record.team2"
-                                :value="record.team2.id"
-                            >
-                                {{ record.team2.club?.name }}
-                                {{ record.team2.name }}
-                            </option>
-                        </template>
-                        <template v-else>
-                            <optgroup
-                                v-for="side in [1, 2]"
-                                :key="side"
-                                :label="
-                                    `${(side === 1 ? record.team1 : record.team2)?.club?.name ?? ''} ${(side === 1 ? record.team1 : record.team2)?.name ?? ''}`.trim()
-                                "
-                            >
-                                <option
+                        <RadioOption
+                            v-for="team in [record.team1, record.team2].filter(
+                                (item): item is NonNullable<typeof item> =>
+                                    item !== null,
+                            )"
+                            :key="team.id"
+                            v-model="eventForm.competitor_id"
+                            name="competitor_id"
+                            :value="team.id"
+                            required
+                        >
+                            {{ team.club?.name }} {{ team.name }}
+                        </RadioOption>
+                    </div>
+                    <template v-else>
+                        <p
+                            v-if="!lineups.length"
+                            class="mt-2 text-sm text-slate-600"
+                        >
+                            No players selected for this game.
+                        </p>
+                        <div
+                            v-for="side in [1, 2]"
+                            :key="side"
+                            class="mt-3"
+                        >
+                            <p class="text-sm text-slate-600">
+                                {{
+                                    (side === 1 ? record.team1 : record.team2)
+                                        ?.club?.name
+                                }}
+                                {{
+                                    (side === 1 ? record.team1 : record.team2)
+                                        ?.name
+                                }}
+                            </p>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <RadioOption
                                     v-for="player in lineups.filter(
                                         (item) => item.team === side,
                                     )"
                                     :key="player.game_user_id"
+                                    v-model="eventForm.competitor_id"
+                                    name="competitor_id"
                                     :value="player.game_user_id"
+                                    required
                                 >
                                     {{ player.number ?? 'No number' }} -
                                     {{ player.name }} -
                                     {{ player.position?.name ?? 'No position' }}
-                                </option>
-                            </optgroup>
-                        </template>
-                    </select>
-                    <span
+                                </RadioOption>
+                            </div>
+                        </div>
+                    </template>
+                    <p
                         v-if="eventForm.errors.competitor_id"
-                        class="text-red-700"
-                        >{{ eventForm.errors.competitor_id }}</span
+                        id="competitor-error"
+                        class="mt-1 text-sm text-red-700"
+                        role="alert"
                     >
-                </label>
+                        {{ eventForm.errors.competitor_id }}
+                    </p>
+                </fieldset>
                 <label class="grid gap-1 text-sm font-medium"
                     >Occurred at
                     <input

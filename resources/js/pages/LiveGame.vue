@@ -97,7 +97,10 @@ function competitorName(event: GameEvent): string | undefined {
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="`Live Game: ${game.name}`" />
         <h1 class="text-3xl font-semibold">{{ game.name }}</h1>
-        <p v-if="!liveUpdatesAvailable" class="mt-2 text-sm text-slate-600">
+        <p
+            v-if="!liveUpdatesAvailable"
+            class="mt-2 text-sm text-slate-600"
+        >
             Live updates are unavailable. Refresh the page to see new events.
         </p>
         <h2 class="mt-8 text-xl font-semibold">Game events</h2>
@@ -113,10 +116,16 @@ function competitorName(event: GameEvent): string | undefined {
                 <span>{{ team2Score }}</span>
             </h3>
         </div>
-        <p v-if="timeline.length === 0" class="mt-4 text-slate-600">
+        <p
+            v-if="timeline.length === 0"
+            class="mt-4 text-slate-600"
+        >
             No events yet.
         </p>
-        <ol v-else class="mt-4 space-y-3">
+        <ol
+            v-else
+            class="mt-4 space-y-3"
+        >
             <li
                 v-for="{ event, side } in timeline"
                 :key="event.pivot.id"

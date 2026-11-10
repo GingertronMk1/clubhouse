@@ -1,12 +1,16 @@
 <?php
 
+use App\Models\Game;
 use App\Models\Position;
 use App\Models\Sport;
 use App\Models\SportEvent;
+use App\Models\Team;
+use App\Models\User;
 use Database\Seeders\SportSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('sports and their events can be created, viewed, updated and deleted', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $this->withoutVite();
     $this->post(route('sports.store'), [
         'name' => 'Rugby', 'description' => 'A team sport',
@@ -34,6 +38,7 @@ test('sports and their events can be created, viewed, updated and deleted', func
 });
 
 test('sport events entries are validated', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $this->post(route('sports.store'), [
         'name' => '', 'description' => '',
         'events' => [['name' => '', 'description' => '', 'score' => 'invalid']],
@@ -41,7 +46,35 @@ test('sport events entries are validated', function () {
     expect(Sport::query()->count())->toBe(0);
 });
 
+test('editing a sport preserves recorded events and rejects removing or changing their scores', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
+    $game = Game::factory()->create();
+    $event = SportEvent::factory()->create(['sport_id' => $game->sport_id, 'name' => 'Try', 'score' => 5]);
+    $game->sportEvents()->attach($event, ['competitor_type' => Team::class, 'competitor_id' => $game->team1_id, 'occurred_at' => now()]);
+    $sport = $game->sport;
+    $data = ['name' => 'Updated sport', 'description' => 'Updated description', 'events' => [['id' => $event->id, 'name' => 'Try', 'description' => '', 'score' => 5]]];
+
+    $this->put(route('sports.update', $sport), $data)->assertRedirect(route('sports.index'));
+    $this->assertDatabaseHas('game_sport_event', ['game_id' => $game->id, 'sport_event_id' => $event->id]);
+    expect($sport->events()->firstOrFail()->id)->toBe($event->id);
+
+    $this->put(route('sports.update', $sport->fresh()), [...$data, 'events' => []])->assertSessionHasErrors('events');
+    $this->put(route('sports.update', $sport->fresh()), [...$data, 'events' => [[...$data['events'][0], 'score' => 10]]])->assertSessionHasErrors('events');
+    $this->assertDatabaseHas('game_sport_event', ['game_id' => $game->id, 'sport_event_id' => $event->id]);
+    expect($event->fresh()->score)->toBe(5);
+});
+
+test('sport updates reject event IDs from another sport', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
+    $sport = Sport::factory()->create();
+    $otherEvent = SportEvent::factory()->create();
+
+    $this->put(route('sports.update', $sport), ['name' => $sport->name, 'description' => $sport->description, 'events' => [['id' => $otherEvent->id, 'name' => 'Try', 'description' => '', 'score' => 5]]])->assertSessionHasErrors('events.0.id');
+    $this->assertModelExists($otherEvent);
+});
+
 test('the sport creation page displays an empty form', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $this->withoutVite();
 
     $this->get(route('sports.create'))->assertInertia(fn (Assert $page) => $page

@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->dateTime('start');
+            $table->dateTime('start')->nullable();
             $table->text('description');
             $table->text('summary');
             $table->foreignIdFor(Sport::class)->constrained();

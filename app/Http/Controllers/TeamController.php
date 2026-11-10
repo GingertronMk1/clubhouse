@@ -6,6 +6,7 @@ use App\Http\Requests\TeamRequest;
 use App\Models\Club;
 use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,7 +17,7 @@ class TeamController extends Controller
     {
         return Inertia::render('teams/Index', [
             'club' => $club,
-            'teams' => $club->teams()->orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Team $team) => [
+            'teams' => $club->teams()->without('club')->orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Team $team) => [
                 'id' => $team->id,
                 'slug' => $team->slug,
                 'name' => $team->name,
@@ -27,6 +28,8 @@ class TeamController extends Controller
 
     public function create(Club $club): Response
     {
+        Gate::authorize('create-team', $club);
+
         return Inertia::render('teams/Form', [
             'club' => $club,
         ]);
@@ -49,6 +52,8 @@ class TeamController extends Controller
 
     public function edit(Club $club, Team $team): Response
     {
+        Gate::authorize('update-team', $club);
+
         return Inertia::render('teams/Form', [
             'club' => $club,
             'team' => $team,
@@ -64,6 +69,8 @@ class TeamController extends Controller
 
     public function destroy(Club $club, Team $team): RedirectResponse
     {
+        Gate::authorize('delete-team', $club);
+
         $team->delete();
 
         return to_route('clubs.teams.index', $club);

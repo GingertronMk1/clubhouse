@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('superadmin')->default(false);
+        Schema::table('game_sport_event', function (Blueprint $table) {
+            $table->index('game_id');
+            $table->index('sport_event_id');
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('superadmin');
+        Schema::table('game_sport_event', function (Blueprint $table) {
+            $table->dropIndex(['game_id']);
+            $table->dropIndex(['sport_event_id']);
         });
     }
 };

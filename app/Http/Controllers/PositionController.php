@@ -16,7 +16,7 @@ class PositionController extends Controller
     {
         return Inertia::render('positions/Index', [
             'sport' => $sport,
-            'positions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Position $position) => [
+            'positions' => $sport->positions()->without('sport')->orderBy('sort_order')->orderBy('name')->get(['id', 'slug', 'name', 'description'])->map(fn (Position $position) => [
                 'id' => $position->id,
                 'slug' => $position->slug,
                 'name' => $position->name,
@@ -29,7 +29,7 @@ class PositionController extends Controller
     {
         return Inertia::render('positions/Form', [
             'sport' => $sport,
-            'otherPositions' => $sport->positions()->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
+            'otherPositions' => $sport->positions()->without('sport')->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
         ]);
     }
 
@@ -45,7 +45,7 @@ class PositionController extends Controller
         return Inertia::render('positions/Show', [
             'sport' => $sport,
             'position' => $position,
-            'otherPositions' => $sport->positions()->whereKeyNot($position->getKey())->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
+            'otherPositions' => $sport->positions()->without('sport')->whereKeyNot($position->getKey())->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
         ]);
     }
 
@@ -54,7 +54,7 @@ class PositionController extends Controller
         return Inertia::render('positions/Form', [
             'sport' => $sport,
             'position' => $position,
-            'otherPositions' => $sport->positions()->whereKeyNot($position->getKey())->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
+            'otherPositions' => $sport->positions()->without('sport')->whereKeyNot($position->getKey())->orderBy('sort_order')->orderBy('name')->get(['id', 'name', 'preview_x', 'preview_y', 'default_number']),
         ]);
     }
 

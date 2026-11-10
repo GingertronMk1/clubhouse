@@ -23,7 +23,7 @@ class LocationController extends Controller
     public function store(LocationRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['additional_information'] = json_decode($data['additional_information'], true);
+        $data['additional_information'] = json_decode($request->string('additional_information')->toString(), true);
 
         $location = Location::query()->create($data);
 
@@ -43,7 +43,7 @@ class LocationController extends Controller
     public function update(LocationRequest $request, Location $location): RedirectResponse
     {
         $data = $request->validated();
-        $data['additional_information'] = json_decode($data['additional_information'], true);
+        $data['additional_information'] = json_decode($request->string('additional_information')->toString(), true);
 
         $location->update($data);
 

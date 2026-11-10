@@ -54,7 +54,7 @@ class ClubSeeder extends Seeder
             ],
         ];
 
-        $users = User::query()->orderBy('email')->pluck('id');
+        $users = User::query()->orderBy('email')->get(['id'])->map(fn (User $user) => $user->id);
         $userIndex = 0;
 
         foreach ($competitions as $description => $clubs) {
@@ -72,7 +72,7 @@ class ClubSeeder extends Seeder
                     $userId = $users[$userIndex % $users->count()];
                     $userIndex++;
 
-                    if (! $existingUserIds->contains($userId)) {
+                    if ($userId !== null && ! $existingUserIds->contains($userId)) {
                         $assignments[$userId] = ['permissions' => []];
                     }
                 }

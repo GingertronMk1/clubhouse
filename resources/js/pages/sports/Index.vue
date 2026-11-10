@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import ResourceCard from '@/components/ResourceCard.vue';
 
 defineOptions({ layout: AppLayout });
 import { Head, Link } from '@inertiajs/vue3';
@@ -21,24 +22,23 @@ defineProps<{
                 >Add sport</Link
             >
         </div>
-        <p v-if="sports.length === 0" class="text-slate-600">
+        <p
+            v-if="sports.length === 0"
+            class="text-slate-600"
+        >
             No sports yet. Add one to get started.
         </p>
-        <ul v-else class="space-y-4">
-            <li
+        <ul
+            v-else
+            class="space-y-4"
+        >
+            <ResourceCard
                 v-for="sport in sports"
                 :key="sport.id"
-                class="rounded-lg border border-slate-200 p-5"
-            >
-                <h2 class="text-xl font-semibold">
-                    <Link :href="show.url(sport.slug)" class="underline">{{
-                        sport.name
-                    }}</Link>
-                </h2>
-                <p class="mt-2 whitespace-pre-wrap text-slate-600">
-                    {{ sport.description }}
-                </p>
-            </li>
+                :href="show.url(sport.slug)"
+                :name="sport.name"
+                :description="sport.description"
+            />
         </ul>
     </main>
 </template>

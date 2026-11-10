@@ -104,9 +104,15 @@ function submit() {
         <h1 class="mt-5 text-3xl font-semibold">
             {{ record ? 'Edit' : 'Add' }} game
         </h1>
-        <form class="mt-8 space-y-6" @submit.prevent="submit">
+        <form
+            class="mt-8 space-y-6"
+            @submit.prevent="submit"
+        >
             <div>
-                <label for="name" class="block font-medium">Name</label
+                <label
+                    for="name"
+                    class="block font-medium"
+                    >Name</label
                 ><input
                     id="name"
                     v-model="form.name"
@@ -123,7 +129,10 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="start" class="block font-medium">Start</label
+                <label
+                    for="start"
+                    class="block font-medium"
+                    >Start</label
                 ><input
                     id="start"
                     v-model="form.start"
@@ -140,7 +149,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="description" class="block font-medium"
+                <label
+                    for="description"
+                    class="block font-medium"
                     >Description</label
                 ><textarea
                     id="description"
@@ -158,7 +169,10 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="summary" class="block font-medium">Summary</label
+                <label
+                    for="summary"
+                    class="block font-medium"
+                    >Summary</label
                 ><textarea
                     id="summary"
                     v-model="form.summary"
@@ -175,14 +189,22 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="sport_id" class="block font-medium">Sport</label
+                <label
+                    for="sport_id"
+                    class="block font-medium"
+                    >Sport</label
                 ><select
                     id="sport_id"
                     v-model="form.sport_id"
                     required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 >
-                    <option value="" disabled>Select a sport</option>
+                    <option
+                        value=""
+                        disabled
+                    >
+                        Select a sport
+                    </option>
                     <option
                         v-for="item in sports"
                         :key="item.id"
@@ -200,7 +222,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="competition_id" class="block font-medium"
+                <label
+                    for="competition_id"
+                    class="block font-medium"
                     >Competition</label
                 ><select
                     id="competition_id"
@@ -208,7 +232,12 @@ function submit() {
                     required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 >
-                    <option value="" disabled>Select a competition</option>
+                    <option
+                        value=""
+                        disabled
+                    >
+                        Select a competition
+                    </option>
                     <option
                         v-for="item in competitions"
                         :key="item.id"
@@ -226,7 +255,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="team1_id" class="block font-medium"
+                <label
+                    for="team1_id"
+                    class="block font-medium"
                     >First team</label
                 ><select
                     id="team1_id"
@@ -234,7 +265,12 @@ function submit() {
                     required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 >
-                    <option value="" disabled>Select a team</option>
+                    <option
+                        value=""
+                        disabled
+                    >
+                        Select a team
+                    </option>
                     <option
                         v-for="item in teams"
                         :key="item.id"
@@ -252,7 +288,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="team2_id" class="block font-medium"
+                <label
+                    for="team2_id"
+                    class="block font-medium"
                     >Second team</label
                 ><select
                     id="team2_id"
@@ -260,7 +298,12 @@ function submit() {
                     required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 >
-                    <option value="" disabled>Select a team</option>
+                    <option
+                        value=""
+                        disabled
+                    >
+                        Select a team
+                    </option>
                     <option
                         v-for="item in teams"
                         :key="item.id"
@@ -278,7 +321,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="location_id" class="block font-medium"
+                <label
+                    for="location_id"
+                    class="block font-medium"
                     >Location</label
                 ><select
                     id="location_id"
@@ -286,7 +331,12 @@ function submit() {
                     required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 >
-                    <option value="" disabled>Select a location</option>
+                    <option
+                        value=""
+                        disabled
+                    >
+                        Select a location
+                    </option>
                     <option
                         v-for="item in locations"
                         :key="item.id"
@@ -387,7 +437,10 @@ function submit() {
                                 required
                                 class="w-full rounded border border-slate-300 p-2"
                             >
-                                <option value="" disabled>
+                                <option
+                                    value=""
+                                    disabled
+                                >
                                     Select a position
                                 </option>
                                 <option

@@ -55,7 +55,7 @@ class CompetitionController extends Controller
     {
         return [
             'locations' => Location::query()->orderBy('name')->get(['id', 'name']),
-            'competitions' => Competition::query()->orderBy('name')->get(['id', 'name']),
+            'competitions' => Competition::query()->without(['parent', 'location'])->orderBy('name')->get(['id', 'name']),
         ];
     }
 }

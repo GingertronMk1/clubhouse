@@ -10,27 +10,75 @@ import { show as profile } from '@/routes/profile';
 
 const page = usePage();
 const navigation = [
-    { label: 'Sports', route: sports },
-    { label: 'Clubs', route: clubs },
-    { label: 'Locations', route: locations },
-    { label: 'Competitions', route: competitions },
     { label: 'Games', route: games },
+    { label: 'Competitions', route: competitions },
+    { label: 'Clubs', route: clubs },
+    { label: 'Sports', route: sports },
+    { label: 'Locations', route: locations },
 ];
 </script>
 
 <template>
-    <div class="min-h-screen bg-white text-slate-900">
-        <header class="border-b border-slate-200 bg-white">
-            <nav
-                aria-label="Main navigation"
-                class="mx-auto flex max-w-4xl flex-wrap items-center gap-x-8 gap-y-4 px-6 py-5"
+    <div class="min-h-screen bg-club-paper text-club-ink">
+        <header class="border-b-4 border-club-orange bg-club-ink text-white">
+            <div
+                class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8"
             >
                 <Link
                     :href="home()"
-                    class="text-lg font-semibold tracking-tight"
-                    >Clubhouse</Link
+                    class="flex items-center gap-3"
+                    aria-label="Clubhouse home"
                 >
-                <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
+                    <span
+                        class="flex h-10 w-10 items-center justify-center rounded-sm bg-club-orange text-xl font-black italic"
+                        >C</span
+                    >
+                    <span class="text-xl font-black tracking-tight"
+                        >CLUBHOUSE<span class="text-club-orange">.</span></span
+                    >
+                </Link>
+                <div class="relative text-sm font-semibold">
+                    <Link
+                        v-if="!page.props.auth.user"
+                        :href="login()"
+                        class="rounded border border-white/30 px-4 py-2 transition hover:border-white hover:bg-white/10"
+                        >Log in <span aria-hidden="true">↗</span></Link
+                    >
+                    <details
+                        v-else
+                        class="group"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-2 rounded border border-white/25 px-4 py-2 hover:bg-white/10"
+                        >
+                            {{ page.props.auth.user.name }}
+                            <span aria-hidden="true">⌄</span>
+                        </summary>
+                        <div
+                            class="absolute right-0 z-20 mt-2 w-44 rounded border border-club-line bg-white py-1 text-club-ink shadow-xl"
+                        >
+                            <Link
+                                :href="profile()"
+                                class="block px-4 py-2 hover:bg-club-paper"
+                                >Your profile</Link
+                            >
+                            <Link
+                                :href="logout()"
+                                as="button"
+                                class="block w-full px-4 py-2 text-left hover:bg-club-paper"
+                                >Log out</Link
+                            >
+                        </div>
+                    </details>
+                </div>
+            </div>
+            <nav
+                aria-label="Main navigation"
+                class="border-t border-white/10"
+            >
+                <div
+                    class="mx-auto flex max-w-6xl gap-7 overflow-x-auto px-5 sm:px-8"
+                >
                     <Link
                         v-for="item in navigation"
                         :key="item.label"
@@ -40,43 +88,22 @@ const navigation = [
                                 ? 'page'
                                 : undefined
                         "
-                        class="text-slate-600 hover:text-slate-950 aria-[current=page]:text-slate-950 aria-[current=page]:underline aria-[current=page]:underline-offset-8"
+                        class="shrink-0 border-b-2 border-transparent py-3 text-sm font-bold text-white/70 transition hover:text-white aria-[current=page]:border-club-orange aria-[current=page]:text-white"
                         >{{ item.label }}</Link
                     >
-                </div>
-                <div class="relative ml-auto text-sm font-medium">
-                    <Link
-                        v-if="!page.props.auth.user"
-                        :href="login()"
-                        class="text-slate-600 hover:text-slate-950"
-                        >Log in</Link
-                    >
-                    <details v-else class="group">
-                        <summary
-                            class="flex cursor-pointer list-none items-center gap-2 rounded px-2 py-1 text-slate-700 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
-                        >
-                            {{ page.props.auth.user.name }}
-                            <span aria-hidden="true" class="text-xs">▾</span>
-                        </summary>
-                        <div
-                            class="absolute right-0 z-10 mt-2 w-44 rounded-md border border-slate-200 bg-white py-1 shadow-lg"
-                        >
-                            <Link
-                                :href="profile()"
-                                class="block px-4 py-2 text-slate-700 hover:bg-slate-100"
-                                >Your profile</Link
-                            >
-                            <Link
-                                :href="logout()"
-                                as="button"
-                                class="block w-full px-4 py-2 text-left text-slate-700 hover:bg-slate-100"
-                                >Log out</Link
-                            >
-                        </div>
-                    </details>
                 </div>
             </nav>
         </header>
         <slot />
+        <footer class="mt-16 border-t border-club-line bg-white">
+            <div
+                class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-7 text-xs font-semibold text-slate-500 sm:px-8"
+            >
+                <span class="font-black tracking-wide text-club-ink"
+                    >CLUBHOUSE<span class="text-club-orange">.</span></span
+                >
+                <span>For the love of the game.</span>
+            </div>
+        </footer>
     </div>
 </template>

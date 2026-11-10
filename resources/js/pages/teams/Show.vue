@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDelete } from '@/lib/confirmDelete';
 import { index as gamesIndex } from '@/routes/games';
 
 defineOptions({ layout: AppLayout });
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { destroy, edit, index } from '@/routes/clubs/teams';
 
 defineProps<{
@@ -16,21 +17,24 @@ defineProps<{
     };
 }>();
 function deleteTeam(clubId: string, teamId: string) {
-    if (window.confirm('Delete this team?'))
-        router.delete(destroy.url([clubId, teamId]));
+    confirmDelete(destroy.url([clubId, teamId]), 'Delete this team?');
 }
 </script>
 
 <template>
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="team.name" />
-        <Link :href="index.url(club.slug)" class="text-sm underline"
+        <Link
+            :href="index.url(club.slug)"
+            class="text-sm underline"
             >Back to {{ club.name }} teams</Link
         >
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ team.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link :href="edit.url([club.slug, team.slug])" class="underline"
+                <Link
+                    :href="edit.url([club.slug, team.slug])"
+                    class="underline"
                     >Edit</Link
                 >
                 <button

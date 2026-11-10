@@ -53,15 +53,24 @@ function submit() {
 <template>
     <main class="mx-auto max-w-2xl px-6 py-12 text-slate-900">
         <Head :title="position ? 'Edit position' : 'Add position'" />
-        <Link :href="index.url(sport.slug)" class="text-sm underline"
+        <Link
+            :href="index.url(sport.slug)"
+            class="text-sm underline"
             >Back to {{ sport.name }} positions</Link
         >
         <h1 class="mt-5 text-3xl font-semibold">
             {{ position ? 'Edit position' : 'Add position' }}
         </h1>
-        <form class="mt-8 space-y-6" @submit.prevent="submit">
+        <form
+            class="mt-8 space-y-6"
+            @submit.prevent="submit"
+        >
             <div>
-                <label for="name" class="block font-medium">Name</label>
+                <label
+                    for="name"
+                    class="block font-medium"
+                    >Name</label
+                >
                 <FormInput
                     id="name"
                     v-model="form.name"
@@ -77,7 +86,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="description" class="block font-medium"
+                <label
+                    for="description"
+                    class="block font-medium"
                     >Description</label
                 >
                 <FormInput
@@ -95,10 +106,15 @@ function submit() {
                     {{ form.errors.description }}
                 </p>
             </div>
-            <div v-for="field in numberFields" :key="field.key">
-                <label :for="field.key" class="block font-medium">{{
-                    field.label
-                }}</label>
+            <div
+                v-for="field in numberFields"
+                :key="field.key"
+            >
+                <label
+                    :for="field.key"
+                    class="block font-medium"
+                    >{{ field.label }}</label
+                >
                 <FormInput
                     :id="field.key"
                     v-model.number="form[field.key]"
@@ -116,7 +132,10 @@ function submit() {
                 </p>
             </div>
             <section aria-labelledby="preview-heading">
-                <h2 id="preview-heading" class="text-xl font-semibold">
+                <h2
+                    id="preview-heading"
+                    class="text-xl font-semibold"
+                >
                     Field preview
                 </h2>
                 <p class="mt-2 text-sm text-slate-600">
@@ -135,8 +154,13 @@ function submit() {
                         :other-positions="otherPositions ?? []"
                     />
                     <div class="space-y-5">
-                        <div v-for="field in coordinateFields" :key="field.key">
-                            <label :for="field.key" class="block font-medium"
+                        <div
+                            v-for="field in coordinateFields"
+                            :key="field.key"
+                        >
+                            <label
+                                :for="field.key"
+                                class="block font-medium"
                                 >{{ field.label }}: {{ form[field.key] }}</label
                             >
                             <FormInput

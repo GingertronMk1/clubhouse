@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import GameCard from '@/components/GameCard.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import * as routes from '@/routes/games';
@@ -57,23 +58,33 @@ function applyFilters() {
         preserveScroll: true,
     });
 }
-function formatDate(value: string | null) {
-    return value ? new Date(value).toLocaleString() : 'Kickoff to be announced';
-}
 </script>
 <template>
-    <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
+    <main class="mx-auto max-w-6xl px-5 py-10 text-club-ink sm:px-8 sm:py-14">
         <Head title="Games" />
-        <div class="mb-8 flex items-center justify-between gap-4">
-            <h1 class="text-3xl font-semibold">Games</h1>
+        <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div>
+                <p class="club-eyebrow">The match centre</p>
+                <h1 class="mt-1 text-4xl font-black tracking-tight sm:text-5xl">
+                    Games<span class="text-club-orange">.</span>
+                </h1>
+                <p class="mt-3 text-sm text-slate-600">
+                    Find a fixture and follow the action.
+                </p>
+            </div>
             <Link
                 :href="routes.create()"
-                class="rounded bg-slate-900 px-4 py-2 text-white"
-                >Add game</Link
+                class="rounded-sm bg-club-orange px-5 py-3 text-sm font-bold text-white hover:bg-club-orange-dark"
+                >Add game
+                <span
+                    aria-hidden="true"
+                    class="ml-2"
+                    >+</span
+                ></Link
             >
         </div>
         <form
-            class="mb-8 flex flex-wrap items-end gap-4"
+            class="club-panel mb-8 flex flex-wrap items-end gap-4 rounded-sm p-5"
             @submit.prevent="applyFilters"
         >
             <label
@@ -135,12 +146,15 @@ function formatDate(value: string | null) {
             </label>
             <button
                 type="submit"
-                class="rounded bg-slate-900 px-4 py-2 text-white"
+                class="rounded-sm bg-club-ink px-5 py-2.5 text-sm font-bold text-white hover:bg-club-orange"
             >
                 Filter games
             </button>
         </form>
-        <p v-if="!records.data.length" class="text-slate-600">
+        <p
+            v-if="!records.data.length"
+            class="text-slate-600"
+        >
             {{
                 records.total === 0
                     ? filters.sport || filters.team || filters.club
@@ -149,32 +163,27 @@ function formatDate(value: string | null) {
                     : 'No games on this page.'
             }}
         </p>
-        <ul v-else class="space-y-4">
-            <li
+        <div
+            v-if="records.data.length"
+            class="mb-3 flex items-center justify-between border-b-2 border-club-ink pb-3"
+        >
+            <h2 class="text-xs font-black tracking-[0.16em] uppercase">
+                Fixtures &amp; results
+            </h2>
+            <span class="text-xs font-semibold text-slate-500"
+                >{{ records.total }}
+                {{ records.total === 1 ? 'game' : 'games' }}</span
+            >
+        </div>
+        <ul
+            v-if="records.data.length"
+            class="space-y-3"
+        >
+            <GameCard
                 v-for="record in records.data"
                 :key="record.id"
-                class="rounded-lg border border-slate-200 p-5"
-            >
-                <h2 class="text-xl font-semibold">
-                    <Link :href="routes.show(record.id)" class="underline">{{
-                        record.name
-                    }}</Link>
-                </h2>
-                <p
-                    v-if="record.team1 && record.team2"
-                    class="mt-2 text-slate-700"
-                >
-                    {{ record.team1.name }} vs {{ record.team2.name }}
-                </p>
-                <p class="mt-2 text-sm text-slate-600">
-                    {{ formatDate(record.start)
-                    }}<span v-if="record.location">
-                        · {{ record.location.name }}</span
-                    ><span v-if="record.competition">
-                        · {{ record.competition.name }}</span
-                    >
-                </p>
-            </li>
+                :game="record"
+            />
         </ul>
         <nav
             v-if="records.last_page > 1"
@@ -187,7 +196,11 @@ function formatDate(value: string | null) {
                 class="underline"
                 >Previous</Link
             >
-            <span v-else class="text-slate-400">Previous</span>
+            <span
+                v-else
+                class="text-slate-400"
+                >Previous</span
+            >
             <span
                 >Page {{ records.current_page }} of
                 {{ records.last_page }}</span
@@ -198,7 +211,11 @@ function formatDate(value: string | null) {
                 class="underline"
                 >Next</Link
             >
-            <span v-else class="text-slate-400">Next</span>
+            <span
+                v-else
+                class="text-slate-400"
+                >Next</span
+            >
         </nav>
     </main>
 </template>

@@ -42,9 +42,16 @@ function submit() {
         <h1 class="mt-5 text-3xl font-semibold">
             {{ record ? 'Edit' : 'Add' }} {{ label }}
         </h1>
-        <form class="mt-8 space-y-6" @submit.prevent="submit">
+        <form
+            class="mt-8 space-y-6"
+            @submit.prevent="submit"
+        >
             <div>
-                <label for="name" class="block font-medium">Name</label>
+                <label
+                    for="name"
+                    class="block font-medium"
+                    >Name</label
+                >
                 <FormInput
                     id="name"
                     v-model="form.name"
@@ -60,7 +67,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="description" class="block font-medium"
+                <label
+                    for="description"
+                    class="block font-medium"
                     >Description</label
                 >
                 <FormInput
@@ -79,7 +88,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="additional_information" class="block font-medium"
+                <label
+                    for="additional_information"
+                    class="block font-medium"
                     >Additional information (JSON)</label
                 >
                 <FormInput

@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import FormInput from '@/components/FormInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { store } from '@/routes/login';
 
 defineOptions({ layout: AppLayout });
 
 const form = useForm({ email: '', password: '' });
+const passwordVisible = ref(false);
 
 function submit() {
     form.post(store.url(), { onFinish: () => form.reset('password') });
@@ -18,9 +20,14 @@ function submit() {
         <Head title="Log in" />
         <h1 class="text-3xl font-semibold">Log in</h1>
         <p class="mt-3 text-slate-600">Welcome back to Clubhouse.</p>
-        <form class="mt-8 space-y-6" @submit.prevent="submit">
+        <form
+            class="mt-8 space-y-6"
+            @submit.prevent="submit"
+        >
             <div>
-                <label for="email" class="block font-medium"
+                <label
+                    for="email"
+                    class="block font-medium"
                     >Email address</label
                 >
                 <FormInput
@@ -45,11 +52,27 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="password" class="block font-medium">Password</label>
+                <div class="flex items-center justify-between gap-4">
+                    <label
+                        for="password"
+                        class="block font-medium"
+                        >Password</label
+                    >
+                    <button
+                        type="button"
+                        aria-controls="password"
+                        class="text-sm font-semibold text-club-orange hover:underline"
+                        @click="passwordVisible = !passwordVisible"
+                    >
+                        {{
+                            passwordVisible ? 'Hide password' : 'Show password'
+                        }}
+                    </button>
+                </div>
                 <FormInput
                     id="password"
                     v-model="form.password"
-                    type="password"
+                    :type="passwordVisible ? 'text' : 'password'"
                     autocomplete="current-password"
                     required
                     :aria-invalid="!!form.errors.password"
