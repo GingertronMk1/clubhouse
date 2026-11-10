@@ -7,6 +7,7 @@ use App\Models\Game;
 use App\Models\User;
 use App\Permission;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -51,6 +52,8 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureDefaults(): void
     {
+        Model::shouldBeStrict();
+
         Date::use(CarbonImmutable::class);
 
         DB::prohibitDestructiveCommands(

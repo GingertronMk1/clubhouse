@@ -37,7 +37,7 @@ class ClubController extends Controller
     {
         Gate::authorize('view', $club);
 
-        return Inertia::render('clubs/Show', ['record' => $club, 'teams' => $club->teams()->orderBy('name')->get(['id', 'slug', 'name'])]);
+        return Inertia::render('clubs/Show', ['record' => $club, 'teams' => $club->teams()->without('club')->orderBy('name')->get(['id', 'slug', 'name'])]);
     }
 
     public function edit(Club $club): Response

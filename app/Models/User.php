@@ -36,6 +36,9 @@ class User extends Authenticatable
 
     use HasUuids, SoftDeletes;
 
+    /** @var array<string, mixed> */
+    protected $attributes = ['superadmin' => false];
+
     /** @return BelongsToMany<Game, $this, GameUser> */
     public function games(): BelongsToMany
     {

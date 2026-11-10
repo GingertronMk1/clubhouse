@@ -181,8 +181,8 @@ class GameController extends Controller
     {
         return [
             'sports' => Sport::query()->orderBy('name')->get(['id', 'name']),
-            'competitions' => Competition::query()->orderBy('name')->get(['id', 'name']),
-            'positions' => Position::query()->orderBy('sort_order')->get(['id', 'name', 'sport_id']),
+            'competitions' => Competition::query()->without(['parent', 'location'])->orderBy('name')->get(['id', 'name']),
+            'positions' => Position::query()->without('sport')->orderBy('sort_order')->get(['id', 'name', 'sport_id']),
             'teams' => Team::query()->with(['club:id,name', 'club.users:id,name'])->orderBy('name')->get(['id', 'name', 'club_id']),
             'locations' => Location::query()->orderBy('name')->get(['id', 'name']),
         ];
