@@ -23,19 +23,27 @@ const title = 'Clubs';
                 >Add club</Link
             >
         </div>
-        <p v-if="records.length === 0" class="text-slate-600">
+        <p
+            v-if="records.length === 0"
+            class="text-slate-600"
+        >
             No clubs yet. Add one to get started.
         </p>
-        <ul v-else class="space-y-4">
+        <ul
+            v-else
+            class="space-y-4"
+        >
             <li
                 v-for="record in records"
                 :key="record.id"
                 class="rounded-lg border border-slate-200 p-5"
             >
                 <h2 class="text-xl font-semibold">
-                    <Link :href="routes.show(record.slug)" class="underline">{{
-                        record.name
-                    }}</Link>
+                    <Link
+                        :href="routes.show(record.slug)"
+                        class="underline"
+                        >{{ record.name }}</Link
+                    >
                 </h2>
                 <p class="mt-2 whitespace-pre-wrap text-slate-600">
                     {{ record.description }}

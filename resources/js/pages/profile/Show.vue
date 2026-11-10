@@ -27,13 +27,30 @@ defineProps<{
                 <dd class="mt-1">{{ user.email }}</dd>
             </div>
         </dl>
-        <section class="mt-10" aria-labelledby="clubs-heading">
-            <h2 id="clubs-heading" class="text-xl font-semibold">Your clubs</h2>
-            <p v-if="clubs.length === 0" class="mt-3 text-slate-600">
+        <section
+            class="mt-10"
+            aria-labelledby="clubs-heading"
+        >
+            <h2
+                id="clubs-heading"
+                class="text-xl font-semibold"
+            >
+                Your clubs
+            </h2>
+            <p
+                v-if="clubs.length === 0"
+                class="mt-3 text-slate-600"
+            >
                 You don't belong to any clubs yet.
             </p>
-            <ul v-else class="mt-4 space-y-3">
-                <li v-for="club in clubs" :key="club.id">
+            <ul
+                v-else
+                class="mt-4 space-y-3"
+            >
+                <li
+                    v-for="club in clubs"
+                    :key="club.id"
+                >
                     <Link
                         v-if="club.can_view"
                         :href="clubShow(club.slug)"

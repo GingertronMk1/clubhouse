@@ -21,19 +21,27 @@ defineProps<{
                 >Add sport</Link
             >
         </div>
-        <p v-if="sports.length === 0" class="text-slate-600">
+        <p
+            v-if="sports.length === 0"
+            class="text-slate-600"
+        >
             No sports yet. Add one to get started.
         </p>
-        <ul v-else class="space-y-4">
+        <ul
+            v-else
+            class="space-y-4"
+        >
             <li
                 v-for="sport in sports"
                 :key="sport.id"
                 class="rounded-lg border border-slate-200 p-5"
             >
                 <h2 class="text-xl font-semibold">
-                    <Link :href="show.url(sport.slug)" class="underline">{{
-                        sport.name
-                    }}</Link>
+                    <Link
+                        :href="show.url(sport.slug)"
+                        class="underline"
+                        >{{ sport.name }}</Link
+                    >
                 </h2>
                 <p class="mt-2 whitespace-pre-wrap text-slate-600">
                     {{ sport.description }}

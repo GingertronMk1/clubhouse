@@ -35,7 +35,9 @@ function deletePosition(sportId: string, positionId: string) {
 <template>
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="position.name" />
-        <Link :href="index.url(sport.slug)" class="text-sm underline"
+        <Link
+            :href="index.url(sport.slug)"
+            class="text-sm underline"
             >Back to {{ sport.name }} positions</Link
         >
         <div class="mt-5 flex items-start justify-between gap-4">
@@ -74,8 +76,14 @@ function deletePosition(sportId: string, positionId: string) {
                 </dd>
             </div>
         </dl>
-        <section class="mt-8 max-w-2xl" aria-labelledby="preview-heading">
-            <h2 id="preview-heading" class="text-xl font-semibold">
+        <section
+            class="mt-8 max-w-2xl"
+            aria-labelledby="preview-heading"
+        >
+            <h2
+                id="preview-heading"
+                class="text-xl font-semibold"
+            >
                 Field preview
             </h2>
             <PositionField

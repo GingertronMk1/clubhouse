@@ -38,13 +38,19 @@ function deleteSport(id: string) {
 <template>
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="sport.name" />
-        <Link :href="index.url()" class="text-sm underline"
+        <Link
+            :href="index.url()"
+            class="text-sm underline"
             >Back to sports</Link
         >
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ sport.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link :href="edit.url(sport.slug)" class="underline">Edit</Link>
+                <Link
+                    :href="edit.url(sport.slug)"
+                    class="underline"
+                    >Edit</Link
+                >
                 <button
                     type="button"
                     class="text-red-700 underline"
@@ -62,10 +68,16 @@ function deleteSport(id: string) {
         <p class="mt-5 whitespace-pre-wrap text-slate-600">
             {{ sport.description }}
         </p>
-        <section v-if="sport.events.length" class="mt-6">
+        <section
+            v-if="sport.events.length"
+            class="mt-6"
+        >
             <h2 class="text-xl font-semibold">Events</h2>
             <ul class="mt-2 text-slate-700">
-                <li v-for="(score, i) in sport.events" :key="i">
+                <li
+                    v-for="(score, i) in sport.events"
+                    :key="i"
+                >
                     {{ score.name }}: {{ score.score }}
                     <span v-if="score.description">
                         — {{ score.description }}</span
@@ -73,9 +85,15 @@ function deleteSport(id: string) {
                 </li>
             </ul>
         </section>
-        <section class="mt-8" aria-labelledby="positions-heading">
+        <section
+            class="mt-8"
+            aria-labelledby="positions-heading"
+        >
             <div class="flex items-center justify-between gap-4">
-                <h2 id="positions-heading" class="text-xl font-semibold">
+                <h2
+                    id="positions-heading"
+                    class="text-xl font-semibold"
+                >
                     Positions
                 </h2>
                 <Link
@@ -84,7 +102,10 @@ function deleteSport(id: string) {
                     >Manage positions</Link
                 >
             </div>
-            <p v-if="positions.length === 0" class="mt-3 text-slate-600">
+            <p
+                v-if="positions.length === 0"
+                class="mt-3 text-slate-600"
+            >
                 No positions yet.
             </p>
             <template v-else>
@@ -135,7 +156,10 @@ function deleteSport(id: string) {
                     </div>
                 </div>
                 <ul class="mt-4 grid gap-2 text-sm sm:grid-cols-2">
-                    <li v-for="position in positions" :key="position.id">
+                    <li
+                        v-for="position in positions"
+                        :key="position.id"
+                    >
                         <Link
                             :href="
                                 positionShow.url([sport.slug, position.slug])

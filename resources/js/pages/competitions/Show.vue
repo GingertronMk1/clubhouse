@@ -29,7 +29,9 @@ function remove() {
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ record.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link :href="routes.edit(record.id)" class="underline"
+                <Link
+                    :href="routes.edit(record.id)"
+                    class="underline"
                     >Edit</Link
                 ><button
                     type="button"
@@ -43,43 +45,74 @@ function remove() {
         <p class="mt-5 whitespace-pre-wrap text-slate-600">
             {{ record.description }}
         </p>
-        <p v-if="record.location" class="mt-4 text-slate-600">
+        <p
+            v-if="record.location"
+            class="mt-4 text-slate-600"
+        >
             Location: {{ record.location.name }}
         </p>
-        <p v-if="record.parent" class="mt-2 text-slate-600">
+        <p
+            v-if="record.parent"
+            class="mt-2 text-slate-600"
+        >
             Parent:
-            <Link :href="routes.show(record.parent.id)" class="underline">{{
-                record.parent.name
-            }}</Link>
+            <Link
+                :href="routes.show(record.parent.id)"
+                class="underline"
+                >{{ record.parent.name }}</Link
+            >
         </p>
         <section class="mt-8">
             <h2 class="text-xl font-semibold">Sub-competitions</h2>
-            <p v-if="!record.children.length" class="mt-2 text-slate-600">
+            <p
+                v-if="!record.children.length"
+                class="mt-2 text-slate-600"
+            >
                 No sub-competitions yet.
             </p>
-            <ul v-else class="mt-2 space-y-2">
-                <li v-for="child in record.children" :key="child.id">
-                    <Link :href="routes.show(child.id)" class="underline">{{
-                        child.name
-                    }}</Link>
+            <ul
+                v-else
+                class="mt-2 space-y-2"
+            >
+                <li
+                    v-for="child in record.children"
+                    :key="child.id"
+                >
+                    <Link
+                        :href="routes.show(child.id)"
+                        class="underline"
+                        >{{ child.name }}</Link
+                    >
                 </li>
             </ul>
         </section>
         <section class="mt-8">
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-semibold">Games</h2>
-                <Link :href="games.create()" class="text-sm underline"
+                <Link
+                    :href="games.create()"
+                    class="text-sm underline"
                     >Add game</Link
                 >
             </div>
-            <p v-if="!record.games.length" class="mt-2 text-slate-600">
+            <p
+                v-if="!record.games.length"
+                class="mt-2 text-slate-600"
+            >
                 No games yet.
             </p>
-            <ul v-else class="mt-2 space-y-2">
-                <li v-for="game in record.games" :key="game.id">
-                    <Link :href="games.show(game.id)" class="underline">{{
-                        game.name
-                    }}</Link
+            <ul
+                v-else
+                class="mt-2 space-y-2"
+            >
+                <li
+                    v-for="game in record.games"
+                    :key="game.id"
+                >
+                    <Link
+                        :href="games.show(game.id)"
+                        class="underline"
+                        >{{ game.name }}</Link
                     ><span
                         v-if="game.team1 && game.team2"
                         class="text-slate-600"

@@ -23,13 +23,17 @@ function remove() {
 <template>
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="record.name" />
-        <Link :href="routes.index()" class="text-sm underline"
+        <Link
+            :href="routes.index()"
+            class="text-sm underline"
             >Back to locations</Link
         >
         <div class="mt-5 flex items-start justify-between gap-4">
             <h1 class="text-3xl font-semibold">{{ record.name }}</h1>
             <div class="flex gap-3 text-sm">
-                <Link :href="routes.edit(record.id)" class="underline"
+                <Link
+                    :href="routes.edit(record.id)"
+                    class="underline"
                     >Edit</Link
                 >
                 <button

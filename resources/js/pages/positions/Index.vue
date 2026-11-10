@@ -20,7 +20,9 @@ defineProps<{
 <template>
     <main class="mx-auto max-w-4xl px-6 py-12 text-slate-900">
         <Head :title="`${sport.name} positions`" />
-        <Link :href="sportShow.url(sport.slug)" class="text-sm underline"
+        <Link
+            :href="sportShow.url(sport.slug)"
+            class="text-sm underline"
             >Back to {{ sport.name }}</Link
         >
         <div class="mt-5 mb-8 flex items-center justify-between gap-4">
@@ -31,10 +33,16 @@ defineProps<{
                 >Add position</Link
             >
         </div>
-        <p v-if="positions.length === 0" class="text-slate-600">
+        <p
+            v-if="positions.length === 0"
+            class="text-slate-600"
+        >
             No positions yet. Add one to get started.
         </p>
-        <ul v-else class="space-y-4">
+        <ul
+            v-else
+            class="space-y-4"
+        >
             <li
                 v-for="position in positions"
                 :key="position.id"

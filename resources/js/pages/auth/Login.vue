@@ -18,9 +18,14 @@ function submit() {
         <Head title="Log in" />
         <h1 class="text-3xl font-semibold">Log in</h1>
         <p class="mt-3 text-slate-600">Welcome back to Clubhouse.</p>
-        <form class="mt-8 space-y-6" @submit.prevent="submit">
+        <form
+            class="mt-8 space-y-6"
+            @submit.prevent="submit"
+        >
             <div>
-                <label for="email" class="block font-medium"
+                <label
+                    for="email"
+                    class="block font-medium"
                     >Email address</label
                 >
                 <FormInput
@@ -45,7 +50,11 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="password" class="block font-medium">Password</label>
+                <label
+                    for="password"
+                    class="block font-medium"
+                    >Password</label
+                >
                 <FormInput
                     id="password"
                     v-model="form.password"

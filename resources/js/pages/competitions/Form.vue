@@ -37,9 +37,15 @@ function submit() {
         <h1 class="mt-5 text-3xl font-semibold">
             {{ record ? 'Edit' : 'Add' }} competition
         </h1>
-        <form class="mt-8 space-y-6" @submit.prevent="submit">
+        <form
+            class="mt-8 space-y-6"
+            @submit.prevent="submit"
+        >
             <div>
-                <label for="name" class="block font-medium">Name</label
+                <label
+                    for="name"
+                    class="block font-medium"
+                    >Name</label
                 ><input
                     id="name"
                     v-model="form.name"
@@ -56,7 +62,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="description" class="block font-medium"
+                <label
+                    for="description"
+                    class="block font-medium"
                     >Description</label
                 ><textarea
                     id="description"
@@ -74,7 +82,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="location_id" class="block font-medium"
+                <label
+                    for="location_id"
+                    class="block font-medium"
                     >Location</label
                 ><select
                     id="location_id"
@@ -82,7 +92,12 @@ function submit() {
                     required
                     class="mt-1 w-full rounded border border-slate-300 p-2"
                 >
-                    <option value="" disabled>Select a location</option>
+                    <option
+                        value=""
+                        disabled
+                    >
+                        Select a location
+                    </option>
                     <option
                         v-for="location in locations"
                         :key="location.id"
@@ -98,12 +113,17 @@ function submit() {
                 >
                     {{ form.errors.location_id }}
                 </p>
-                <p v-if="!locations.length" class="mt-1 text-sm text-slate-600">
+                <p
+                    v-if="!locations.length"
+                    class="mt-1 text-sm text-slate-600"
+                >
                     Add a location before creating a competition.
                 </p>
             </div>
             <div>
-                <label for="parent_id" class="block font-medium"
+                <label
+                    for="parent_id"
+                    class="block font-medium"
                     >Parent competition (optional)</label
                 ><select
                     id="parent_id"

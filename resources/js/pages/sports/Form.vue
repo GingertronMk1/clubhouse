@@ -34,15 +34,24 @@ function submit() {
 <template>
     <main class="mx-auto max-w-2xl px-6 py-12 text-slate-900">
         <Head :title="sport ? 'Edit sport' : 'Add sport'" />
-        <Link :href="index.url()" class="text-sm underline"
+        <Link
+            :href="index.url()"
+            class="text-sm underline"
             >Back to sports</Link
         >
         <h1 class="mt-5 text-3xl font-semibold">
             {{ sport ? 'Edit sport' : 'Add sport' }}
         </h1>
-        <form class="mt-8 space-y-6" @submit.prevent="submit">
+        <form
+            class="mt-8 space-y-6"
+            @submit.prevent="submit"
+        >
             <div>
-                <label for="name" class="block font-medium">Name</label>
+                <label
+                    for="name"
+                    class="block font-medium"
+                    >Name</label
+                >
                 <FormInput
                     id="name"
                     v-model="form.name"
@@ -58,7 +67,9 @@ function submit() {
                 </p>
             </div>
             <div>
-                <label for="description" class="block font-medium"
+                <label
+                    for="description"
+                    class="block font-medium"
                     >Description</label
                 >
                 <FormInput
@@ -78,7 +89,10 @@ function submit() {
             </div>
             <fieldset class="space-y-4">
                 <legend class="font-medium">Events</legend>
-                <p v-if="form.errors.events" class="text-sm text-red-700">
+                <p
+                    v-if="form.errors.events"
+                    class="text-sm text-red-700"
+                >
                     {{ form.errors.events }}
                 </p>
                 <div
