@@ -68,7 +68,7 @@ export default defineConfig({
         htmlWhitespaceSensitivity: 'css',
         ignorePatterns: [
             '.github/**',
-            './AGENTS.md',
+            'AGENTS.md',
             '.agents/**',
             '.ai/rules/**',
             'composer.json',
