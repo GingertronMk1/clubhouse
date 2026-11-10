@@ -5,10 +5,12 @@ use App\Models\Position;
 use App\Models\Sport;
 use App\Models\SportEvent;
 use App\Models\Team;
+use App\Models\User;
 use Database\Seeders\SportSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('sports and their events can be created, viewed, updated and deleted', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $this->withoutVite();
     $this->post(route('sports.store'), [
         'name' => 'Rugby', 'description' => 'A team sport',
@@ -36,6 +38,7 @@ test('sports and their events can be created, viewed, updated and deleted', func
 });
 
 test('sport events entries are validated', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $this->post(route('sports.store'), [
         'name' => '', 'description' => '',
         'events' => [['name' => '', 'description' => '', 'score' => 'invalid']],
@@ -44,6 +47,7 @@ test('sport events entries are validated', function () {
 });
 
 test('editing a sport preserves recorded events and rejects removing or changing their scores', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $game = Game::factory()->create();
     $event = SportEvent::factory()->create(['sport_id' => $game->sport_id, 'name' => 'Try', 'score' => 5]);
     $game->sportEvents()->attach($event, ['competitor_type' => Team::class, 'competitor_id' => $game->team1_id, 'occurred_at' => now()]);
@@ -61,6 +65,7 @@ test('editing a sport preserves recorded events and rejects removing or changing
 });
 
 test('sport updates reject event IDs from another sport', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $sport = Sport::factory()->create();
     $otherEvent = SportEvent::factory()->create();
 
@@ -69,6 +74,7 @@ test('sport updates reject event IDs from another sport', function () {
 });
 
 test('the sport creation page displays an empty form', function () {
+    $this->actingAs(User::factory()->create(['superadmin' => true]));
     $this->withoutVite();
 
     $this->get(route('sports.create'))->assertInertia(fn (Assert $page) => $page

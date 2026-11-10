@@ -6,6 +6,7 @@ use App\Http\Requests\SportRequest;
 use App\Models\Sport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,6 +25,8 @@ class SportController extends Controller
 
     public function create(): Response
     {
+        Gate::authorize('manage-sports');
+
         return Inertia::render('sports/Form');
     }
 
@@ -49,6 +52,8 @@ class SportController extends Controller
 
     public function edit(Sport $sport): Response
     {
+        Gate::authorize('manage-sports');
+
         return Inertia::render('sports/Form', ['sport' => $sport->load('events')]);
     }
 
@@ -74,6 +79,8 @@ class SportController extends Controller
 
     public function destroy(Sport $sport): RedirectResponse
     {
+        Gate::authorize('manage-sports');
+
         $sport->delete();
 
         return to_route('sports.index');

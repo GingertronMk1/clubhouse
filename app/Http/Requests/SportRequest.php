@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Sport;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
@@ -12,7 +13,7 @@ class SportRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('manage-sports');
     }
 
     /** @return array<string, mixed> */

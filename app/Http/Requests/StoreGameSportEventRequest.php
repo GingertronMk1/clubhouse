@@ -5,13 +5,16 @@ namespace App\Http\Requests;
 use App\Models\Game;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class StoreGameSportEventRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $game = $this->route('game');
+
+        return $game instanceof Game && Gate::allows('create-game-event', $game);
     }
 
     /** @return array<string, mixed> */
