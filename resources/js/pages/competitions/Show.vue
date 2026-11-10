@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDelete } from '@/lib/confirmDelete';
 import GameCard from '@/components/GameCard.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import * as routes from '@/routes/competitions';
 import * as games from '@/routes/games';
 defineOptions({ layout: AppLayout });
@@ -22,8 +23,10 @@ const props = defineProps<{
     };
 }>();
 function remove() {
-    if (window.confirm(`Delete ${props.record.name}?`))
-        router.delete(routes.destroy.url(props.record.id));
+    confirmDelete(
+        routes.destroy.url(props.record.id),
+        `Delete ${props.record.name}?`,
+    );
 }
 </script>
 <template>

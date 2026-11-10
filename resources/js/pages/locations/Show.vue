@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDelete } from '@/lib/confirmDelete';
 
 defineOptions({ layout: AppLayout });
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import * as locations from '@/routes/locations';
 
 const props = defineProps<{
@@ -15,8 +16,10 @@ const props = defineProps<{
 }>();
 const routes = locations;
 function remove() {
-    if (window.confirm(`Delete ${props.record.name}?`))
-        router.delete(routes.destroy.url(props.record.id));
+    confirmDelete(
+        routes.destroy.url(props.record.id),
+        `Delete ${props.record.name}?`,
+    );
 }
 </script>
 

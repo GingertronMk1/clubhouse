@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import ResourceCard from '@/components/ResourceCard.vue';
 
 defineOptions({ layout: AppLayout });
 import { Head, Link } from '@inertiajs/vue3';
@@ -33,22 +34,13 @@ const title = 'Clubs';
             v-else
             class="space-y-4"
         >
-            <li
+            <ResourceCard
                 v-for="record in records"
                 :key="record.id"
-                class="rounded-lg border border-slate-200 p-5"
-            >
-                <h2 class="text-xl font-semibold">
-                    <Link
-                        :href="routes.show(record.slug)"
-                        class="underline"
-                        >{{ record.name }}</Link
-                    >
-                </h2>
-                <p class="mt-2 whitespace-pre-wrap text-slate-600">
-                    {{ record.description }}
-                </p>
-            </li>
+                :href="routes.show.url(record.slug)"
+                :name="record.name"
+                :description="record.description"
+            />
         </ul>
     </main>
 </template>

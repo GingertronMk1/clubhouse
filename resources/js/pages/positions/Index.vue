@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import ResourceCard from '@/components/ResourceCard.vue';
 
 defineOptions({ layout: AppLayout });
 import { Head, Link } from '@inertiajs/vue3';
@@ -43,22 +44,13 @@ defineProps<{
             v-else
             class="space-y-4"
         >
-            <li
+            <ResourceCard
                 v-for="position in positions"
                 :key="position.id"
-                class="rounded-lg border border-slate-200 p-5"
-            >
-                <h2 class="text-xl font-semibold">
-                    <Link
-                        :href="show.url([sport.slug, position.slug])"
-                        class="underline"
-                        >{{ position.name }}</Link
-                    >
-                </h2>
-                <p class="mt-2 whitespace-pre-wrap text-slate-600">
-                    {{ position.description }}
-                </p>
-            </li>
+                :href="show.url([sport.slug, position.slug])"
+                :name="position.name"
+                :description="position.description"
+            />
         </ul>
     </main>
 </template>

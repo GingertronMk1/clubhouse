@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDelete } from '@/lib/confirmDelete';
+import { fieldCoordinate } from '@/lib/utils';
 import { index as gamesIndex } from '@/routes/games';
 
 defineOptions({ layout: AppLayout });
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { destroy, edit, index } from '@/routes/sports';
 import {
     index as positionsIndex,
@@ -27,11 +29,8 @@ defineProps<{
         default_number: number;
     }[];
 }>();
-function fieldCoordinate(value: number): string {
-    return `${Math.max(0, Math.min(100, value))}%`;
-}
 function deleteSport(id: string) {
-    if (window.confirm('Delete this sport?')) router.delete(destroy.url(id));
+    confirmDelete(destroy.url(id), 'Delete this sport?');
 }
 </script>
 

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDelete } from '@/lib/confirmDelete';
 import { index as gamesIndex } from '@/routes/games';
 
 defineOptions({ layout: AppLayout });
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import * as clubs from '@/routes/clubs';
 import { index as teamsIndex, show as teamShow } from '@/routes/clubs/teams';
 
@@ -18,8 +19,10 @@ const props = defineProps<{
 }>();
 const routes = clubs;
 function remove() {
-    if (window.confirm(`Delete ${props.record.name}?`))
-        router.delete(routes.destroy.url(props.record.slug));
+    confirmDelete(
+        routes.destroy.url(props.record.slug),
+        `Delete ${props.record.name}?`,
+    );
 }
 </script>
 

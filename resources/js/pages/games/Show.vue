@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDelete } from '@/lib/confirmDelete';
+import { fieldCoordinate } from '@/lib/utils';
 import RadioOption from '@/components/RadioOption.vue';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import * as routes from '@/routes/games';
 import * as competitions from '@/routes/competitions';
 import { store as storeEvent } from '@/routes/games/events';
@@ -68,12 +70,11 @@ function initials(name: string): string {
         .join('')
         .toUpperCase();
 }
-function fieldCoordinate(value: number): string {
-    return `${Math.max(0, Math.min(100, value))}%`;
-}
 function remove() {
-    if (window.confirm(`Delete ${props.record.name}?`))
-        router.delete(routes.destroy.url(props.record.id));
+    confirmDelete(
+        routes.destroy.url(props.record.id),
+        `Delete ${props.record.name}?`,
+    );
 }
 </script>
 <template>

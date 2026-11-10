@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import ResourceCard from '@/components/ResourceCard.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import * as routes from '@/routes/competitions';
 defineOptions({ layout: AppLayout });
@@ -33,28 +34,20 @@ defineProps<{
             v-else
             class="space-y-4"
         >
-            <li
+            <ResourceCard
                 v-for="record in records"
                 :key="record.id"
-                class="rounded-lg border border-slate-200 p-5"
+                :href="routes.show.url(record.id)"
+                :name="record.name"
+                :description="record.description"
             >
-                <h2 class="text-xl font-semibold">
-                    <Link
-                        :href="routes.show(record.id)"
-                        class="underline"
-                        >{{ record.name }}</Link
-                    >
-                </h2>
-                <p class="mt-2 whitespace-pre-wrap text-slate-600">
-                    {{ record.description }}
-                </p>
                 <p
                     v-if="record.location"
                     class="mt-2 text-sm text-slate-500"
                 >
                     {{ record.location.name }}
                 </p>
-            </li>
+            </ResourceCard>
         </ul>
     </main>
 </template>

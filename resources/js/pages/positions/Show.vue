@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { confirmDelete } from '@/lib/confirmDelete';
 
 defineOptions({ layout: AppLayout });
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import PositionField from './PositionField.vue';
 import { destroy, edit, index } from '@/routes/sports/positions';
 
@@ -27,8 +28,7 @@ defineProps<{
     };
 }>();
 function deletePosition(sportId: string, positionId: string) {
-    if (window.confirm('Delete this position?'))
-        router.delete(destroy.url([sportId, positionId]));
+    confirmDelete(destroy.url([sportId, positionId]), 'Delete this position?');
 }
 </script>
 
