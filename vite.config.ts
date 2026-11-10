@@ -69,8 +69,8 @@ export default defineConfig({
         ignorePatterns: [
             '.github/**',
             './AGENTS.md',
-            './rules/**',
             '.agents/**',
+            '.ai/rules/**',
             'composer.json',
             'resources/js/components/ui/*',
             'resources/views/mail/*',
